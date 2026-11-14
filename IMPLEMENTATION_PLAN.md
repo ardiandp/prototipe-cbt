@@ -80,11 +80,11 @@
 **Acceptance:** halaman contoh menggunakan asset AdminLTE 3 dari `public/theme/adminLTE`; tidak ada theme yang diunduh atau diganti.
 
 ### P1-T03 — Route and view foundation
-- [ ] Susun route groups.
-- [ ] Buat halaman error/unauthorized/404.
-- [ ] Buat halaman login shell.
-- [ ] Terapkan naming convention.
-- [ ] Tambahkan smoke tests.
+- [x] Susun route groups.
+- [x] Buat halaman error/unauthorized/404.
+- [x] Buat halaman login shell.
+- [x] Terapkan naming convention.
+- [x] Tambahkan smoke tests.
 
 **Acceptance:** route utama dapat diakses sesuai status autentikasi.
 

@@ -7,12 +7,12 @@ use Tests\TestCase;
 class AdminLteLayoutTest extends TestCase
 {
     /**
-     * Test that root returns successful response with theme demo.
+     * Test that root redirects to login for guests.
      */
-    public function test_root_returns_successful_response(): void
+    public function test_root_redirects_to_login(): void
     {
         $response = $this->get('/');
-        $response->assertStatus(200);
+        $response->assertRedirect('/login');
     }
 
     /**

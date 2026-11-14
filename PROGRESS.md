@@ -8,7 +8,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 |---|---|
 | Project inspection | Selesai |
 | Dokumentasi awal | Selesai |
-| Laravel foundation | Sedang dikerjakan (P1-T01 selesai) |
+| Laravel foundation | Selesai |
 | Authentication & roles | Belum dimulai |
 | Master data | Belum dimulai |
 | Question bank | Belum dimulai |
@@ -20,8 +20,8 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Current Task
 
-**Task ID:** P1-T03  
-**Task:** Route and view foundation  
+**Task ID:** P2-T01  
+**Task:** User and role model  
 **Status:** Pending
 
 ## Completed Tasks
@@ -31,6 +31,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - [x] **P0-T03:** Documentation commit (2026-11-14)
 - [x] **P1-T01:** Laravel environment and SQLite (2026-11-14)
 - [x] **P1-T02:** Integrasi AdminLTE 3 dari asset yang sudah disediakan (2026-11-14)
+- [x] **P1-T03:** Route and view foundation (2026-11-14)
 
 ## Task Log
 
@@ -40,7 +41,8 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | 2026-11-14 | P0-T02 | Review dan perapian instruksi kerja, memastikan konsistensi keputusan produk di README, PRD, AGENTS, IMPLEMENTATION_PLAN, dan PROGRESS | Validasi silang isi dokumen | af9292e |
 | 2026-11-14 | P0-T03 | Inisialisasi Git repository dan commit awal dokumen rencana implementasi | `git status`, verifikasi tidak ada secret | af9292e |
 | 2026-11-14 | P1-T01 | Konfigurasi environment Laravel, SQLite, timezone Asia/Jakarta, pembersihan .env.example, dan penambahan EnvironmentTest | `artisan migrate:status`, `artisan db:show`, `EnvironmentTest` (3 tests passed) | d68a90b |
-| 2026-11-14 | P1-T02 | Integrasi asset lokal AdminLTE 3 ke layout master Blade, navbar, sidebar, footer, content-header, komponen reusable (alert, card, modal, table, form-input), halaman demo, dan Feature test | `AdminLteLayoutTest` (5 tests passed, 19 assertions) | d141606 |
+| 2026-11-14 | P1-T02 | Integrasi asset lokal AdminLTE 3 ke layout master Blade, navbar, sidebar, footer, content-header, komponen reusable (alert, card, modal, table, form-input), halaman demo, dan Feature test | `AdminLteLayoutTest` (5 tests passed, 19 assertions) | 09712dc |
+| 2026-11-14 | P1-T03 | Penyusunan route groups (guest, auth, admin, teacher, student), pembuatan halaman login shell, error views (403, 404, 500) berbasis AdminLTE, AuthController, DashboardController, dan RouteAndFoundationTest | `RouteAndFoundationTest`, `phpunit` (12 tests passed, 42 assertions) | 8f7c449 |
 
 ## Theme Asset Inspection
 
@@ -93,7 +95,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Next Task
 
-Setelah P1-T02 selesai, lanjutkan P1-T03 — Route and view foundation.
+Setelah P1-T03 selesai, lanjutkan P2-T01 — User and role model.
 
 ## Required Update Format
 

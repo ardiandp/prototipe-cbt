@@ -4,3 +4,4 @@
     </div>
     <strong>Hak Cipta &copy; {{ date('Y') }} <a href="{{ url('/') }}" class="text-decoration-none">CBT School</a>.</strong> Seluruh hak dilindungi.
 </footer>
+
