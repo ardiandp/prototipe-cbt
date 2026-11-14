@@ -19,3 +19,4 @@ class EnvironmentTest extends TestCase
         $this->assertNotEmpty($dbName);
     }
 }
+

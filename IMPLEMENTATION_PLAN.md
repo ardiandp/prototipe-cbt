@@ -62,20 +62,20 @@
 **Acceptance:** aplikasi dapat boot dan koneksi SQLite berhasil.
 
 ### P1-T02 — Integrasi AdminLTE 3 dari asset yang sudah disediakan
-- [ ] Pastikan folder `public/theme/adminLTE` tersedia.
-- [ ] Inspeksi struktur folder: CSS, JavaScript, plugins, image, dan font.
-- [ ] Catat nama dan path asset aktual.
-- [ ] Integrasikan asset lokal ke layout Blade menggunakan helper `asset()`.
-- [ ] Jangan mengunduh ulang atau memasang theme alternatif.
-- [ ] Jangan memindahkan, mengganti nama, menghapus, atau menimpa asset yang tersedia.
-- [ ] Buat layout backend, navbar, sidebar, footer, dan breadcrumb.
-- [ ] Buat reusable alert, card, form, table, dan modal.
-- [ ] Pastikan asset inti dapat dimuat tanpa CDN.
-- [ ] Jika folder tidak ditemukan, hentikan task integrasi dan laporkan blocker.
-- [ ] Buat layout backend.
-- [ ] Buat navbar, sidebar, footer, breadcrumb.
-- [ ] Buat reusable alert, card, form, table, modal.
-- [ ] Pastikan asset tidak bergantung pada CDN saat demo LAN.
+- [x] Pastikan folder `public/theme/adminLTE` tersedia.
+- [x] Inspeksi struktur folder: CSS, JavaScript, plugins, image, dan font.
+- [x] Catat nama dan path asset aktual.
+- [x] Integrasikan asset lokal ke layout Blade menggunakan helper `asset()`.
+- [x] Jangan mengunduh ulang atau memasang theme alternatif.
+- [x] Jangan memindahkan, mengganti nama, menghapus, atau menimpa asset yang tersedia.
+- [x] Buat layout backend, navbar, sidebar, footer, dan breadcrumb.
+- [x] Buat reusable alert, card, form, table, dan modal.
+- [x] Pastikan asset inti dapat dimuat tanpa CDN.
+- [x] Jika folder tidak ditemukan, hentikan task integrasi dan laporkan blocker.
+- [x] Buat layout backend.
+- [x] Buat navbar, sidebar, footer, breadcrumb.
+- [x] Buat reusable alert, card, form, table, modal.
+- [x] Pastikan asset tidak bergantung pada CDN saat demo LAN.
 
 **Acceptance:** halaman contoh menggunakan asset AdminLTE 3 dari `public/theme/adminLTE`; tidak ada theme yang diunduh atau diganti.
 

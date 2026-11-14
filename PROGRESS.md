@@ -20,8 +20,8 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Current Task
 
-**Task ID:** P1-T02  
-**Task:** Integrasi AdminLTE 3 dari asset yang sudah disediakan  
+**Task ID:** P1-T03  
+**Task:** Route and view foundation  
 **Status:** Pending
 
 ## Completed Tasks
@@ -30,6 +30,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - [x] **P0-T02:** Initialize project instructions (2026-11-14)
 - [x] **P0-T03:** Documentation commit (2026-11-14)
 - [x] **P1-T01:** Laravel environment and SQLite (2026-11-14)
+- [x] **P1-T02:** Integrasi AdminLTE 3 dari asset yang sudah disediakan (2026-11-14)
 
 ## Task Log
 
@@ -38,7 +39,8 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | 2026-11-14 | P0-T01 | Inspeksi kondisi aktual project, runtime (PHP, Composer, Node), asset theme, database, dan status Git | `php -v`, `artisan --version`, inspeksi folder | af9292e |
 | 2026-11-14 | P0-T02 | Review dan perapian instruksi kerja, memastikan konsistensi keputusan produk di README, PRD, AGENTS, IMPLEMENTATION_PLAN, dan PROGRESS | Validasi silang isi dokumen | af9292e |
 | 2026-11-14 | P0-T03 | Inisialisasi Git repository dan commit awal dokumen rencana implementasi | `git status`, verifikasi tidak ada secret | af9292e |
-| 2026-11-14 | P1-T01 | Konfigurasi environment Laravel, SQLite, timezone Asia/Jakarta, pembersihan .env.example, dan penambahan EnvironmentTest | `artisan migrate:status`, `artisan db:show`, `EnvironmentTest` (3 tests passed) | e251177 |
+| 2026-11-14 | P1-T01 | Konfigurasi environment Laravel, SQLite, timezone Asia/Jakarta, pembersihan .env.example, dan penambahan EnvironmentTest | `artisan migrate:status`, `artisan db:show`, `EnvironmentTest` (3 tests passed) | d68a90b |
+| 2026-11-14 | P1-T02 | Integrasi asset lokal AdminLTE 3 ke layout master Blade, navbar, sidebar, footer, content-header, komponen reusable (alert, card, modal, table, form-input), halaman demo, dan Feature test | `AdminLteLayoutTest` (5 tests passed, 19 assertions) | d141606 |
 
 ## Theme Asset Inspection
 
@@ -48,8 +50,8 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - JavaScript files found: `dist/js/adminlte.js`, `dist/js/adminlte.min.js`, `dist/js/adminlte.esm.js`
 - Plugin folders found: Paket bawaan dist AdminLTE (`dist/assets/`, `dist/pages/`, `dist/tables/`, dll.)
 - Image/font folders found: `dist/assets/img/` (avatar, logo, credit icons)
-- Blade asset references verified: Belum (akan dikerjakan pada P1-T02)
-- Core theme assets loaded without CDN: Disediakan lokal di `public/theme/adminLTE/dist`
+- Blade asset references verified: Ya (terintegrasi pada `resources/views/layouts/app.blade.php`, partials, dan komponen)
+- Core theme assets loaded without CDN: Ya, dimuat dari `asset('theme/adminLTE/dist/css/adminlte.min.css')` dan `asset('theme/adminLTE/dist/js/adminlte.min.js')`
 - Catatan versi theme: Paket di `public/theme/adminLTE` adalah AdminLTE v4.10.1 (Bootstrap 5). Sesuai aturan AGENTS.md/README.md, asset yang disediakan ini wajib digunakan langsung tanpa diganti atau diunduh ulang.
 
 ## Environment Inspection
@@ -91,7 +93,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Next Task
 
-Setelah P1-T01 selesai, lanjutkan P1-T02 — Integrasi AdminLTE 3 dari asset yang sudah disediakan.
+Setelah P1-T02 selesai, lanjutkan P1-T03 — Route and view foundation.
 
 ## Required Update Format
 
