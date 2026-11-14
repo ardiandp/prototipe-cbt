@@ -53,11 +53,11 @@
 ## PHASE 1 — Foundation
 
 ### P1-T01 — Laravel environment and SQLite
-- [ ] Validasi versi PHP dan Laravel.
-- [ ] Konfigurasi SQLite untuk prototype.
-- [ ] Siapkan `.env.example` tanpa secret.
-- [ ] Pastikan migration command dapat dijalankan.
-- [ ] Dokumentasikan setup lokal.
+- [x] Validasi versi PHP dan Laravel.
+- [x] Konfigurasi SQLite untuk prototype.
+- [x] Siapkan `.env.example` tanpa secret.
+- [x] Pastikan migration command dapat dijalankan.
+- [x] Dokumentasikan setup lokal.
 
 **Acceptance:** aplikasi dapat boot dan koneksi SQLite berhasil.
 

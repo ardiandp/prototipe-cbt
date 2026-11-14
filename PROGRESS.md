@@ -8,7 +8,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 |---|---|
 | Project inspection | Selesai |
 | Dokumentasi awal | Selesai |
-| Laravel foundation | Belum dimulai |
+| Laravel foundation | Sedang dikerjakan (P1-T01 selesai) |
 | Authentication & roles | Belum dimulai |
 | Master data | Belum dimulai |
 | Question bank | Belum dimulai |
@@ -20,8 +20,8 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Current Task
 
-**Task ID:** P1-T01  
-**Task:** Laravel environment and SQLite  
+**Task ID:** P1-T02  
+**Task:** Integrasi AdminLTE 3 dari asset yang sudah disediakan  
 **Status:** Pending
 
 ## Completed Tasks
@@ -29,14 +29,16 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - [x] **P0-T01:** Inspect existing project (2026-11-14)
 - [x] **P0-T02:** Initialize project instructions (2026-11-14)
 - [x] **P0-T03:** Documentation commit (2026-11-14)
+- [x] **P1-T01:** Laravel environment and SQLite (2026-11-14)
 
 ## Task Log
 
 | Date | Task ID | Summary | Tests | Commit |
 |---|---|---|---|---|
-| 2026-11-14 | P0-T01 | Inspeksi kondisi aktual project, runtime (PHP, Composer, Node), asset theme, database, dan status Git | `php -v`, `artisan --version`, inspeksi folder | 1b4126d |
-| 2026-11-14 | P0-T02 | Review dan perapian instruksi kerja, memastikan konsistensi keputusan produk di README, PRD, AGENTS, IMPLEMENTATION_PLAN, dan PROGRESS | Validasi silang isi dokumen | 1b4126d |
-| 2026-11-14 | P0-T03 | Inisialisasi Git repository dan commit awal dokumen rencana implementasi | `git status`, verifikasi tidak ada secret | 1b4126d |
+| 2026-11-14 | P0-T01 | Inspeksi kondisi aktual project, runtime (PHP, Composer, Node), asset theme, database, dan status Git | `php -v`, `artisan --version`, inspeksi folder | af9292e |
+| 2026-11-14 | P0-T02 | Review dan perapian instruksi kerja, memastikan konsistensi keputusan produk di README, PRD, AGENTS, IMPLEMENTATION_PLAN, dan PROGRESS | Validasi silang isi dokumen | af9292e |
+| 2026-11-14 | P0-T03 | Inisialisasi Git repository dan commit awal dokumen rencana implementasi | `git status`, verifikasi tidak ada secret | af9292e |
+| 2026-11-14 | P1-T01 | Konfigurasi environment Laravel, SQLite, timezone Asia/Jakarta, pembersihan .env.example, dan penambahan EnvironmentTest | `artisan migrate:status`, `artisan db:show`, `EnvironmentTest` (3 tests passed) | e251177 |
 
 ## Theme Asset Inspection
 
@@ -89,7 +91,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Next Task
 
-Setelah P0-T03 selesai, lanjutkan P1-T01 — Laravel environment and SQLite.
+Setelah P1-T01 selesai, lanjutkan P1-T02 — Integrasi AdminLTE 3 dari asset yang sudah disediakan.
 
 ## Required Update Format
 
