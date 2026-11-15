@@ -89,3 +89,4 @@ class RouteAndFoundationTest extends TestCase
         $response->assertSee('Terjadi Gangguan Server');
     }
 }
+

@@ -62,3 +62,4 @@ class AuthController extends Controller
             ->with('info', 'Anda telah berhasil keluar dari sistem CBT School.');
     }
 }
+

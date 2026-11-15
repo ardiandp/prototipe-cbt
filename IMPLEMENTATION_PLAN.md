@@ -93,9 +93,9 @@
 ## PHASE 2 — Authentication & Roles
 
 ### P2-T01 — User and role model
-- [ ] Implementasikan users dan role.
-- [ ] Buat migration, model, factory/seed dasar.
-- [ ] Terapkan password hashing.
+- [x] Implementasikan users dan role.
+- [x] Buat migration, model, factory/seed dasar.
+- [x] Terapkan password hashing.
 
 ### P2-T02 — Login and logout
 - [ ] Form login.
