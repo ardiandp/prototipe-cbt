@@ -98,11 +98,11 @@
 - [x] Terapkan password hashing.
 
 ### P2-T02 — Login and logout
-- [ ] Form login.
-- [ ] Validasi credential.
-- [ ] Session regeneration.
-- [ ] Logout dan invalidasi session.
-- [ ] Demo account seeder.
+- [x] Form login.
+- [x] Validasi credential.
+- [x] Session regeneration.
+- [x] Logout dan invalidasi session.
+- [x] Demo account seeder.
 
 ### P2-T03 — Authorization
 - [ ] Role middleware.

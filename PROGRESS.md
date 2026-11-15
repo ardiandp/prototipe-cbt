@@ -20,8 +20,8 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Current Task
 
-**Task ID:** P2-T02  
-**Task:** Login and logout  
+**Task ID:** P2-T03  
+**Task:** Authorization  
 **Status:** Pending
 
 ## Completed Tasks
@@ -33,6 +33,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - [x] **P1-T02:** Integrasi AdminLTE 3 dari asset yang sudah disediakan (2026-11-14)
 - [x] **P1-T03:** Route and view foundation (2026-11-14)
 - [x] **P2-T01:** User and role model (2026-11-16)
+- [x] **P2-T02:** Login and logout (2026-11-16)
 
 ## Task Log
 
@@ -44,7 +45,8 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | 2026-11-14 | P1-T01 | Konfigurasi environment Laravel, SQLite, timezone Asia/Jakarta, pembersihan .env.example, dan penambahan EnvironmentTest | `artisan migrate:status`, `artisan db:show`, `EnvironmentTest` (3 tests passed) | d68a90b |
 | 2026-11-14 | P1-T02 | Integrasi asset lokal AdminLTE 3 ke layout master Blade, navbar, sidebar, footer, content-header, komponen reusable (alert, card, modal, table, form-input), halaman demo, dan Feature test | `AdminLteLayoutTest` (5 tests passed, 19 assertions) | 09712dc |
 | 2026-11-14 | P1-T03 | Penyusunan route groups (guest, auth, admin, teacher, student), pembuatan halaman login shell, error views (403, 404, 500) berbasis AdminLTE, AuthController, DashboardController, dan RouteAndFoundationTest | `RouteAndFoundationTest`, `phpunit` (12 tests passed, 42 assertions) | d0cbbf0 |
-| 2026-11-16 | P2-T01 | Implementasi UserRole Enum (superadmin, admin, teacher, student), migrasi username & role, User model helpers, UserFactory, UserSeeder, dan UserModelTest | `UserModelTest`, `phpunit` (15 tests passed, 73 assertions) | a70c8d5 |
+| 2026-11-16 | P2-T01 | Implementasi UserRole Enum (superadmin, admin, teacher, student), migrasi username & role, User model helpers, UserFactory, UserSeeder, dan UserModelTest | `UserModelTest`, `phpunit` (15 tests passed, 73 assertions) | 0865f1d |
+| 2026-11-16 | P2-T02 | FormRequest LoginRequest dengan rate limiting & inactive check, login multi-identifier (username/email), dynamic role-based redirect, session regeneration, logout invalidation, dan AuthenticationTest | `AuthenticationTest`, `phpunit` (23 tests passed, 96 assertions) | 463d90c |
 
 ## Theme Asset Inspection
 
@@ -97,7 +99,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Next Task
 
-Setelah P2-T01 selesai, lanjutkan P2-T02 — Login and logout.
+Setelah P2-T02 selesai, lanjutkan P2-T03 — Authorization.
 
 ## Required Update Format
 

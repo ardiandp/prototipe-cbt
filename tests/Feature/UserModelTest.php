@@ -95,3 +95,4 @@ class UserModelTest extends TestCase
         $this->assertTrue(Hash::check('password', $student->password));
     }
 }
+

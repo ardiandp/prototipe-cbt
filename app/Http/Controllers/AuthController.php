@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,37 +18,28 @@ class AuthController extends Controller
     public function showLogin(): View|RedirectResponse
     {
         if (Auth::check()) {
-            return redirect()->route('dashboard');
+            return redirect($this->redirectPathForUser(Auth::user()));
         }
 
         return view('auth.login');
     }
 
     /**
-     * Handle an authentication attempt.
+     * Handle an incoming authentication request.
      */
-    public function login(Request $request): RedirectResponse
+    public function login(LoginRequest $request): RedirectResponse
     {
-        $credentials = $request->validate([
-            'username' => ['required', 'string'],
-            'password' => ['required', 'string'],
-        ]);
+        $request->authenticate();
 
-        $remember = $request->boolean('remember');
+        $request->session()->regenerate();
 
-        // Allow login using username or email
-        $loginField = filter_var($credentials['username'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        /** @var User $user */
+        $user = Auth::user();
 
-        if (Auth::attempt([$loginField => $credentials['username'], 'password' => $credentials['password']], $remember)) {
-            $request->session()->regenerate();
+        $targetUrl = $this->redirectPathForUser($user);
 
-            return redirect()->intended(route('dashboard'))
-                ->with('success', 'Selamat datang kembali di CBT School!');
-        }
-
-        return back()->withErrors([
-            'username' => 'Identitas akun atau kata sandi yang Anda masukkan salah.',
-        ])->onlyInput('username');
+        return redirect()->intended($targetUrl)
+            ->with('success', "Selamat datang kembali, {$user->name}!");
     }
 
     /**
@@ -61,5 +55,17 @@ class AuthController extends Controller
         return redirect()->route('login')
             ->with('info', 'Anda telah berhasil keluar dari sistem CBT School.');
     }
-}
 
+    /**
+     * Determine role-based redirect target URL for the authenticated user.
+     */
+    public function redirectPathForUser(User $user): string
+    {
+        return match ($user->role) {
+            UserRole::SUPERADMIN, UserRole::ADMIN => route('admin.dashboard'),
+            UserRole::TEACHER => route('teacher.dashboard'),
+            UserRole::STUDENT => route('student.dashboard'),
+            default => route('dashboard'),
+        };
+    }
+}

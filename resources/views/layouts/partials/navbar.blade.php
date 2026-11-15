@@ -31,7 +31,7 @@
                     <li class="user-header text-bg-primary p-3 text-center">
                         <img src="{{ asset('theme/adminLTE/dist/assets/img/avatar5.png') }}" class="rounded-circle shadow mb-2" alt="User Image" style="width: 64px; height: 64px;">
                         <p class="mb-0 fw-bold">{{ auth()->user()->name ?? 'Demo User' }}</p>
-                        <small class="badge text-bg-light text-primary text-uppercase">{{ auth()->user()->role ?? 'Super Admin' }}</small>
+                        <small class="badge text-bg-light text-primary text-uppercase">{{ auth()->check() ? auth()->user()->roleLabel() : 'Tamu' }}</small>
                     </li>
                     <li class="user-footer d-flex justify-content-between p-2 border-top">
                         <a href="{{ url('/profile') }}" class="btn btn-sm btn-outline-secondary">Profil</a>
