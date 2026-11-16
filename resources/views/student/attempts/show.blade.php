@@ -30,6 +30,12 @@
                     <button type="button" class="btn btn-outline-secondary" id="fontLgBtn" title="Font Besar">A+</button>
                 </div>
 
+                <!-- Status Autosave Indikator -->
+                <span id="autosaveStatus" class="badge text-bg-light border text-success small d-flex align-items-center gap-1 px-2 py-1">
+                    <span class="indicator-dot" style="width: 8px; height: 8px; background-color: #198754; border-radius: 50%; display: inline-block;"></span>
+                    <span class="status-text">Tersimpan di Server</span>
+                </span>
+
                 <!-- Server Timer Display -->
                 <div class="p-2 px-3 border border-danger rounded bg-danger-subtle d-flex align-items-center gap-2">
                     <span class="fs-5">&#9201;</span>
@@ -244,9 +250,12 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Periksa Kembali</button>
-                <a href="{{ route('student.exams.show', $attempt->exam) }}" class="btn btn-danger fw-bold">
-                    Ya, Selesaikan Ujian
-                </a>
+                <form method="POST" action="{{ route('student.attempts.finish', $attempt) }}" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-danger fw-bold">
+                        Ya, Selesaikan Ujian
+                    </button>
+                </form>
             </div>
         </div>
     </div>
@@ -369,6 +378,91 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Autosave Constants & Handlers (P6-T05)
+    const saveAnswerUrl = "{{ route('student.attempts.save-answer', $attempt) }}";
+    const autosaveStatusEl = document.getElementById('autosaveStatus');
+
+    function setAutosaveStatus(state, msg) {
+        if (!autosaveStatusEl) return;
+        const dot = autosaveStatusEl.querySelector('.indicator-dot');
+        const text = autosaveStatusEl.querySelector('.status-text');
+
+        autosaveStatusEl.classList.remove('text-bg-light', 'text-bg-success', 'text-bg-warning', 'text-bg-danger', 'text-success', 'text-dark', 'text-white');
+
+        if (state === 'saving') {
+            autosaveStatusEl.classList.add('text-bg-warning', 'text-dark');
+            if (dot) dot.style.backgroundColor = '#ffc107';
+            if (text) text.textContent = msg || 'Menyimpan...';
+        } else if (state === 'saved') {
+            autosaveStatusEl.classList.add('text-bg-light', 'border', 'text-success');
+            if (dot) dot.style.backgroundColor = '#198754';
+            if (text) text.textContent = msg || 'Tersimpan di Server';
+        } else if (state === 'failed') {
+            autosaveStatusEl.classList.add('text-bg-danger', 'text-white');
+            if (dot) dot.style.backgroundColor = '#fff';
+            if (text) text.textContent = msg || 'Gagal Menyimpan!';
+        }
+    }
+
+    function postAnswerUpdate(order) {
+        const activePane = document.getElementById('question-pane-' + order);
+        if (!activePane) return;
+
+        const aqId = activePane.getAttribute('data-aq-id');
+        const checkedRadio = activePane.querySelector('.option-radio:checked');
+        const optId = checkedRadio ? checkedRadio.value : null;
+        const paletteBtn = document.getElementById('palette-btn-' + order);
+        const isDoubtful = paletteBtn ? (paletteBtn.getAttribute('data-doubtful') === '1') : false;
+
+        setAutosaveStatus('saving', 'Menyimpan jawaban...');
+
+        fetch(saveAnswerUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+                exam_attempt_question_id: aqId,
+                exam_question_option_id: optId,
+                is_doubtful: isDoubtful ? 1 : 0,
+                client_timestamp: Date.now()
+            })
+        })
+        .then(res => {
+            if (!res.ok) {
+                return res.json().then(errData => { throw errData; });
+            }
+            return res.json();
+        })
+        .then(data => {
+            if (data.success) {
+                setAutosaveStatus('saved', 'Tersimpan di Server');
+                if (paletteBtn) {
+                    paletteBtn.setAttribute('data-answered', data.selected_exam_question_option_id ? '1' : '0');
+                    paletteBtn.setAttribute('data-doubtful', data.is_doubtful ? '1' : '0');
+                    updatePaletteButtonStyle(paletteBtn);
+                }
+                if (answeredBadge && typeof data.answered_count === 'number') answeredBadge.textContent = data.answered_count;
+                if (doubtfulBadge && typeof data.doubtful_count === 'number') doubtfulBadge.textContent = data.doubtful_count;
+                if (unansweredBadge && typeof data.unanswered_count === 'number') unansweredBadge.textContent = data.unanswered_count;
+                if (modalAnswered && typeof data.answered_count === 'number') modalAnswered.textContent = data.answered_count;
+                if (modalDoubtful && typeof data.doubtful_count === 'number') modalDoubtful.textContent = data.doubtful_count;
+                if (modalUnanswered && typeof data.unanswered_count === 'number') modalUnanswered.textContent = data.unanswered_count;
+            }
+        })
+        .catch(err => {
+            console.error('Autosave error:', err);
+            if (err && err.is_expired) {
+                handleExpiration(err.redirect_url);
+            } else {
+                setAutosaveStatus('failed', 'Gagal Menyimpan! Cek Koneksi');
+            }
+        });
+    }
+
     // Option change handler
     document.querySelectorAll('.option-radio').forEach(radio => {
         radio.addEventListener('change', function () {
@@ -407,6 +501,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             recalculateSummary();
+            postAnswerUpdate(order);
         });
     });
 
@@ -419,6 +514,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 updatePaletteButtonStyle(paletteBtn);
             }
             recalculateSummary();
+            postAnswerUpdate(currentOrder);
         });
     }
 

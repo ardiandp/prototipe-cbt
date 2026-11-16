@@ -23,6 +23,7 @@ class ExamAttemptQuestion extends Model
         'selected_exam_question_option_id',
         'is_doubtful',
         'answered_at',
+        'client_timestamp',
     ];
 
     /**
@@ -36,6 +37,7 @@ class ExamAttemptQuestion extends Model
             'order' => 'integer',
             'is_doubtful' => 'boolean',
             'answered_at' => 'datetime',
+            'client_timestamp' => 'integer',
         ];
     }
 

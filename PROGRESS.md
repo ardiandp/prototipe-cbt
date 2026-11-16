@@ -11,17 +11,17 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | Laravel foundation | Selesai |
 | Authentication & roles | Selesai |
 | Master data | Selesai (Phase 3 lengkap) |
-| Question bank | Dalam pengerjaan (P4-T01 selesai) |
-| Exam management | Belum dimulai |
-| Exam engine | Belum dimulai |
+| Question bank | Selesai (Phase 4 lengkap) |
+| Exam management | Selesai (Phase 5 lengkap) |
+| Exam engine | Dalam pengerjaan (P6-T01 - P6-T05 selesai) |
 | Monitoring & scoring | Belum dimulai |
 | Reporting | Belum dimulai |
 | LAN demo readiness | Belum dimulai |
 
 ## Current Task
 
-**Task ID:** P4-T02  
-**Task:** Question CRUD  
+**Task ID:** P6-T06  
+**Task:** Manual and automatic submit  
 **Status:** Pending
 
 ## Completed Tasks
@@ -52,6 +52,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - [x] **P6-T02:** Attempt question ordering (2026-11-16)
 - [x] **P6-T03:** Exam room UI (2026-11-16)
 - [x] **P6-T04:** Server timer (2026-11-16)
+- [x] **P6-T05:** Answer autosave and recovery (2026-11-16)
 
 ## Task Log
 
@@ -83,6 +84,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | 2026-11-16 | P6-T02 | Implementasi skema & relasi exam_attempt_questions dan exam_attempt_question_options, persistensi urutan soal stabil (acak/urut), persistensi opsi jawaban A–E aman (acak/urut), proteksi anti-bocor kunci jawaban, dan feature tests | `ExamAttemptQuestionOrderingTest`, `phpunit` (185 tests passed, 1131 assertions) | 4b5db66 |
 | 2026-11-16 | P6-T03 | Implementasi antarmuka ruang ujian CBT responsif (AdminLTE 3), navigasi nomor soal (palette grid), navigasi soal sebelumnya/berikutnya, pilihan opsi jawaban A–E interaktif, penanda ragu-ragu, legend status indikator real-time, modal konfirmasi selesai ujian, dan feature tests | `ExamRoomUiTest`, `phpunit` (189 tests passed, 1161 assertions) | fcadf78 |
 | 2026-11-16 | P6-T04 | Implementasi endpoint sinkronisasi waktu server (sync-time), finalisasi attempt kedaluwarsa secara otomatis & idempotent, periodic timer sync di client, proteksi refresh tidak mereset timer, artisan command background cbt:finalize-expired-attempts, dan feature tests | `ExamServerTimerTest`, `phpunit` (195 tests passed, 1193 assertions) | 0d17d33 |
+| 2026-11-16 | P6-T05 | Implementasi autosave jawaban real-time (POST /attempts/{attempt}/save-answer), validasi kepemilikan & window waktu ujian, pencegahan race condition stale requests via client_timestamp, pemulihan instan saat reload/reconnect, indikator UI (Menyimpan/Tersimpan/Gagal), dan feature tests | `ExamAnswerAutosaveAndRecoveryTest`, `phpunit` (204 tests passed, 1229 assertions) | 4e2f7b0 |
 
 ## Theme Asset Inspection
 

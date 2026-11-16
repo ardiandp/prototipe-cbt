@@ -259,5 +259,154 @@ class ExamAttemptController extends Controller
         return redirect()->route('student.exams.show', $attempt->exam)
             ->with('error', 'Waktu ujian telah habis. Sesi ujian Anda telah diselesaikan.');
     }
+
+    /**
+     * Save an answer choice or doubtful status via AJAX autosave.
+     */
+    public function saveAnswer(Request $request, ExamAttempt $attempt): JsonResponse
+    {
+        $user = $request->user();
+        $student = $user->studentProfile;
+
+        if (! $student || $attempt->student_id !== $student->id) {
+            abort(403, 'Anda tidak memiliki hak akses ke sesi ujian ini.');
+        }
+
+        // Rule 5: Answers can only be updated if attempt is active and time has not expired
+        if ($attempt->isExpired() || Carbon::now()->greaterThanOrEqualTo($attempt->expires_at)) {
+            if ($attempt->isInProgress()) {
+                $attempt->markAsExpired();
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Waktu pengerjaan ujian telah habis. Jawaban tidak dapat disimpan.',
+                'is_expired' => true,
+                'redirect_url' => route('student.exams.show', $attempt->exam),
+            ], 422);
+        }
+
+        if ($attempt->isCompleted()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sesi ujian ini telah diselesaikan sebelumnya.',
+                'is_completed' => true,
+                'redirect_url' => route('student.exams.show', $attempt->exam),
+            ], 422);
+        }
+
+        $validated = $request->validate([
+            'exam_attempt_question_id' => ['required', 'integer'],
+            'exam_question_option_id' => ['nullable', 'integer'],
+            'is_doubtful' => ['nullable', 'boolean'],
+            'client_timestamp' => ['nullable', 'numeric'],
+        ]);
+
+        $attemptQuestion = $attempt->attemptQuestions()
+            ->where('id', $validated['exam_attempt_question_id'])
+            ->first();
+
+        if (! $attemptQuestion) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Butir soal tidak ditemukan dalam attempt ini.',
+            ], 404);
+        }
+
+        $optionId = $validated['exam_question_option_id'] ?? null;
+
+        // Verify that option belongs to this question
+        if (! is_null($optionId)) {
+            $validOption = $attemptQuestion->options()
+                ->where('exam_question_option_id', $optionId)
+                ->exists();
+
+            if (! $validOption) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pilihan jawaban tidak valid untuk butir soal ini.',
+                ], 422);
+            }
+        }
+
+        $clientTimestamp = isset($validated['client_timestamp']) ? (int) $validated['client_timestamp'] : null;
+
+        // Prevent race conditions from out-of-order stale requests
+        if ($clientTimestamp && $attemptQuestion->client_timestamp && $clientTimestamp < $attemptQuestion->client_timestamp) {
+            return response()->json([
+                'success' => true,
+                'ignored' => true,
+                'message' => 'Request diabaikan karena terdapat data jawaban yang lebih baru.',
+                'exam_attempt_question_id' => $attemptQuestion->id,
+                'selected_exam_question_option_id' => $attemptQuestion->selected_exam_question_option_id,
+                'is_doubtful' => $attemptQuestion->is_doubtful,
+                'answered_at' => $attemptQuestion->answered_at?->format('Y-m-d H:i:s'),
+            ]);
+        }
+
+        // Persist answer to database
+        $attemptQuestion->update([
+            'selected_exam_question_option_id' => $optionId,
+            'is_doubtful' => $request->boolean('is_doubtful'),
+            'answered_at' => Carbon::now(),
+            'client_timestamp' => $clientTimestamp ?? (int) round(microtime(true) * 1000),
+        ]);
+
+        // Update total answered count on attempt record
+        $totalAnswered = $attempt->attemptQuestions()->whereNotNull('selected_exam_question_option_id')->count();
+        $attempt->update(['total_answered' => $totalAnswered]);
+
+        // Calculate real-time counts
+        $totalQuestions = $attempt->attemptQuestions()->count();
+        $doubtfulCount = $attempt->attemptQuestions()->where('is_doubtful', true)->count();
+        $answeredCount = $attempt->attemptQuestions()->whereNotNull('selected_exam_question_option_id')->where('is_doubtful', false)->count();
+        $unansweredCount = $attempt->attemptQuestions()->whereNull('selected_exam_question_option_id')->where('is_doubtful', false)->count();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Jawaban berhasil disimpan ke server.',
+            'exam_attempt_question_id' => $attemptQuestion->id,
+            'selected_exam_question_option_id' => $attemptQuestion->selected_exam_question_option_id,
+            'is_doubtful' => $attemptQuestion->is_doubtful,
+            'answered_at' => $attemptQuestion->answered_at?->format('Y-m-d H:i:s'),
+            'total_questions' => $totalQuestions,
+            'answered_count' => $answeredCount,
+            'doubtful_count' => $doubtfulCount,
+            'unanswered_count' => $unansweredCount,
+            'remaining_seconds' => $attempt->remaining_seconds,
+        ]);
+    }
+
+    /**
+     * Complete and submit the attempt.
+     */
+    public function finish(Request $request, ExamAttempt $attempt): RedirectResponse
+    {
+        $user = $request->user();
+        $student = $user->studentProfile;
+
+        if (! $student || $attempt->student_id !== $student->id) {
+            abort(403, 'Anda tidak memiliki hak akses ke sesi ujian ini.');
+        }
+
+        if (! $attempt->isCompleted()) {
+            DB::transaction(function () use ($attempt) {
+                $totalAnswered = $attempt->attemptQuestions()->whereNotNull('selected_exam_question_option_id')->count();
+
+                $attempt->update([
+                    'status' => 'completed',
+                    'completed_at' => Carbon::now(),
+                    'total_answered' => $totalAnswered,
+                ]);
+
+                ExamParticipant::where('exam_id', $attempt->exam_id)
+                    ->where('student_id', $attempt->student_id)
+                    ->update(['status' => 'completed']);
+            });
+        }
+
+        return redirect()->route('student.exams.show', $attempt->exam)
+            ->with('success', 'Sesi ujian Anda telah berhasil diselesaikan. Terima kasih atas partisipasi Anda.');
+    }
 }
 

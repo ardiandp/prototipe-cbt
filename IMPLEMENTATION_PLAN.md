@@ -241,12 +241,12 @@
 - [x] Expired attempt difinalisasi secara idempotent.
 
 ### P6-T05 — Answer autosave and recovery
-- [ ] Endpoint simpan jawaban.
-- [ ] Validasi ownership dan waktu.
-- [ ] Simpan ke SQLite.
-- [ ] Status saving/saved/failed.
-- [ ] Recovery setelah refresh/koneksi pulih.
-- [ ] Cegah request lama menimpa jawaban terbaru.
+- [x] Endpoint simpan jawaban.
+- [x] Validasi ownership dan waktu.
+- [x] Simpan ke SQLite.
+- [x] Status saving/saved/failed.
+- [x] Recovery setelah refresh/koneksi pulih.
+- [x] Cegah request lama menimpa jawaban terbaru.
 
 ### P6-T06 — Manual and automatic submit
 - [ ] Konfirmasi submit.
