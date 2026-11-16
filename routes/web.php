@@ -112,6 +112,14 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+// Media storage fallback (serves files from storage/app/public safely on LAN / Windows without symlink dependency)
+Route::get('/storage/{path}', function (string $path) {
+    if (! \Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
+        abort(404);
+    }
+    return \Illuminate\Support\Facades\Storage::disk('public')->response($path);
+})->where('path', '.*')->name('storage.local');
+
 // Error Preview Routes (For testing error page layouts)
 Route::get('/error/403', function () { abort(403); })->name('error.403');
 Route::get('/error/404', function () { abort(404); })->name('error.404');

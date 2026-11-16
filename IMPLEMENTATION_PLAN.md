@@ -164,10 +164,10 @@
 - [x] Preview.
 
 ### P4-T03 — Question content and media
-- [ ] Editor pertanyaan.
-- [ ] Opsi A–E.
-- [ ] Upload gambar lokal opsional.
-- [ ] Validasi file.
+- [x] Editor pertanyaan.
+- [x] Opsi A–E.
+- [x] Upload gambar lokal opsional.
+- [x] Validasi file.
 
 ### P4-T04 — Question seeding
 - [ ] Seed kategori.

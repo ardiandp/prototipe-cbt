@@ -5,10 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 class QuestionOption extends Model
 {
     use HasFactory;
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::deleting(function (QuestionOption $option) {
+            if ($option->option_image && Storage::disk('public')->exists($option->option_image)) {
+                Storage::disk('public')->delete($option->option_image);
+            }
+        });
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -43,5 +56,25 @@ class QuestionOption extends Model
     public function question(): BelongsTo
     {
         return $this->belongsTo(Question::class);
+    }
+
+    /**
+     * Determine whether this option has an attached image.
+     */
+    public function hasImage(): bool
+    {
+        return ! empty($this->option_image);
+    }
+
+    /**
+     * Get the publicly accessible URL for the option image.
+     */
+    public function getImageUrlAttribute(): ?string
+    {
+        if (! $this->hasImage()) {
+            return null;
+        }
+
+        return asset('storage/' . $this->option_image);
     }
 }

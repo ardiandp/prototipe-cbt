@@ -24,6 +24,7 @@ class StoreQuestionRequest extends FormRequest
         return [
             'code' => ['nullable', 'string', 'max:50'],
             'question_text' => ['required', 'string'],
+            'question_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,gif', 'max:2048'],
             'difficulty' => ['required', 'in:easy,medium,hard'],
             'weight' => ['required', 'numeric', 'min:0.01'],
             'status' => ['required', 'in:draft,active,inactive'],
@@ -33,6 +34,12 @@ class StoreQuestionRequest extends FormRequest
             'options.C' => ['required', 'string'],
             'options.D' => ['required', 'string'],
             'options.E' => ['required', 'string'],
+            'option_images' => ['nullable', 'array'],
+            'option_images.A' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,gif', 'max:2048'],
+            'option_images.B' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,gif', 'max:2048'],
+            'option_images.C' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,gif', 'max:2048'],
+            'option_images.D' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,gif', 'max:2048'],
+            'option_images.E' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,gif', 'max:2048'],
             'correct_option' => ['required', 'in:A,B,C,D,E'],
         ];
     }
@@ -47,6 +54,7 @@ class StoreQuestionRequest extends FormRequest
         return [
             'code' => 'Kode Soal',
             'question_text' => 'Teks Pertanyaan',
+            'question_image' => 'Gambar Pertanyaan',
             'difficulty' => 'Tingkat Kesulitan',
             'weight' => 'Bobot Nilai',
             'status' => 'Status Soal',
@@ -55,7 +63,13 @@ class StoreQuestionRequest extends FormRequest
             'options.C' => 'Pilihan Jawaban C',
             'options.D' => 'Pilihan Jawaban D',
             'options.E' => 'Pilihan Jawaban E',
+            'option_images.A' => 'Gambar Pilihan A',
+            'option_images.B' => 'Gambar Pilihan B',
+            'option_images.C' => 'Gambar Pilihan C',
+            'option_images.D' => 'Gambar Pilihan D',
+            'option_images.E' => 'Gambar Pilihan E',
             'correct_option' => 'Kunci Jawaban Benar',
         ];
     }
 }
+

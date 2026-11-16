@@ -42,6 +42,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - [x] **P3-T05:** Master data seeders and dashboards (2026-11-16)
 - [x] **P4-T01:** Category and question schema (2026-11-16)
 - [x] **P4-T02:** Question CRUD, duplicate, and preview (2026-11-16)
+- [x] **P4-T03:** Question content and media (2026-11-16)
 
 ## Task Log
 
@@ -63,6 +64,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | 2026-11-16 | P3-T05 | Implementasi data-driven dashboard untuk setiap role (Admin, Guru, Siswa), verifikasi reproducible seeders dari scratch via migrate:fresh --seed, dan feature tests dashboard | `DashboardTest`, `phpunit` (91 tests passed, 357 assertions) | f395948 |
 | 2026-11-16 | P4-T01 | Implementasi skema database Bank Soal: QuestionCategory, Question, dan QuestionOption (A–E) lengkap dengan relasi, cascade delete, bobot positif, helper kunci jawaban, factories, seeder bank soal, dan feature tests | `QuestionSchemaTest`, `phpunit` (98 tests passed, 394 assertions) | eb764a0 |
 | 2026-11-16 | P4-T02 | Implementasi CRUD Bank Soal & Soal Pilihan Ganda (A–E), pencarian, filter, paginasi, duplikasi soal (reset kode *-COPY & status draft), modal preview soal tampilan CBT, FormRequests, dan feature tests | `QuestionCrudTest`, `phpunit` (109 tests passed, 448 assertions) | 37f4fb6 |
+| 2026-11-16 | P4-T03 | Implementasi media gambar lokal soal & opsi (A–E), validasi file (JPG/PNG/WEBP/GIF max 2MB), upload, ganti & hapus gambar, duplikasi file mandiri, cleanup penghapusan, fallback route /storage, dan feature tests | `QuestionMediaTest`, `phpunit` (119 tests passed, 507 assertions) | a50e64b |
 
 ## Theme Asset Inspection
 
@@ -115,7 +117,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Next Task
 
-Setelah P4-T02 selesai, lanjutkan P4-T03 — Question content and media (Editor pertanyaan, opsi A–E, upload gambar lokal opsional, validasi file).
+Setelah P4-T03 selesai, lanjutkan P4-T04 — Question seeding (Seed kategori, seed soal dummy yang koheren, reproducible seed).
 
 ## Required Update Format
 

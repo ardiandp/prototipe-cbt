@@ -8,10 +8,29 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Storage;
 
 class Question extends Model
 {
     use HasFactory;
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::deleting(function (Question $question) {
+            if ($question->question_image && Storage::disk('public')->exists($question->question_image)) {
+                Storage::disk('public')->delete($question->question_image);
+            }
+
+            foreach ($question->options as $option) {
+                if ($option->option_image && Storage::disk('public')->exists($option->option_image)) {
+                    Storage::disk('public')->delete($option->option_image);
+                }
+            }
+        });
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -81,6 +100,26 @@ class Question extends Model
     public function getCorrectAnswerLabel(): ?string
     {
         return $this->correctOption?->label;
+    }
+
+    /**
+     * Determine whether this question has an attached image.
+     */
+    public function hasImage(): bool
+    {
+        return ! empty($this->question_image);
+    }
+
+    /**
+     * Get the publicly accessible URL for the question image.
+     */
+    public function getImageUrlAttribute(): ?string
+    {
+        if (! $this->hasImage()) {
+            return null;
+        }
+
+        return asset('storage/' . $this->question_image);
     }
 
     /**

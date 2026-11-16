@@ -12,7 +12,7 @@
 @endsection
 
 @section('content')
-<form method="POST" action="{{ route('teacher.questions.update', [$questionBank, $question]) }}">
+<form method="POST" action="{{ route('teacher.questions.update', [$questionBank, $question]) }}" enctype="multipart/form-data">
     @csrf
     @method('PUT')
 
@@ -24,6 +24,29 @@
                     <label class="form-label fw-bold">Teks Pertanyaan <span class="text-danger">*</span></label>
                     <textarea name="question_text" class="form-control @error('question_text') is-invalid @enderror" rows="5" required>{{ old('question_text', $question->question_text) }}</textarea>
                     @error('question_text')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">&#128444; Gambar Lampiran Soal <small class="text-secondary">(Opsional)</small></label>
+                    @if($question->hasImage())
+                        <div class="mb-2 p-2 border rounded bg-body-tertiary d-flex align-items-center">
+                            <img src="{{ $question->image_url }}" alt="Gambar Soal" class="rounded border me-3" style="max-height: 80px; max-width: 120px; object-fit: contain;">
+                            <div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="remove_question_image" value="1" id="remove_question_image" {{ old('remove_question_image') ? 'checked' : '' }}>
+                                    <label class="form-check-label text-danger small fw-bold" for="remove_question_image">
+                                        &#128465; Hapus gambar lampiran ini
+                                    </label>
+                                </div>
+                                <small class="text-secondary d-block">Centang jika ingin menghapus gambar ini tanpa menggantinya.</small>
+                            </div>
+                        </div>
+                    @endif
+                    <input type="file" name="question_image" class="form-control @error('question_image') is-invalid @enderror" accept="image/jpeg,image/png,image/jpg,image/webp,image/gif">
+                    <small class="text-secondary">Pilih file baru jika ingin mengganti gambar. Maksimum 2MB (JPG, PNG, WEBP, GIF).</small>
+                    @error('question_image')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
@@ -40,7 +63,8 @@
 
                 @foreach(['A', 'B', 'C', 'D', 'E'] as $label)
                     @php
-                        $existingText = $optionsMap->get($label)?->option_text ?? '';
+                        $existingOpt = $optionsMap->get($label);
+                        $existingText = $existingOpt?->option_text ?? '';
                     @endphp
                     <div class="mb-3 p-3 border rounded bg-body-tertiary">
                         <div class="d-flex align-items-center mb-2">
@@ -56,6 +80,26 @@
                         @error("options.{$label}")
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+
+                        @if($existingOpt?->hasImage())
+                            <div class="my-2 p-2 border rounded bg-white d-flex align-items-center">
+                                <img src="{{ $existingOpt->image_url }}" alt="Gambar Opsi {{ $label }}" class="rounded border me-3" style="max-height: 60px; max-width: 90px; object-fit: contain;">
+                                <div class="form-check mb-0">
+                                    <input class="form-check-input" type="checkbox" name="remove_option_images[{{ $label }}]" value="1" id="remove_opt_img_{{ $label }}" {{ old("remove_option_images.{$label}") ? 'checked' : '' }}>
+                                    <label class="form-check-label text-danger small fw-semibold" for="remove_opt_img_{{ $label }}">
+                                        Hapus gambar opsi ini
+                                    </label>
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="mt-2">
+                            <label class="form-label small text-secondary mb-1">&#128444; Gambar Opsi {{ $label }} <small>(Opsional)</small></label>
+                            <input type="file" name="option_images[{{ $label }}]" class="form-control form-control-sm @error("option_images.{$label}") is-invalid @enderror" accept="image/jpeg,image/png,image/jpg,image/webp,image/gif">
+                            @error("option_images.{$label}")
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
                 @endforeach
             </x-card>
@@ -117,3 +161,4 @@
     </div>
 </form>
 @endsection
+

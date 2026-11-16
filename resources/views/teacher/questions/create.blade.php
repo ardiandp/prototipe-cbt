@@ -12,7 +12,7 @@
 @endsection
 
 @section('content')
-<form method="POST" action="{{ route('teacher.questions.store', $questionBank) }}">
+<form method="POST" action="{{ route('teacher.questions.store', $questionBank) }}" enctype="multipart/form-data">
     @csrf
 
     <div class="row">
@@ -23,6 +23,15 @@
                     <label class="form-label fw-bold">Teks Pertanyaan <span class="text-danger">*</span></label>
                     <textarea name="question_text" class="form-control @error('question_text') is-invalid @enderror" rows="5" required placeholder="Tuliskan butir soal atau teks pertanyaan secara lengkap di sini...">{{ old('question_text') }}</textarea>
                     @error('question_text')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">&#128444; Gambar Lampiran Soal <small class="text-secondary">(Opsional)</small></label>
+                    <input type="file" name="question_image" class="form-control @error('question_image') is-invalid @enderror" accept="image/jpeg,image/png,image/jpg,image/webp,image/gif">
+                    <small class="text-secondary">Format didukung: JPG, PNG, WEBP, GIF. Maksimum 2MB.</small>
+                    @error('question_image')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
@@ -52,6 +61,14 @@
                         @error("options.{$label}")
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+
+                        <div class="mt-2">
+                            <label class="form-label small text-secondary mb-1">&#128444; Gambar Opsi {{ $label }} <small>(Opsional)</small></label>
+                            <input type="file" name="option_images[{{ $label }}]" class="form-control form-control-sm @error("option_images.{$label}") is-invalid @enderror" accept="image/jpeg,image/png,image/jpg,image/webp,image/gif">
+                            @error("option_images.{$label}")
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
                 @endforeach
             </x-card>
@@ -113,3 +130,4 @@
     </div>
 </form>
 @endsection
+

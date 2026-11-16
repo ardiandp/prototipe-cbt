@@ -112,6 +112,10 @@
                             @else
                                 <span class="badge text-bg-secondary ms-1">Draft</span>
                             @endif
+
+                            @if($q->hasImage())
+                                <span class="badge text-bg-dark text-white ms-1">&#128444; Bergambar</span>
+                            @endif
                         </div>
 
                         <!-- Action Toolbar -->
@@ -146,6 +150,12 @@
                         {!! nl2br(e($q->question_text)) !!}
                     </div>
 
+                    @if($q->hasImage())
+                        <div class="mb-3">
+                            <img src="{{ $q->image_url }}" alt="Lampiran Soal" class="img-thumbnail" style="max-height: 200px; max-width: 100%; object-fit: contain;">
+                        </div>
+                    @endif
+
                     <!-- Opsi Jawaban A - E -->
                     <div class="row g-2">
                         @foreach($q->options as $opt)
@@ -153,6 +163,9 @@
                                 <div class="p-2 border rounded small d-flex align-items-center {{ $opt->is_correct ? 'bg-success-subtle border-success text-success-emphasis fw-bold' : 'bg-body-tertiary' }}">
                                     <span class="badge {{ $opt->is_correct ? 'text-bg-success' : 'text-bg-light border' }} me-2 font-monospace">{{ $opt->label }}</span>
                                     <span>{{ $opt->option_text }}</span>
+                                    @if($opt->hasImage())
+                                        <img src="{{ $opt->image_url }}" alt="Opsi {{ $opt->label }}" class="rounded border ms-2" style="max-height: 40px; max-width: 60px; object-fit: contain;">
+                                    @endif
                                     @if($opt->is_correct)
                                         <span class="ms-auto badge text-bg-success fs-8">&#10004; Kunci Benar</span>
                                     @endif
@@ -171,12 +184,21 @@
 
                             <h6 class="fw-bold mb-3">{!! nl2br(e($q->question_text)) !!}</h6>
 
+                            @if($q->hasImage())
+                                <div class="text-center mb-3 p-2 border rounded bg-light">
+                                    <img src="{{ $q->image_url }}" alt="Gambar Soal" class="img-fluid rounded" style="max-height: 350px;">
+                                </div>
+                            @endif
+
                             <div class="d-flex flex-column gap-2 mb-4">
                                 @foreach($q->options as $opt)
                                     <label class="p-2 border rounded d-flex align-items-center cursor-pointer hover-bg-light">
                                         <input type="radio" name="preview_choice_{{ $q->id }}" class="form-check-input me-3" disabled>
                                         <span class="badge text-bg-light border me-2 font-monospace">{{ $opt->label }}</span>
-                                        <span>{{ $opt->option_text }}</span>
+                                        <span class="me-auto">{{ $opt->option_text }}</span>
+                                        @if($opt->hasImage())
+                                            <img src="{{ $opt->image_url }}" alt="Opsi {{ $opt->label }}" class="rounded border ms-2" style="max-height: 50px; max-width: 80px; object-fit: contain;">
+                                        @endif
                                     </label>
                                 @endforeach
                             </div>
@@ -217,3 +239,4 @@
     @endif
 </x-card>
 @endsection
+
