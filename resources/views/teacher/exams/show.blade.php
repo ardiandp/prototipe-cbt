@@ -1,0 +1,192 @@
+@extends('layouts.app')
+
+@section('title', 'Detail Jadwal Ujian - ' . $exam->title . ' - CBT School')
+@section('page_title', $exam->title)
+@section('page_subtitle', 'Kode Ujian: ' . $exam->code)
+
+@section('breadcrumbs')
+    <li class="breadcrumb-item"><a href="{{ route('teacher.dashboard') }}">Guru</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('teacher.exams.index') }}">Jadwal Ujian</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ $exam->code }}</li>
+@endsection
+
+@section('content')
+<div class="row">
+    <!-- Kolom Kiri: Ringkasan Status & Parameter Ujian -->
+    <div class="col-md-8">
+        <x-card title="Ringkasan Parameter Pelaksanaan Ujian">
+            <x-slot:tools>
+                <div class="btn-group btn-group-sm">
+                    <a href="{{ route('teacher.exams.edit', $exam) }}" class="btn btn-outline-primary">
+                        &#9998; Edit Jadwal
+                    </a>
+                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteExamModal">
+                        &#128465; Hapus
+                    </button>
+                </div>
+            </x-slot:tools>
+
+            <!-- Banner Jadwal Operasional -->
+            <div class="alert alert-{{ $exam->isOpen() ? 'success' : 'light border' }} d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <span class="badge text-bg-{{ $exam->computed_status_badge_class }} fs-6 me-2">
+                        {{ $exam->computed_status_label }}
+                    </span>
+                    <span class="fw-semibold">
+                        @if($exam->isOpen())
+                            &#9679; Sesi ujian sedang dibuka untuk peserta didik!
+                        @elseif($exam->isDraft())
+                            Ujian masih berupa konsep draft (belum dapat diakses siswa).
+                        @elseif($exam->isCancelled())
+                            Pelaksanaan ujian ini telah dibatalkan.
+                        @elseif(now()->lessThan($exam->start_at))
+                            Ujian belum dimulai. Dibuka pada {{ $exam->start_at->translatedFormat('d F Y, H:i') }}.
+                        @else
+                            Ujian telah selesai pada {{ $exam->end_at->translatedFormat('d F Y, H:i') }}.
+                        @endif
+                    </span>
+                </div>
+                <span class="badge text-bg-dark font-monospace">{{ $exam->code }}</span>
+            </div>
+
+            <!-- Grid Detail Metrik -->
+            <div class="row g-3 mb-4">
+                <div class="col-sm-6 col-md-3">
+                    <div class="p-3 border rounded text-center bg-body-tertiary">
+                        <div class="text-secondary small">Durasi Timer</div>
+                        <div class="fs-4 fw-bold text-primary">{{ $exam->duration }} <span class="fs-7 fw-normal">Menit</span></div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="p-3 border rounded text-center bg-body-tertiary">
+                        <div class="text-secondary small">Batas KKM</div>
+                        <div class="fs-4 fw-bold text-success">{{ $exam->passing_grade }}</div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="p-3 border rounded text-center bg-body-tertiary">
+                        <div class="text-secondary small">Total Soal Terpilih</div>
+                        <div class="fs-4 fw-bold text-dark">{{ $exam->total_questions }} <span class="fs-7 fw-normal">Butir</span></div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="p-3 border rounded text-center bg-body-tertiary">
+                        <div class="text-secondary small">Token Akses</div>
+                        <div class="fs-4 fw-bold font-monospace text-danger">{{ $exam->token ?? '-' }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rincian Parameter Tabel -->
+            <table class="table table-bordered mb-0">
+                <tbody>
+                    <tr>
+                        <th style="width: 25%;" class="bg-light">Mata Pelajaran</th>
+                        <td>{{ $exam->subject?->code }} - {{ $exam->subject?->name }} (Tingkat {{ $exam->subject?->level }})</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Guru Pembuat</th>
+                        <td>{{ $exam->teacher?->name ?? 'Admin Sekolah' }} (NIP: {{ $exam->teacher?->nip ?? '-' }})</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Waktu Pelaksanaan</th>
+                        <td>
+                            <strong>{{ $exam->start_at->translatedFormat('l, d F Y, H:i') }}</strong>
+                            &mdash; s.d. &mdash;
+                            <strong>{{ $exam->end_at->translatedFormat('l, d F Y, H:i') }}</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Parameter Acak</th>
+                        <td>
+                            <span class="badge text-bg-{{ $exam->random_question ? 'success' : 'secondary' }} me-1">
+                                Acak Soal: {{ $exam->random_question ? 'Ya' : 'Tidak' }}
+                            </span>
+                            <span class="badge text-bg-{{ $exam->random_answer ? 'success' : 'secondary' }}">
+                                Acak Opsi: {{ $exam->random_answer ? 'Ya' : 'Tidak' }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Petunjuk Ujian</th>
+                        <td>{{ $exam->description ?? 'Tidak ada petunjuk khusus.' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </x-card>
+
+        <!-- Placeholder Sections untuk Fase Selanjutnya (P5-T02 Soal & P5-T03 Peserta) -->
+        <div class="mt-4">
+            <x-card title="Butir Soal & Snapshot Asesmen (Tahap P5-T02)">
+                <div class="text-center py-4 text-secondary">
+                    <div class="fs-2 mb-2">&#128221;</div>
+                    <h6 class="fw-bold">Manajemen Butir Soal & Snapshot Soal</h6>
+                    <p class="small mb-0">Modul pemilihan butir soal dari bank soal dan pembuatan snapshot ujian akan dihubungkan pada tahap selanjutnya (P5-T02).</p>
+                </div>
+            </x-card>
+        </div>
+
+        <div class="mt-4">
+            <x-card title="Penetapan Peserta Ujian (Tahap P5-T03)">
+                <div class="text-center py-4 text-secondary">
+                    <div class="fs-2 mb-2">&#128101;</div>
+                    <h6 class="fw-bold">Manajemen Peserta Asesmen</h6>
+                    <p class="small mb-0">Modul penugasan kelas dan peserta individual akan dihubungkan pada tahap selanjutnya (P5-T03).</p>
+                </div>
+            </x-card>
+        </div>
+    </div>
+
+    <!-- Kolom Kanan: Navigasi & Aksi -->
+    <div class="col-md-4">
+        <x-card title="Status & Navigasi Cepat">
+            <div class="mb-3">
+                <label class="form-label text-secondary small">Status Publikasi</label>
+                <div>
+                    <span class="badge text-bg-{{ $exam->isPublished() ? 'success' : ($exam->isCancelled() ? 'danger' : 'secondary') }} fs-6">
+                        {{ ucfirst($exam->status) }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-secondary small">Status Operasional Jadwal</label>
+                <div>
+                    <span class="badge text-bg-{{ $exam->computed_status_badge_class }} fs-6">
+                        {{ $exam->computed_status_label }}
+                    </span>
+                </div>
+            </div>
+
+            <hr class="my-3">
+
+            <div class="d-grid gap-2">
+                <a href="{{ route('teacher.exams.edit', $exam) }}" class="btn btn-outline-primary">
+                    &#9998; Edit Jadwal & Pengaturan
+                </a>
+                <a href="{{ route('teacher.exams.index') }}" class="btn btn-outline-secondary">
+                    &larr; Kembali ke Daftar Jadwal
+                </a>
+            </div>
+        </x-card>
+    </div>
+</div>
+
+<!-- Modal Hapus Jadwal Ujian -->
+<x-modal id="deleteExamModal" title="Konfirmasi Hapus Jadwal Ujian">
+    <div class="text-start">
+        <p>Apakah Anda yakin ingin menghapus jadwal ujian <strong>{{ $exam->title }}</strong> ({{ $exam->code }})?</p>
+        <div class="alert alert-danger small">
+            Perhatian: Tindakan ini akan menghapus seluruh data jadwal ujian ini secara permanen.
+        </div>
+    </div>
+    <form method="POST" action="{{ route('teacher.exams.destroy', $exam) }}">
+        @csrf
+        @method('DELETE')
+        <div class="text-end">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-danger">Hapus Jadwal Ujian</button>
+        </div>
+    </form>
+</x-modal>
+@endsection

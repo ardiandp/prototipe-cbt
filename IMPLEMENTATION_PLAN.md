@@ -181,10 +181,10 @@
 ## PHASE 5 — Exam Management & Scheduling
 
 ### P5-T01 — Exam schema and CRUD
-- [ ] Migration ujian.
-- [ ] Form create/edit.
-- [ ] Ownership dan authorization.
-- [ ] Validasi tanggal/durasi.
+- [x] Migration ujian.
+- [x] Form create/edit.
+- [x] Ownership dan authorization.
+- [x] Validasi tanggal/durasi.
 
 ### P5-T02 — Question selection and snapshots
 - [ ] Pilih soal.

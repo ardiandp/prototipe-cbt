@@ -97,7 +97,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a href="{{ route('admin.exams.index') }}" class="nav-link {{ request()->routeIs('admin.exams.*') ? 'active' : '' }}">
+                        <a href="{{ route('teacher.exams.index') }}" class="nav-link {{ request()->routeIs('admin.exams.*') || request()->routeIs('teacher.exams.*') ? 'active' : '' }}">
                             <span class="nav-icon me-2">&#9201;</span>
                             <p class="d-inline">Jadwal Ujian</p>
                         </a>

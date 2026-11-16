@@ -73,7 +73,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/students/{student}/edit', [\App\Http\Controllers\Admin\StudentController::class, 'edit'])->name('students.edit');
         Route::put('/students/{student}', [\App\Http\Controllers\Admin\StudentController::class, 'update'])->name('students.update');
         Route::delete('/students/{student}', [\App\Http\Controllers\Admin\StudentController::class, 'destroy'])->name('students.destroy');
-        Route::get('/exams', function () { return view('adminlte-demo'); })->name('exams.index');
+        Route::get('/exams', function () {
+            return redirect()->route('teacher.exams.index');
+        })->name('exams.index');
         Route::get('/monitoring', function () { return view('adminlte-demo'); })->name('monitoring.index');
         Route::get('/results', function () { return view('adminlte-demo'); })->name('results.index');
     });
@@ -99,7 +101,8 @@ Route::middleware('auth')->group(function () {
         Route::delete('/question-banks/{question_bank}/questions/{question}', [\App\Http\Controllers\Teacher\QuestionController::class, 'destroy'])->name('questions.destroy');
         Route::post('/question-banks/{question_bank}/questions/{question}/duplicate', [\App\Http\Controllers\Teacher\QuestionController::class, 'duplicate'])->name('questions.duplicate');
 
-        Route::get('/exams', function () { return view('adminlte-demo'); })->name('exams.index');
+        // Exams Management (Jadwal Ujian)
+        Route::resource('exams', \App\Http\Controllers\Teacher\ExamController::class);
         Route::get('/monitoring', function () { return view('adminlte-demo'); })->name('monitoring.index');
         Route::get('/results', function () { return view('adminlte-demo'); })->name('results.index');
     });

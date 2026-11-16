@@ -44,6 +44,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - [x] **P4-T02:** Question CRUD, duplicate, and preview (2026-11-16)
 - [x] **P4-T03:** Question content and media (2026-11-16)
 - [x] **P4-T04:** Question seeding (2026-11-16)
+- [x] **P5-T01:** Exam schema and CRUD (2026-11-16)
 
 ## Task Log
 
@@ -67,6 +68,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | 2026-11-16 | P4-T02 | Implementasi CRUD Bank Soal & Soal Pilihan Ganda (A–E), pencarian, filter, paginasi, duplikasi soal (reset kode *-COPY & status draft), modal preview soal tampilan CBT, FormRequests, dan feature tests | `QuestionCrudTest`, `phpunit` (109 tests passed, 448 assertions) | 37f4fb6 |
 | 2026-11-16 | P4-T03 | Implementasi media gambar lokal soal & opsi (A–E), validasi file (JPG/PNG/WEBP/GIF max 2MB), upload, ganti & hapus gambar, duplikasi file mandiri, cleanup penghapusan, fallback route /storage, dan feature tests | `QuestionMediaTest`, `phpunit` (119 tests passed, 507 assertions) | 4165d5e |
 | 2026-11-16 | P4-T04 | Implementasi seeder bank soal realistis & koheren (PWPB, BD, MTK, BIN, ASJ), opsi A–E lengkap dengan tepat 1 kunci jawaban, bobot positif, variasi kesulitan, reproducible & idempotent, dan feature tests | `QuestionSeedingTest`, `phpunit` (123 tests passed, 861 assertions) | e46f9d8 |
+| 2026-11-16 | P5-T01 | Implementasi skema tabel exams & CRUD Jadwal Ujian, FormRequests, validasi rentang tanggal (end_at > start_at) dan durasi positif, authorization & ownership guru/admin, status operasional turunan (computed status), AdminLTE views, dan feature tests | `ExamCrudTest`, `phpunit` (136 tests passed, 919 assertions) | 7ca0716 |
 
 ## Theme Asset Inspection
 
@@ -119,7 +121,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Next Task
 
-Setelah P4-T04 selesai (Phase 4 selesai), lanjutkan Phase 5: P5-T01 — Exam schema and CRUD (Migration ujian, form create/edit, ownership dan authorization, validasi tanggal/durasi).
+Setelah P5-T01 selesai, lanjutkan P5-T02 — Question selection and snapshots (Pilih soal, atur jumlah soal, simpan snapshot pertanyaan, opsi, bobot, lindungi snapshot dari perubahan bank soal).
 
 ## Required Update Format
 
