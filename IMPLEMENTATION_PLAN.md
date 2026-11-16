@@ -283,10 +283,10 @@
 - [x] Unit tests scoring.
 
 ### P7-T04 — Result publication
-- [ ] Hasil guru/admin.
-- [ ] Publikasi/sembunyikan hasil.
-- [ ] Hasil siswa hanya setelah publish.
-- [ ] Detail hasil.
+- [x] Hasil guru/admin.
+- [x] Publikasi/sembunyikan hasil.
+- [x] Hasil siswa hanya setelah publish.
+- [x] Detail hasil.
 
 **Acceptance Phase 7:** monitoring akurat dan nilai dihitung benar.
 

@@ -14,14 +14,14 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | Question bank | Selesai (Phase 4 lengkap) |
 | Exam management | Selesai (Phase 5 lengkap) |
 | Exam engine | Selesai (Phase 6 lengkap) |
-| Monitoring & scoring | Dalam pengerjaan (P7-T01 - P7-T03 selesai) |
-| Reporting | Belum dimulai |
+| Monitoring & scoring | Selesai (Phase 7 lengkap) |
+| Reporting | Dalam pengerjaan (Phase 8) |
 | LAN demo readiness | Belum dimulai |
 
 ## Current Task
 
-**Task ID:** P7-T04  
-**Task:** Result publication  
+**Task ID:** P8-T01  
+**Task:** Result reports  
 **Status:** Pending
 
 ## Completed Tasks
@@ -57,6 +57,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - [x] **P7-T01:** Monitoring dashboard (2026-11-16)
 - [x] **P7-T02:** Administrative actions (2026-11-16)
 - [x] **P7-T03:** Scoring service (2026-11-16)
+- [x] **P7-T04:** Result publication (2026-11-16)
 
 ## Task Log
 
@@ -93,6 +94,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | 2026-11-16 | P7-T01 | Implementasi dashboard monitoring live ujian CBT, ringkasan real-time (total, belum mulai, mengerjakan, selesai, kedaluwarsa), status & progres butir soal per peserta, polling berkala (5 detik), modal rincian attempt siswa, dan feature tests | `ExamMonitoringTest`, `phpunit` (220 tests passed, 1328 assertions) | e7c27cf |
 | 2026-11-16 | P7-T02 | Implementasi tindakan administratif pengawas (finalisasi paksa sesi attempt, otorisasi retake ujian ulang dengan counter attempt_number), validasi alasan tindakan wajib, tabel dan model AuditLog, modal UI terintegrasi, dan feature tests | `ExamAdministrativeActionTest`, `phpunit` (229 tests passed, 1377 assertions) | f2f8e93 |
 | 2026-11-16 | P7-T03 | Implementasi ScoringService berbasis snapshot soal ujian & bobot positif, rumus skala 0–100, evaluasi benar/salah/kosong, threshold passing grade/KKM, idempotensi kalkulasi berulang, automatic scoring pasca-submit & expiration, dan feature tests | `ExamScoringTest`, `phpunit` (236 tests passed, 1423 assertions) | b5e3d44 |
+| 2026-11-16 | P7-T04 | Implementasi publikasi hasil ujian guru/admin, sembunyikan/terbitkan skor ke siswa dengan audit logging, portal nilai & lembar jawaban siswa yang digate publikasi, review rincian attempt per butir soal, dan feature tests | `ExamResultPublicationTest`, `phpunit` (247 tests passed, 1473 assertions) | 5ae86a0 |
 
 ## Theme Asset Inspection
 
@@ -145,7 +147,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Next Task
 
-Setelah P6-T04 selesai, lanjutkan P6-T05 — Answer autosave and recovery (Endpoint simpan jawaban, validasi ownership dan waktu, simpan ke SQLite, status saving/saved/failed, recovery setelah refresh/koneksi pulih, cegah request lama menimpa jawaban terbaru).
+Setelah P7-T04 selesai, lanjutkan P8-T01 — Result reports (Rekap ujian, rekap kelas/mapel, ranking, distribusi nilai).
 
 ## Required Update Format
 

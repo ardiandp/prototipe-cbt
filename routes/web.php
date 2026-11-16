@@ -84,7 +84,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/monitoring/{exam}/attempts/{attempt}/force-finish', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'forceFinish'])->name('monitoring.attempts.force-finish');
         Route::post('/monitoring/{exam}/participants/{participant}/retake', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'authorizeRetake'])->name('monitoring.participants.retake');
         Route::get('/monitoring/{exam}/audit-logs', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'auditLogs'])->name('monitoring.audit-logs');
-        Route::get('/results', function () { return view('adminlte-demo'); })->name('results.index');
+        // Exam Results & Scoring (P7-T04)
+        Route::get('/results', [\App\Http\Controllers\Teacher\ExamResultController::class, 'index'])->name('results.index');
+        Route::get('/results/{exam}', [\App\Http\Controllers\Teacher\ExamResultController::class, 'show'])->name('results.show');
+        Route::get('/results/{exam}/attempts/{attempt}', [\App\Http\Controllers\Teacher\ExamResultController::class, 'attemptDetail'])->name('results.attempts.detail');
+        Route::post('/exams/{exam}/publish-results', [\App\Http\Controllers\Teacher\ExamResultController::class, 'publishResults'])->name('exams.publish-results');
+        Route::post('/exams/{exam}/unpublish-results', [\App\Http\Controllers\Teacher\ExamResultController::class, 'unpublishResults'])->name('exams.unpublish-results');
     });
 
     // Teacher Route Group
@@ -138,7 +143,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/monitoring/{exam}/attempts/{attempt}/force-finish', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'forceFinish'])->name('monitoring.attempts.force-finish');
         Route::post('/monitoring/{exam}/participants/{participant}/retake', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'authorizeRetake'])->name('monitoring.participants.retake');
         Route::get('/monitoring/{exam}/audit-logs', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'auditLogs'])->name('monitoring.audit-logs');
-        Route::get('/results', function () { return view('adminlte-demo'); })->name('results.index');
+        // Exam Results & Scoring (P7-T04)
+        Route::get('/results', [\App\Http\Controllers\Teacher\ExamResultController::class, 'index'])->name('results.index');
+        Route::get('/results/{exam}', [\App\Http\Controllers\Teacher\ExamResultController::class, 'show'])->name('results.show');
+        Route::get('/results/{exam}/attempts/{attempt}', [\App\Http\Controllers\Teacher\ExamResultController::class, 'attemptDetail'])->name('results.attempts.detail');
+        Route::post('/exams/{exam}/publish-results', [\App\Http\Controllers\Teacher\ExamResultController::class, 'publishResults'])->name('exams.publish-results');
+        Route::post('/exams/{exam}/unpublish-results', [\App\Http\Controllers\Teacher\ExamResultController::class, 'unpublishResults'])->name('exams.unpublish-results');
     });
 
     // Student Route Group
@@ -152,7 +162,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/attempts/{attempt}/finalize-expired', [\App\Http\Controllers\Student\ExamAttemptController::class, 'finalizeExpired'])->name('attempts.finalize-expired');
         Route::post('/attempts/{attempt}/save-answer', [\App\Http\Controllers\Student\ExamAttemptController::class, 'saveAnswer'])->name('attempts.save-answer');
         Route::post('/attempts/{attempt}/finish', [\App\Http\Controllers\Student\ExamAttemptController::class, 'finish'])->name('attempts.finish');
-        Route::get('/results', function () { return view('adminlte-demo'); })->name('results.index');
+        // Exam Results (P7-T04)
+        Route::get('/results', [\App\Http\Controllers\Student\ExamResultController::class, 'index'])->name('results.index');
+        Route::get('/results/{exam}', [\App\Http\Controllers\Student\ExamResultController::class, 'show'])->name('results.show');
     });
 });
 
