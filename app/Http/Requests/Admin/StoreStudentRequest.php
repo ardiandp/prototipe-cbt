@@ -63,3 +63,4 @@ class StoreStudentRequest extends FormRequest
         ];
     }
 }
+

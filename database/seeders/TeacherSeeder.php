@@ -120,3 +120,4 @@ class TeacherSeeder extends Seeder
         }
     }
 }
+

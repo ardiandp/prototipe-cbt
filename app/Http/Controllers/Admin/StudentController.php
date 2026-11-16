@@ -185,3 +185,4 @@ class StudentController extends Controller
             ->with('success', 'Data siswa dan akun terkait berhasil dihapus.');
     }
 }
+

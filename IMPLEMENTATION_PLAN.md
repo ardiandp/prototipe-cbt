@@ -142,11 +142,11 @@
 - [x] Unique NIS dan username.
 
 ### P3-T05 — Master data seeders and dashboards
-- [ ] Faker/factory/seeders reproducible.
-- [ ] Dashboard data-driven per role.
-- [ ] Tests CRUD dan relasi.
+- [x] Faker/factory/seeders reproducible.
+- [x] Dashboard data-driven per role.
+- [x] Tests CRUD dan relasi.
 
-**Acceptance Phase 3:** admin dapat mengelola data sekolah dan dashboard menampilkan data aktual dari SQLite.
+**Acceptance Phase 3:** admin dapat mengelola data sekolah dan dashboard menampilkan data aktual dari SQLite. (Selesai dan diverifikasi)
 
 ---
 

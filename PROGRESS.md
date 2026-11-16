@@ -10,8 +10,8 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | Dokumentasi awal | Selesai |
 | Laravel foundation | Selesai |
 | Authentication & roles | Selesai |
-| Master data | Dalam pengerjaan (P3-T01 s/d P3-T04 selesai) |
-| Question bank | Belum dimulai |
+| Master data | Selesai (Phase 3 lengkap) |
+| Question bank | Siap dimulai (Phase 4) |
 | Exam management | Belum dimulai |
 | Exam engine | Belum dimulai |
 | Monitoring & scoring | Belum dimulai |
@@ -20,8 +20,8 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Current Task
 
-**Task ID:** P3-T05  
-**Task:** Master data seeders and dashboards  
+**Task ID:** P4-T01  
+**Task:** Category and question schema  
 **Status:** Pending
 
 ## Completed Tasks
@@ -39,6 +39,26 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - [x] **P3-T02:** Department, class, subject (2026-11-16)
 - [x] **P3-T03:** Teacher management (2026-11-16)
 - [x] **P3-T04:** Student management (2026-11-16)
+- [x] **P3-T05:** Master data seeders and dashboards (2026-11-16)
+
+## Task Log
+
+| Date | Task ID | Summary | Tests | Commit |
+|---|---|---|---|---|
+| 2026-11-14 | P0-T01 | Inspeksi kondisi aktual project, runtime (PHP, Composer, Node), asset theme, database, dan status Git | `php -v`, `artisan --version`, inspeksi folder | af9292e |
+| 2026-11-14 | P0-T02 | Review dan perapian instruksi kerja, memastikan konsistensi keputusan produk di README, PRD, AGENTS, IMPLEMENTATION_PLAN, dan PROGRESS | Validasi silang isi dokumen | af9292e |
+| 2026-11-14 | P0-T03 | Inisialisasi Git repository dan commit awal dokumen rencana implementasi | `git status`, verifikasi tidak ada secret | af9292e |
+| 2026-11-14 | P1-T01 | Konfigurasi environment Laravel, SQLite, timezone Asia/Jakarta, pembersihan .env.example, dan penambahan EnvironmentTest | `artisan migrate:status`, `artisan db:show`, `EnvironmentTest` (3 tests passed) | d68a90b |
+| 2026-11-14 | P1-T02 | Integrasi asset lokal AdminLTE 3 ke layout master Blade, navbar, sidebar, footer, content-header, komponen reusable (alert, card, modal, table, form-input), halaman demo, dan Feature test | `AdminLteLayoutTest` (5 tests passed, 19 assertions) | 09712dc |
+| 2026-11-14 | P1-T03 | Penyusunan route groups (guest, auth, admin, teacher, student), pembuatan halaman login shell, error views (403, 404, 500) berbasis AdminLTE, AuthController, DashboardController, dan RouteAndFoundationTest | `RouteAndFoundationTest`, `phpunit` (12 tests passed, 42 assertions) | d0cbbf0 |
+| 2026-11-16 | P2-T01 | Implementasi UserRole Enum (superadmin, admin, teacher, student), migrasi username & role, User model helpers, UserFactory, UserSeeder, dan UserModelTest | `UserModelTest`, `phpunit` (15 tests passed, 73 assertions) | 0865f1d |
+| 2026-11-16 | P2-T02 | FormRequest LoginRequest dengan rate limiting & inactive check, login multi-identifier (username/email), dynamic role-based redirect, session regeneration, logout invalidation, dan AuthenticationTest | `AuthenticationTest`, `phpunit` (23 tests passed, 96 assertions) | 64fb14d |
+| 2026-11-16 | P2-T03 | Implementasi EnsureUserHasRole middleware (`role`), pembatasan route groups admin/teacher/student, render sidebar dinamis per role, dan AuthorizationTest | `AuthorizationTest`, `phpunit` (30 tests passed, 118 assertions) | f548a37 |
+| 2026-11-16 | P3-T01 | Implementasi Profil Sekolah (SchoolProfile) & Periode Akademik (AcademicYear & Semester) lengkap dengan form validation, active period toggle via DB transaction, AdminLTE views, seeders, serta feature tests | `SchoolProfileTest`, `AcademicPeriodTest`, `phpunit` (45 tests passed, 174 assertions) | 90f5be5 |
+| 2026-11-16 | P3-T02 | Implementasi CRUD Master Data Jurusan (Department), Kelas (Classroom), dan Mata Pelajaran (Subject) lengkap dengan FormRequests, relasi antar entitas, proteksi penghapusan, views AdminLTE, factories, seeders, serta feature tests | `MasterDataDepartmentTest`, `MasterDataClassroomTest`, `MasterDataSubjectTest`, `phpunit` (68 tests passed, 250 assertions) | 70dc800 |
+| 2026-11-16 | P3-T03 | Implementasi Manajemen Guru (Teacher) lengkap dengan relasi akun pengguna (User role teacher), penugasan mata pelajaran (subject_teacher) dan kelas (classroom_teacher), FormRequests, views AdminLTE (index, create, edit), factories, seeders, serta feature tests | `MasterDataTeacherTest`, `phpunit` (77 tests passed, 290 assertions) | bad02dd |
+| 2026-11-16 | P3-T04 | Implementasi Manajemen Siswa (Student) lengkap dengan relasi akun pengguna (User role student), relasi kelas (Classroom), FormRequests, views AdminLTE (index, create, edit), factories, seeders, serta feature tests | `MasterDataStudentTest`, `phpunit` (86 tests passed, 327 assertions) | 56068cd |
+| 2026-11-16 | P3-T05 | Implementasi data-driven dashboard untuk setiap role (Admin, Guru, Siswa), verifikasi reproducible seeders dari scratch via migrate:fresh --seed, dan feature tests dashboard | `DashboardTest`, `phpunit` (91 tests passed, 357 assertions) | 6ee8ed1 |
 
 ## Task Log
 

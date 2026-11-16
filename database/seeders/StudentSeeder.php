@@ -97,3 +97,4 @@ class StudentSeeder extends Seeder
         }
     }
 }
+

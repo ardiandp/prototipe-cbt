@@ -164,3 +164,4 @@ class MasterDataClassroomTest extends TestCase
         $response->assertRedirect(route('login'));
     }
 }
+

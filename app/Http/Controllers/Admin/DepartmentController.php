@@ -82,3 +82,4 @@ class DepartmentController extends Controller
             ->with('success', 'Jurusan berhasil dihapus.');
     }
 }
+

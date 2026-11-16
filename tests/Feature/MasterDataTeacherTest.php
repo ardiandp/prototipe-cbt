@@ -231,3 +231,4 @@ class MasterDataTeacherTest extends TestCase
         $response->assertRedirect(route('login'));
     }
 }
+

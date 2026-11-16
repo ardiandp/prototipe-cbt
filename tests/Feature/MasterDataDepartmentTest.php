@@ -156,3 +156,4 @@ class MasterDataDepartmentTest extends TestCase
         $response->assertRedirect(route('login'));
     }
 }
+

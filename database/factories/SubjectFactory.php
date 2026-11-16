@@ -28,3 +28,4 @@ class SubjectFactory extends Factory
         ];
     }
 }
+

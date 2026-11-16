@@ -49,3 +49,4 @@ class UpdateDepartmentRequest extends FormRequest
         ];
     }
 }
+

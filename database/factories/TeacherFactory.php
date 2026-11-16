@@ -36,3 +36,4 @@ class TeacherFactory extends Factory
         ];
     }
 }
+

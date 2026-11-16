@@ -93,3 +93,4 @@ class SubjectController extends Controller
             ->with('success', 'Mata pelajaran berhasil dihapus.');
     }
 }
+

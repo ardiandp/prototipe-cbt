@@ -29,3 +29,4 @@ class DepartmentFactory extends Factory
         ];
     }
 }
+

@@ -38,5 +38,13 @@ class SchoolProfile extends Model
             'principal_name' => 'Drs. H. Mulyono, M.Pd.',
         ]);
     }
+
+    /**
+     * Alias for current().
+     */
+    public static function instance(): self
+    {
+        return static::current();
+    }
 }
 

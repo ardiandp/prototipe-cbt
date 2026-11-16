@@ -40,3 +40,4 @@ class StudentFactory extends Factory
         ];
     }
 }
+

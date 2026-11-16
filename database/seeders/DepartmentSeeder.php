@@ -47,3 +47,4 @@ class DepartmentSeeder extends Seeder
         }
     }
 }
+

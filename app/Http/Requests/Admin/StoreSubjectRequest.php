@@ -46,3 +46,4 @@ class StoreSubjectRequest extends FormRequest
         ];
     }
 }
+
