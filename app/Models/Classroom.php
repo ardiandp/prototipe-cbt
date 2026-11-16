@@ -59,4 +59,12 @@ class Classroom extends Model
     {
         return $query->where('is_active', true);
     }
+
+    /**
+     * The teachers assigned to teach in this classroom.
+     */
+    public function teachers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Teacher::class, 'classroom_teacher')->withTimestamps();
+    }
 }

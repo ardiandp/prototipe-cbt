@@ -10,7 +10,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | Dokumentasi awal | Selesai |
 | Laravel foundation | Selesai |
 | Authentication & roles | Selesai |
-| Master data | Dalam pengerjaan (P3-T01, P3-T02 selesai) |
+| Master data | Dalam pengerjaan (P3-T01, P3-T02, P3-T03 selesai) |
 | Question bank | Belum dimulai |
 | Exam management | Belum dimulai |
 | Exam engine | Belum dimulai |
@@ -20,8 +20,8 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Current Task
 
-**Task ID:** P3-T03  
-**Task:** Teacher management  
+**Task ID:** P3-T04  
+**Task:** Student management  
 **Status:** Pending
 
 ## Completed Tasks
@@ -37,6 +37,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - [x] **P2-T03:** Authorization (2026-11-16)
 - [x] **P3-T01:** School profile and academic period (2026-11-16)
 - [x] **P3-T02:** Department, class, subject (2026-11-16)
+- [x] **P3-T03:** Teacher management (2026-11-16)
 
 ## Task Log
 
@@ -52,7 +53,8 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | 2026-11-16 | P2-T02 | FormRequest LoginRequest dengan rate limiting & inactive check, login multi-identifier (username/email), dynamic role-based redirect, session regeneration, logout invalidation, dan AuthenticationTest | `AuthenticationTest`, `phpunit` (23 tests passed, 96 assertions) | 64fb14d |
 | 2026-11-16 | P2-T03 | Implementasi EnsureUserHasRole middleware (`role`), pembatasan route groups admin/teacher/student, render sidebar dinamis per role, dan AuthorizationTest | `AuthorizationTest`, `phpunit` (30 tests passed, 118 assertions) | f548a37 |
 | 2026-11-16 | P3-T01 | Implementasi Profil Sekolah (SchoolProfile) & Periode Akademik (AcademicYear & Semester) lengkap dengan form validation, active period toggle via DB transaction, AdminLTE views, seeders, serta feature tests | `SchoolProfileTest`, `AcademicPeriodTest`, `phpunit` (45 tests passed, 174 assertions) | 90f5be5 |
-| 2026-11-16 | P3-T02 | Implementasi CRUD Master Data Jurusan (Department), Kelas (Classroom), dan Mata Pelajaran (Subject) lengkap dengan FormRequests, relasi antar entitas, proteksi penghapusan, views AdminLTE, factories, seeders, serta feature tests | `MasterDataDepartmentTest`, `MasterDataClassroomTest`, `MasterDataSubjectTest`, `phpunit` (68 tests passed, 250 assertions) | 44a162d |
+| 2026-11-16 | P3-T02 | Implementasi CRUD Master Data Jurusan (Department), Kelas (Classroom), dan Mata Pelajaran (Subject) lengkap dengan FormRequests, relasi antar entitas, proteksi penghapusan, views AdminLTE, factories, seeders, serta feature tests | `MasterDataDepartmentTest`, `MasterDataClassroomTest`, `MasterDataSubjectTest`, `phpunit` (68 tests passed, 250 assertions) | 70dc800 |
+| 2026-11-16 | P3-T03 | Implementasi Manajemen Guru (Teacher) lengkap dengan relasi akun pengguna (User role teacher), penugasan mata pelajaran (subject_teacher) dan kelas (classroom_teacher), FormRequests, views AdminLTE (index, create, edit), factories, seeders, serta feature tests | `MasterDataTeacherTest`, `phpunit` (77 tests passed, 290 assertions) | 4245ffc |
 
 ## Theme Asset Inspection
 

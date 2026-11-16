@@ -42,4 +42,12 @@ class Subject extends Model
     {
         return $query->where('is_active', true);
     }
+
+    /**
+     * The teachers assigned to teach this subject.
+     */
+    public function teachers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Teacher::class, 'subject_teacher')->withTimestamps();
+    }
 }

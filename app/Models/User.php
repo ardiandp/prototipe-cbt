@@ -133,4 +133,12 @@ class User extends Authenticatable
     {
         return $this->role?->badgeClass() ?? 'text-bg-secondary';
     }
+
+    /**
+     * Get the teacher profile associated with this user.
+     */
+    public function teacherProfile(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Teacher::class);
+    }
 }

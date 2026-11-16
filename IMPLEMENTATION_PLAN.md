@@ -130,10 +130,10 @@
 - [x] Relasi dan validasi.
 
 ### P3-T03 — Teacher management
-- [ ] Profil guru.
-- [ ] Relasi user.
-- [ ] Assignment mata pelajaran/kelas.
-- [ ] CRUD, filter, pagination.
+- [x] Profil guru.
+- [x] Relasi user.
+- [x] Assignment mata pelajaran/kelas.
+- [x] CRUD, filter, pagination.
 
 ### P3-T04 — Student management
 - [ ] Profil siswa.
