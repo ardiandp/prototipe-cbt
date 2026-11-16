@@ -322,10 +322,10 @@
 ## PHASE 9 — Demo Readiness & LAN
 
 ### P9-T01 — Demo dataset and scenario
-- [ ] Data demo konsisten.
-- [ ] Sediakan ujian demo dengan jadwal yang mudah diuji.
-- [ ] Sediakan instruksi demo end-to-end.
-- [ ] Sediakan cara reset data demo yang eksplisit.
+- [x] Data demo konsisten (seeder master data, akun default, bank soal, dan jadwal ujian).
+- [x] Sediakan ujian demo dengan jadwal yang mudah diuji (EXAM-PWPB-01 aktif siap uji, EXAM-BD-01 selesai terpublikasi, EXAM-PWPB-REMIDIAL draft).
+- [x] Sediakan instruksi demo end-to-end (DEMO_GUIDE.md untuk seluruh role).
+- [x] Sediakan cara reset data demo yang eksplisit (Artisan command cbt:reset-demo --force).
 
 ### P9-T02 — LAN deployment documentation
 - [ ] Panduan menjalankan server lokal.

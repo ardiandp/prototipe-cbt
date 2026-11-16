@@ -20,8 +20,8 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Current Task
 
-**Task ID:** P9-T01  
-**Task:** Demo dataset and scenario  
+**Task ID:** P9-T02  
+**Task:** LAN deployment documentation  
 **Status:** Pending
 
 ## Completed Tasks
@@ -62,6 +62,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - [x] **P8-T02:** Item analysis (2026-11-16)
 - [x] **P8-T03:** Export (2026-11-16)
 - [x] **P8-T04:** Audit log (2026-11-16)
+- [x] **P9-T01:** Demo dataset and scenario (2026-11-16)
 
 ## Task Log
 
@@ -103,6 +104,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | 2026-11-16 | P8-T02 | Implementasi analisis butir soal (item analysis), penghitungan persentase benar/salah & kosong, tingkat kesukaran soal (mudah, sedang, sukar), distribusi pemilihan opsi A–E (analisis fungsi distraktor), filter per rombel, dan feature tests | `ExamItemAnalysisTest`, `phpunit` (260 tests passed, 1547 assertions) | 0067e4e |
 | 2026-11-16 | P8-T03 | Implementasi export rekap nilai ujian dan analisis butir soal ke format CSV/Excel dengan UTF-8 BOM, view printable/PDF siap cetak dengan kop surat resmi & kolom tanda tangan, filter rombel & status kelulusan, dan feature tests | `ExamExportTest`, `phpunit` (265 tests passed, 1591 assertions) | 7fc1d40 |
 | 2026-11-16 | P8-T04 | Implementasi hub Audit Log terpusat, instrumentasi logging otomatis (login/logout, publish/unpublish/cancel exam, force finish, retake, release/hide results), multi-parameter filtering, modal payload JSON, proteksi role berjenjang, dan feature tests | `AuditLogTest`, `phpunit` (272 tests passed, 1619 assertions) | dc90e8e |
+| 2026-11-16 | P9-T01 | Implementasi dataset demo terpadu (ExamDemoSeeder untuk EXAM-PWPB-01 aktif siap uji, EXAM-BD-01 selesai & dinilai, EXAM-PWPB-REMIDIAL draft), artisan command cbt:reset-demo --force, panduan skenario DEMO_GUIDE.md end-to-end, dan feature tests | `DemoDatasetAndScenarioTest`, `phpunit` (275 tests passed, 1669 assertions) | Pending |
 
 ## Theme Asset Inspection
 
@@ -155,7 +157,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Next Task
 
-Setelah P8-T04 selesai (Phase 8 selesai), lanjutkan ke Phase 9: P9-T01 — Demo dataset and scenario (Penyusunan dataset demo terpadu, skenario ujian langsung, panduan pengujian end-to-end, dan mekanisme reset demo).
+Setelah P9-T01 selesai, lanjutkan P9-T02 — LAN deployment documentation (Panduan menjalankan server lokal, akses dari komputer klien LAN, catatan firewall, IP lokal, dan asset offline tanpa CDN).
 
 ## Required Update Format
 
