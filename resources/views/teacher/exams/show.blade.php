@@ -115,14 +115,65 @@
             </table>
         </x-card>
 
-        <!-- Placeholder Sections untuk Fase Selanjutnya (P5-T02 Soal & P5-T03 Peserta) -->
+        <!-- Modul Butir Soal & Snapshot Asesmen (P5-T02) -->
         <div class="mt-4">
-            <x-card title="Butir Soal & Snapshot Asesmen (Tahap P5-T02)">
-                <div class="text-center py-4 text-secondary">
-                    <div class="fs-2 mb-2">&#128221;</div>
-                    <h6 class="fw-bold">Manajemen Butir Soal & Snapshot Soal</h6>
-                    <p class="small mb-0">Modul pemilihan butir soal dari bank soal dan pembuatan snapshot ujian akan dihubungkan pada tahap selanjutnya (P5-T02).</p>
-                </div>
+            <x-card title="Butir Soal & Snapshot Asesmen">
+                <x-slot:tools>
+                    <a href="{{ route('teacher.exams.questions.create', $exam) }}" class="btn btn-primary btn-sm fw-bold">
+                        &#43; Pilih Soal dari Bank
+                    </a>
+                </x-slot:tools>
+
+                @if($exam->total_questions === 0)
+                    <div class="text-center py-4 text-secondary">
+                        <div class="fs-2 mb-2">&#128221;</div>
+                        <h6 class="fw-bold">Belum Ada Butir Soal Terpilih</h6>
+                        <p class="small mb-3">Jadwal ujian ini belum memiliki butir soal. Silakan pilih dan snapshot soal dari bank soal mata pelajaran {{ $exam->subject?->name }}.</p>
+                        <a href="{{ route('teacher.exams.questions.create', $exam) }}" class="btn btn-primary btn-sm fw-bold">
+                            Pilih Soal dari Bank Sekarang
+                        </a>
+                    </div>
+                @else
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <span class="badge text-bg-light border fs-7 me-2">
+                                Total Soal: <strong class="text-primary">{{ $exam->total_questions }}</strong>
+                            </span>
+                            <span class="badge text-bg-light border fs-7">
+                                Total Bobot: <strong class="text-success">{{ number_format($exam->total_weight, 2) }}</strong>
+                            </span>
+                        </div>
+                        <a href="{{ route('teacher.exams.questions.index', $exam) }}" class="btn btn-outline-primary btn-sm fw-bold">
+                            Kelola Seluruh Butir Soal ({{ $exam->total_questions }}) &rarr;
+                        </a>
+                    </div>
+
+                    <!-- Cuplikan 3 Soal Pertama -->
+                    <div class="list-group list-group-flush mb-2">
+                        @foreach($exam->questions()->with('options')->take(3)->get() as $snapQ)
+                            <div class="list-group-item p-2 border rounded mb-2 bg-body-tertiary">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="badge text-bg-dark font-monospace">#{{ $snapQ->order }}</span>
+                                    <span class="badge text-bg-secondary font-monospace">Bobot: {{ $snapQ->weight }}</span>
+                                </div>
+                                <div class="small fw-semibold text-truncate mb-1">
+                                    {{ Str::limit($snapQ->question_text, 120) }}
+                                </div>
+                                <div class="text-success small">
+                                    Kunci Jawaban: <strong>Pilihan {{ $snapQ->getCorrectAnswerLabel() }}</strong>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    @if($exam->total_questions > 3)
+                        <div class="text-center mt-2">
+                            <a href="{{ route('teacher.exams.questions.index', $exam) }}" class="small text-decoration-none">
+                                dan {{ $exam->total_questions - 3 }} butir soal lainnya...
+                            </a>
+                        </div>
+                    @endif
+                @endif
             </x-card>
         </div>
 
@@ -190,3 +241,4 @@
     </form>
 </x-modal>
 @endsection
+

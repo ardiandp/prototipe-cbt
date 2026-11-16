@@ -103,6 +103,12 @@ Route::middleware('auth')->group(function () {
 
         // Exams Management (Jadwal Ujian)
         Route::resource('exams', \App\Http\Controllers\Teacher\ExamController::class);
+
+        // Exam Questions Management (Pemilihan & Snapshot Soal)
+        Route::get('/exams/{exam}/questions', [\App\Http\Controllers\Teacher\ExamQuestionController::class, 'index'])->name('exams.questions.index');
+        Route::get('/exams/{exam}/questions/create', [\App\Http\Controllers\Teacher\ExamQuestionController::class, 'create'])->name('exams.questions.create');
+        Route::post('/exams/{exam}/questions', [\App\Http\Controllers\Teacher\ExamQuestionController::class, 'store'])->name('exams.questions.store');
+        Route::delete('/exams/{exam}/questions/{question}', [\App\Http\Controllers\Teacher\ExamQuestionController::class, 'destroy'])->name('exams.questions.destroy');
         Route::get('/monitoring', function () { return view('adminlte-demo'); })->name('monitoring.index');
         Route::get('/results', function () { return view('adminlte-demo'); })->name('results.index');
     });

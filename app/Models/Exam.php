@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Exam extends Model
 {
@@ -86,6 +87,22 @@ class Exam extends Model
     public function semester(): BelongsTo
     {
         return $this->belongsTo(Semester::class);
+    }
+
+    /**
+     * Get the snapshot questions assigned to this exam.
+     */
+    public function questions(): HasMany
+    {
+        return $this->hasMany(ExamQuestion::class)->orderBy('order');
+    }
+
+    /**
+     * Calculate the total weight of all snapshot questions in this exam.
+     */
+    public function getTotalWeightAttribute(): float
+    {
+        return (float) $this->questions()->sum('weight');
     }
 
     /**
@@ -210,3 +227,4 @@ class Exam extends Model
             ->where('end_at', '>', $now);
     }
 }
+

@@ -187,10 +187,10 @@
 - [x] Validasi tanggal/durasi.
 
 ### P5-T02 — Question selection and snapshots
-- [ ] Pilih soal.
-- [ ] Atur jumlah soal.
-- [ ] Simpan snapshot pertanyaan, opsi, bobot.
-- [ ] Lindungi snapshot dari perubahan bank soal.
+- [x] Pilih soal.
+- [x] Atur jumlah soal.
+- [x] Simpan snapshot pertanyaan, opsi, bobot.
+- [x] Lindungi snapshot dari perubahan bank soal.
 
 ### P5-T03 — Participant assignment
 - [ ] Pilih kelas/peserta.
