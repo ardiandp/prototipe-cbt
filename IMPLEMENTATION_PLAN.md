@@ -269,10 +269,10 @@
 - [x] Detail attempt.
 
 ### P7-T02 — Administrative actions
-- [ ] Finalisasi administratif.
-- [ ] Retake authorization.
-- [ ] Alasan tindakan wajib.
-- [ ] Audit log.
+- [x] Finalisasi administratif.
+- [x] Retake authorization.
+- [x] Alasan tindakan wajib.
+- [x] Audit log.
 
 ### P7-T03 — Scoring service
 - [ ] Scoring berdasarkan snapshot.

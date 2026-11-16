@@ -81,6 +81,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/monitoring/{exam}', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'show'])->name('monitoring.show');
         Route::get('/monitoring/{exam}/live-data', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'liveData'])->name('monitoring.live-data');
         Route::get('/monitoring/{exam}/attempts/{attempt}', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'attemptDetail'])->name('monitoring.attempts.detail');
+        Route::post('/monitoring/{exam}/attempts/{attempt}/force-finish', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'forceFinish'])->name('monitoring.attempts.force-finish');
+        Route::post('/monitoring/{exam}/participants/{participant}/retake', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'authorizeRetake'])->name('monitoring.participants.retake');
+        Route::get('/monitoring/{exam}/audit-logs', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'auditLogs'])->name('monitoring.audit-logs');
         Route::get('/results', function () { return view('adminlte-demo'); })->name('results.index');
     });
 
@@ -132,6 +135,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/monitoring/{exam}', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'show'])->name('monitoring.show');
         Route::get('/monitoring/{exam}/live-data', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'liveData'])->name('monitoring.live-data');
         Route::get('/monitoring/{exam}/attempts/{attempt}', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'attemptDetail'])->name('monitoring.attempts.detail');
+        Route::post('/monitoring/{exam}/attempts/{attempt}/force-finish', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'forceFinish'])->name('monitoring.attempts.force-finish');
+        Route::post('/monitoring/{exam}/participants/{participant}/retake', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'authorizeRetake'])->name('monitoring.participants.retake');
+        Route::get('/monitoring/{exam}/audit-logs', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'auditLogs'])->name('monitoring.audit-logs');
         Route::get('/results', function () { return view('adminlte-demo'); })->name('results.index');
     });
 

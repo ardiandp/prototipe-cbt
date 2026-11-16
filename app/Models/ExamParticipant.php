@@ -21,7 +21,24 @@ class ExamParticipant extends Model
         'student_id',
         'classroom_id',
         'status',
+        'can_retake',
+        'retake_reason',
+        'retake_authorized_by',
+        'retake_authorized_at',
     ];
+
+    protected $casts = [
+        'can_retake' => 'boolean',
+        'retake_authorized_at' => 'datetime',
+    ];
+
+    /**
+     * Get the user who authorized retake for this participant.
+     */
+    public function retakeAuthorizer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'retake_authorized_by');
+    }
 
     /**
      * Get the exam that this participant is assigned to.

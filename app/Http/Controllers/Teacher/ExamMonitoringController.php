@@ -168,6 +168,169 @@ class ExamMonitoringController extends Controller
     }
 
     /**
+     * Force-finish an in-progress attempt administratively.
+     */
+    public function forceFinish(Request $request, Exam $exam, ExamAttempt $attempt): JsonResponse
+    {
+        $this->authorizeExamAccess($request, $exam);
+
+        if ($attempt->exam_id !== $exam->id) {
+            abort(404, 'Attempt tidak terkait dengan ujian ini.');
+        }
+
+        $validated = $request->validate([
+            'reason' => ['required', 'string', 'min:5', 'max:255'],
+        ], [
+            'reason.required' => 'Alasan tindakan administratif wajib diisi.',
+            'reason.min' => 'Alasan tindakan minimal 5 karakter.',
+        ]);
+
+        if (! $attempt->isInProgress()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hanya attempt yang sedang berjalan (in-progress) yang dapat difinalisasi paksa.',
+            ], 422);
+        }
+
+        \DB::transaction(function () use ($attempt, $exam, $validated, $request) {
+            $totalAnswered = $attempt->attemptQuestions()->whereNotNull('selected_exam_question_option_id')->count();
+
+            $attempt->update([
+                'status' => 'completed',
+                'completed_at' => Carbon::now(),
+                'total_answered' => $totalAnswered,
+            ]);
+
+            \App\Models\ExamParticipant::where('exam_id', $exam->id)
+                ->where('student_id', $attempt->student_id)
+                ->update(['status' => 'completed']);
+
+            \App\Models\AuditLog::record(
+                action: 'admin_finalize',
+                reason: $validated['reason'],
+                auditable: $attempt,
+                details: [
+                    'student_id' => $attempt->student_id,
+                    'student_name' => $attempt->student?->name,
+                    'exam_id' => $exam->id,
+                    'exam_title' => $exam->title,
+                    'total_answered' => $totalAnswered,
+                    'previous_status' => 'in_progress',
+                ],
+                user: $request->user()
+            );
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Sesi ujian siswa berhasil difinalisasi secara administratif.',
+            'status' => 'completed',
+        ]);
+    }
+
+    /**
+     * Authorize a retake for an exam participant.
+     */
+    public function authorizeRetake(Request $request, Exam $exam, \App\Models\ExamParticipant $participant): JsonResponse
+    {
+        $this->authorizeExamAccess($request, $exam);
+
+        if ($participant->exam_id !== $exam->id) {
+            abort(404, 'Peserta tidak terkait dengan ujian ini.');
+        }
+
+        $validated = $request->validate([
+            'reason' => ['required', 'string', 'min:5', 'max:255'],
+        ], [
+            'reason.required' => 'Alasan pemberian izin retake wajib diisi.',
+            'reason.min' => 'Alasan tindakan minimal 5 karakter.',
+        ]);
+
+        \DB::transaction(function () use ($participant, $exam, $validated, $request) {
+            $prevStatus = $participant->status;
+
+            $participant->update([
+                'can_retake' => true,
+                'retake_reason' => $validated['reason'],
+                'retake_authorized_by' => $request->user()->id,
+                'retake_authorized_at' => Carbon::now(),
+                'status' => 'assigned',
+            ]);
+
+            \App\Models\AuditLog::record(
+                action: 'retake_authorized',
+                reason: $validated['reason'],
+                auditable: $participant,
+                details: [
+                    'student_id' => $participant->student_id,
+                    'student_name' => $participant->student?->name,
+                    'exam_id' => $exam->id,
+                    'exam_title' => $exam->title,
+                    'previous_status' => $prevStatus,
+                ],
+                user: $request->user()
+            );
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Izin ujian ulang (retake) berhasil diberikan kepada siswa.',
+        ]);
+    }
+
+    /**
+     * Get audit logs related to this exam.
+     */
+    public function auditLogs(Request $request, Exam $exam): JsonResponse
+    {
+        $this->authorizeExamAccess($request, $exam);
+
+        $attemptIds = $exam->attempts()->pluck('id');
+        $participantIds = $exam->participants()->pluck('id');
+
+        $logs = \App\Models\AuditLog::with('user')
+            ->where(function ($q) use ($exam, $attemptIds, $participantIds) {
+                $q->where(function ($sub) use ($attemptIds) {
+                    $sub->where('auditable_type', ExamAttempt::class)
+                        ->whereIn('auditable_id', $attemptIds);
+                })
+                ->orWhere(function ($sub) use ($participantIds) {
+                    $sub->where('auditable_type', \App\Models\ExamParticipant::class)
+                        ->whereIn('auditable_id', $participantIds);
+                })
+                ->orWhere(function ($sub) use ($exam) {
+                    $sub->where('details->exam_id', $exam->id);
+                });
+            })
+            ->latest('id')
+            ->limit(50)
+            ->get()
+            ->map(function ($log) {
+                $actionLabel = match ($log->action) {
+                    'admin_finalize' => 'Finalisasi Administratif',
+                    'retake_authorized' => 'Izin Ujian Ulang (Retake)',
+                    default => ucfirst(str_replace('_', ' ', $log->action)),
+                };
+
+                return [
+                    'id' => $log->id,
+                    'action' => $log->action,
+                    'action_label' => $actionLabel,
+                    'user_name' => $log->user?->name ?? 'System',
+                    'reason' => $log->reason,
+                    'details' => $log->details,
+                    'ip_address' => $log->ip_address ?? '-',
+                    'created_at' => $log->created_at->format('d/m/Y H:i:s'),
+                ];
+            });
+
+        return response()->json([
+            'success' => true,
+            'logs' => $logs,
+        ]);
+    }
+
+    /**
      * Authorize user access to the exam.
      */
     private function authorizeExamAccess(Request $request, Exam $exam): void
@@ -259,6 +422,8 @@ class ExamMonitoringController extends Controller
             }
 
             $participantsData[] = [
+                'participant_id' => $participant->id,
+                'can_retake' => (bool) $participant->can_retake,
                 'student_id' => $student->id,
                 'name' => $student->name,
                 'nis' => $student->nis,

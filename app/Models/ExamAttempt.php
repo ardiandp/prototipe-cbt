@@ -68,6 +68,15 @@ class ExamAttempt extends Model
     }
 
     /**
+     * Get the participant record matching this attempt.
+     */
+    public function examParticipant(): HasOne
+    {
+        return $this->hasOne(ExamParticipant::class, 'student_id', 'student_id')
+            ->where('exam_id', $this->exam_id);
+    }
+
+    /**
      * Get the ordered questions for this attempt.
      */
     public function attemptQuestions(): HasMany

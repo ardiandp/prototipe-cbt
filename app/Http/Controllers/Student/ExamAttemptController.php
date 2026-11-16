@@ -71,20 +71,23 @@ class ExamAttemptController extends Controller
                     ->with('info', 'Melanjutkan sesi ujian yang sedang berjalan.');
             }
 
-            // If expired
-            if ($existingAttempt->isExpired()) {
-                if ($existingAttempt->isInProgress()) {
-                    $existingAttempt->markAsExpired();
+            // If not authorized for retake, enforce terminal block
+            if (! $participant->can_retake) {
+                // If expired
+                if ($existingAttempt->isExpired()) {
+                    if ($existingAttempt->isInProgress()) {
+                        $existingAttempt->markAsExpired();
+                    }
+
+                    return redirect()->route('student.exams.show', $exam)
+                        ->with('error', 'Batas waktu pengerjaan sesi ujian Anda telah berakhir.');
                 }
 
-                return redirect()->route('student.exams.show', $exam)
-                    ->with('error', 'Batas waktu pengerjaan sesi ujian Anda telah berakhir.');
-            }
-
-            // If completed
-            if ($existingAttempt->isCompleted()) {
-                return redirect()->route('student.exams.show', $exam)
-                    ->with('error', 'Anda telah menyelesaikan ujian ini.');
+                // If completed
+                if ($existingAttempt->isCompleted()) {
+                    return redirect()->route('student.exams.show', $exam)
+                        ->with('error', 'Anda telah menyelesaikan ujian ini.');
+                }
             }
         }
 
@@ -92,11 +95,17 @@ class ExamAttemptController extends Controller
         $startedAt = Carbon::now();
         $expiresAt = $exam->calculateAttemptExpiry($startedAt);
 
-        $attempt = DB::transaction(function () use ($exam, $student, $startedAt, $expiresAt, $request, $participant) {
+        // Determine attempt number
+        $lastAttemptNum = ExamAttempt::where('exam_id', $exam->id)
+            ->where('student_id', $student->id)
+            ->max('attempt_number');
+        $attemptNumber = $lastAttemptNum ? $lastAttemptNum + 1 : 1;
+
+        $attempt = DB::transaction(function () use ($exam, $student, $startedAt, $expiresAt, $request, $participant, $attemptNumber) {
             $attempt = ExamAttempt::create([
                 'exam_id' => $exam->id,
                 'student_id' => $student->id,
-                'attempt_number' => 1,
+                'attempt_number' => $attemptNumber,
                 'started_at' => $startedAt,
                 'expires_at' => $expiresAt,
                 'status' => 'in_progress',
@@ -104,7 +113,10 @@ class ExamAttemptController extends Controller
                 'user_agent' => $request->userAgent(),
             ]);
 
-            $participant->update(['status' => 'present']);
+            $participant->update([
+                'status' => 'present',
+                'can_retake' => false,
+            ]);
 
             // Generate question ordering & option ordering (P6-T02)
             $questions = $exam->questions()->with('options')->get();

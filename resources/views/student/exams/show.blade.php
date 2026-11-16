@@ -151,7 +151,27 @@
                     </div>
                 </div>
 
-                @if(isset($latestAttempt) && $latestAttempt->isActive())
+                @if(isset($participant) && $participant->can_retake)
+                    <!-- Izin Ujian Ulang (Retake) Diberikan Pengawas -->
+                    <div class="mt-4 p-3 border border-warning rounded bg-warning-subtle text-start">
+                        <div class="fw-bold text-dark fs-6 mb-1">&#9888; Izin Ujian Ulang (Retake) Diberikan Pengawas</div>
+                        <p class="small text-secondary mb-2">
+                            Alasan Tindakan: "<em>{{ $participant->retake_reason }}</em>"
+                        </p>
+                        <p class="small text-secondary mb-3">
+                            Sesi ujian Anda telah diizinkan untuk diulang. Anda dapat memulai pengerjaan attempt baru dengan durasi penuh sesuai ketentuan ujian.
+                        </p>
+                        <form method="POST" action="{{ route('student.exams.start', $exam) }}" id="startExamForm">
+                            @csrf
+                            @if($exam->token)
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-dark small mb-1">&#128273; Token Masuk Ujian:</label>
+                                    <input type="text" name="token" class="form-control text-uppercase font-monospace fw-bold text-center" style="letter-spacing: 4px; max-width: 250px;" placeholder="MASUKKAN TOKEN" required autocomplete="off">
+                                </div>
+                            @endif
+                        </form>
+                    </div>
+                @elseif(isset($latestAttempt) && $latestAttempt->isActive())
                     <!-- Sesi Aktif Berjalan -->
                     <div class="mt-4 p-3 border border-warning rounded bg-warning-subtle text-center">
                         <div class="fw-bold text-dark fs-6 mb-1">&#9201; Sesi Attempt Anda Sedang Berlangsung</div>
@@ -200,7 +220,11 @@
                     &larr; Kembali ke Jadwal
                 </a>
 
-                @if(isset($latestAttempt) && $latestAttempt->isActive())
+                @if(isset($participant) && $participant->can_retake)
+                    <button type="submit" form="startExamForm" class="btn btn-warning btn-lg fw-bold px-4" onclick="return confirm('Apakah Anda yakin ingin memulai sesi ujian ulang (retake) sekarang?')">
+                        &#9654; Mulai Ujian Ulang (Retake)
+                    </button>
+                @elseif(isset($latestAttempt) && $latestAttempt->isActive())
                     <a href="{{ route('student.attempts.show', $latestAttempt) }}" class="btn btn-warning btn-lg fw-bold px-4">
                         &#9654; Resume Ujian
                     </a>
