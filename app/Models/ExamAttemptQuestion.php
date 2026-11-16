@@ -74,6 +74,20 @@ class ExamAttemptQuestion extends Model
     }
 
     /**
+     * Get the display label (A-E) of the selected option in this attempt.
+     */
+    public function getSelectedDisplayLabel(): ?string
+    {
+        if (! $this->selected_exam_question_option_id) {
+            return null;
+        }
+
+        $mappedOpt = $this->options->firstWhere('exam_question_option_id', $this->selected_exam_question_option_id);
+
+        return $mappedOpt?->display_label ?? $this->selectedOption?->label;
+    }
+
+    /**
      * Determine if this question has been answered.
      */
     public function isAnswered(): bool

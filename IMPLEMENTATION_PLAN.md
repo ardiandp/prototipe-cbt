@@ -263,10 +263,10 @@
 ## PHASE 7 — Monitoring & Scoring
 
 ### P7-T01 — Monitoring dashboard
-- [ ] Daftar peserta dan status.
-- [ ] Progress jawaban.
-- [ ] Polling berkala.
-- [ ] Detail attempt.
+- [x] Daftar peserta dan status.
+- [x] Progress jawaban.
+- [x] Polling berkala.
+- [x] Detail attempt.
 
 ### P7-T02 — Administrative actions
 - [ ] Finalisasi administratif.

@@ -76,7 +76,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/exams', function () {
             return redirect()->route('teacher.exams.index');
         })->name('exams.index');
-        Route::get('/monitoring', function () { return view('adminlte-demo'); })->name('monitoring.index');
+        // Exam Monitoring
+        Route::get('/monitoring', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'index'])->name('monitoring.index');
+        Route::get('/monitoring/{exam}', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'show'])->name('monitoring.show');
+        Route::get('/monitoring/{exam}/live-data', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'liveData'])->name('monitoring.live-data');
+        Route::get('/monitoring/{exam}/attempts/{attempt}', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'attemptDetail'])->name('monitoring.attempts.detail');
         Route::get('/results', function () { return view('adminlte-demo'); })->name('results.index');
     });
 
@@ -123,7 +127,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/exams/{exam}/cancel', [\App\Http\Controllers\Teacher\ExamController::class, 'cancel'])->name('exams.cancel');
         Route::get('/exams/{exam}/preview', [\App\Http\Controllers\Teacher\ExamController::class, 'preview'])->name('exams.preview');
 
-        Route::get('/monitoring', function () { return view('adminlte-demo'); })->name('monitoring.index');
+        // Exam Monitoring
+        Route::get('/monitoring', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'index'])->name('monitoring.index');
+        Route::get('/monitoring/{exam}', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'show'])->name('monitoring.show');
+        Route::get('/monitoring/{exam}/live-data', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'liveData'])->name('monitoring.live-data');
+        Route::get('/monitoring/{exam}/attempts/{attempt}', [\App\Http\Controllers\Teacher\ExamMonitoringController::class, 'attemptDetail'])->name('monitoring.attempts.detail');
         Route::get('/results', function () { return view('adminlte-demo'); })->name('results.index');
     });
 
