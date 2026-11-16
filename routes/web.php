@@ -81,7 +81,24 @@ Route::middleware('auth')->group(function () {
     // Teacher Route Group
     Route::prefix('teacher')->name('teacher.')->middleware('role:teacher,superadmin,admin')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'teacher'])->name('dashboard');
-        Route::get('/question-banks', function () { return view('adminlte-demo'); })->name('question-banks.index');
+
+        // Question Banks (Bank Soal)
+        Route::get('/question-banks', [\App\Http\Controllers\Teacher\QuestionBankController::class, 'index'])->name('question-banks.index');
+        Route::get('/question-banks/create', [\App\Http\Controllers\Teacher\QuestionBankController::class, 'create'])->name('question-banks.create');
+        Route::post('/question-banks', [\App\Http\Controllers\Teacher\QuestionBankController::class, 'store'])->name('question-banks.store');
+        Route::get('/question-banks/{question_bank}', [\App\Http\Controllers\Teacher\QuestionBankController::class, 'show'])->name('question-banks.show');
+        Route::get('/question-banks/{question_bank}/edit', [\App\Http\Controllers\Teacher\QuestionBankController::class, 'edit'])->name('question-banks.edit');
+        Route::put('/question-banks/{question_bank}', [\App\Http\Controllers\Teacher\QuestionBankController::class, 'update'])->name('question-banks.update');
+        Route::delete('/question-banks/{question_bank}', [\App\Http\Controllers\Teacher\QuestionBankController::class, 'destroy'])->name('question-banks.destroy');
+
+        // Questions within a Bank
+        Route::get('/question-banks/{question_bank}/questions/create', [\App\Http\Controllers\Teacher\QuestionController::class, 'create'])->name('questions.create');
+        Route::post('/question-banks/{question_bank}/questions', [\App\Http\Controllers\Teacher\QuestionController::class, 'store'])->name('questions.store');
+        Route::get('/question-banks/{question_bank}/questions/{question}/edit', [\App\Http\Controllers\Teacher\QuestionController::class, 'edit'])->name('questions.edit');
+        Route::put('/question-banks/{question_bank}/questions/{question}', [\App\Http\Controllers\Teacher\QuestionController::class, 'update'])->name('questions.update');
+        Route::delete('/question-banks/{question_bank}/questions/{question}', [\App\Http\Controllers\Teacher\QuestionController::class, 'destroy'])->name('questions.destroy');
+        Route::post('/question-banks/{question_bank}/questions/{question}/duplicate', [\App\Http\Controllers\Teacher\QuestionController::class, 'duplicate'])->name('questions.duplicate');
+
         Route::get('/exams', function () { return view('adminlte-demo'); })->name('exams.index');
         Route::get('/monitoring', function () { return view('adminlte-demo'); })->name('monitoring.index');
         Route::get('/results', function () { return view('adminlte-demo'); })->name('results.index');

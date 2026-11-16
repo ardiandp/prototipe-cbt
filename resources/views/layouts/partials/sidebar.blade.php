@@ -90,6 +90,13 @@
                     <li class="nav-header text-uppercase text-secondary fs-7 mt-3 mb-1 px-3">Manajemen Ujian</li>
 
                     <li class="nav-item">
+                        <a href="{{ route('teacher.question-banks.index') }}" class="nav-link {{ request()->routeIs('teacher.question-banks.*') || request()->routeIs('teacher.questions.*') ? 'active' : '' }}">
+                            <span class="nav-icon me-2">&#128221;</span>
+                            <p class="d-inline">Bank Soal</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
                         <a href="{{ route('admin.exams.index') }}" class="nav-link {{ request()->routeIs('admin.exams.*') ? 'active' : '' }}">
                             <span class="nav-icon me-2">&#9201;</span>
                             <p class="d-inline">Jadwal Ujian</p>
@@ -116,7 +123,7 @@
                     <li class="nav-header text-uppercase text-secondary fs-7 mt-3 mb-1 px-3">Menu Guru</li>
 
                     <li class="nav-item">
-                        <a href="{{ route('teacher.question-banks.index') }}" class="nav-link {{ request()->routeIs('teacher.question-banks.*') ? 'active' : '' }}">
+                        <a href="{{ route('teacher.question-banks.index') }}" class="nav-link {{ request()->routeIs('teacher.question-banks.*') || request()->routeIs('teacher.questions.*') ? 'active' : '' }}">
                             <span class="nav-icon me-2">&#128221;</span>
                             <p class="d-inline">Bank Soal</p>
                         </a>

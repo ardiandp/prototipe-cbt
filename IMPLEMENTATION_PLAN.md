@@ -158,10 +158,10 @@
 - [x] Validasi kunci dan bobot.
 
 ### P4-T02 — Question CRUD
-- [ ] List, search, filter, pagination.
-- [ ] Create/edit/delete.
-- [ ] Duplicate.
-- [ ] Preview.
+- [x] List, search, filter, pagination.
+- [x] Create/edit/delete.
+- [x] Duplicate.
+- [x] Preview.
 
 ### P4-T03 — Question content and media
 - [ ] Editor pertanyaan.
