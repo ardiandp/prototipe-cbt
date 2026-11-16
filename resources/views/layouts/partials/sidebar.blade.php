@@ -116,6 +116,13 @@
                             <p class="d-inline">Hasil & Rekap Nilai</p>
                         </a>
                     </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('admin.reports.index') }}" class="nav-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
+                            <span class="nav-icon me-2">&#128202;</span>
+                            <p class="d-inline">Laporan & Peringkat</p>
+                        </a>
+                    </li>
                 @endif
 
                 <!-- SECTION: GURU PENGAMPU -->
@@ -147,6 +154,13 @@
                         <a href="{{ route('teacher.results.index') }}" class="nav-link {{ request()->routeIs('teacher.results.*') ? 'active' : '' }}">
                             <span class="nav-icon me-2">&#128200;</span>
                             <p class="d-inline">Nilai & Analisis Soal</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('teacher.reports.index') }}" class="nav-link {{ request()->routeIs('teacher.reports.*') ? 'active' : '' }}">
+                            <span class="nav-icon me-2">&#128202;</span>
+                            <p class="d-inline">Laporan & Peringkat</p>
                         </a>
                     </li>
                 @endif

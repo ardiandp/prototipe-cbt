@@ -295,10 +295,10 @@
 ## PHASE 8 — Reports & Audit
 
 ### P8-T01 — Result reports
-- [ ] Rekap ujian.
-- [ ] Rekap kelas/mapel.
-- [ ] Ranking.
-- [ ] Distribusi nilai.
+- [x] Rekap ujian.
+- [x] Rekap kelas/mapel.
+- [x] Ranking.
+- [x] Distribusi nilai.
 
 ### P8-T02 — Item analysis
 - [ ] Persentase benar/salah.
