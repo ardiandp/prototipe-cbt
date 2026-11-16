@@ -15,13 +15,13 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | Exam management | Selesai (Phase 5 lengkap) |
 | Exam engine | Selesai (Phase 6 lengkap) |
 | Monitoring & scoring | Selesai (Phase 7 lengkap) |
-| Reporting | Dalam pengerjaan (Phase 8) |
-| LAN demo readiness | Belum dimulai |
+| Reporting | Selesai (Phase 8 lengkap) |
+| LAN demo readiness | Dalam pengerjaan (Phase 9) |
 
 ## Current Task
 
-**Task ID:** P8-T04  
-**Task:** Audit log  
+**Task ID:** P9-T01  
+**Task:** Demo dataset and scenario  
 **Status:** Pending
 
 ## Completed Tasks
@@ -61,6 +61,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - [x] **P8-T01:** Result reports (2026-11-16)
 - [x] **P8-T02:** Item analysis (2026-11-16)
 - [x] **P8-T03:** Export (2026-11-16)
+- [x] **P8-T04:** Audit log (2026-11-16)
 
 ## Task Log
 
@@ -101,6 +102,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | 2026-11-16 | P8-T01 | Implementasi laporan komprehensif ujian & rekapitulasi, ringkasan statistik (rata-rata, median, std dev, tertinggi, terendah), papan peringkat (ranking) peserta dengan tie-handling & medali, distribusi frekuensi rentang skor (histogram), rekap berbasis rombel/kelas, dan feature tests | `ExamResultReportTest`, `phpunit` (254 tests passed, 1520 assertions) | 04b91b8 |
 | 2026-11-16 | P8-T02 | Implementasi analisis butir soal (item analysis), penghitungan persentase benar/salah & kosong, tingkat kesukaran soal (mudah, sedang, sukar), distribusi pemilihan opsi A–E (analisis fungsi distraktor), filter per rombel, dan feature tests | `ExamItemAnalysisTest`, `phpunit` (260 tests passed, 1547 assertions) | 0067e4e |
 | 2026-11-16 | P8-T03 | Implementasi export rekap nilai ujian dan analisis butir soal ke format CSV/Excel dengan UTF-8 BOM, view printable/PDF siap cetak dengan kop surat resmi & kolom tanda tangan, filter rombel & status kelulusan, dan feature tests | `ExamExportTest`, `phpunit` (265 tests passed, 1591 assertions) | 7fc1d40 |
+| 2026-11-16 | P8-T04 | Implementasi hub Audit Log terpusat, instrumentasi logging otomatis (login/logout, publish/unpublish/cancel exam, force finish, retake, release/hide results), multi-parameter filtering, modal payload JSON, proteksi role berjenjang, dan feature tests | `AuditLogTest`, `phpunit` (272 tests passed, 1619 assertions) | Pending |
 
 ## Theme Asset Inspection
 
@@ -153,7 +155,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Next Task
 
-Setelah P8-T03 selesai, lanjutkan P8-T04 — Audit log (Catat aktivitas penting, filter audit log, proteksi akses).
+Setelah P8-T04 selesai (Phase 8 selesai), lanjutkan ke Phase 9: P9-T01 — Demo dataset and scenario (Penyusunan dataset demo terpadu, skenario ujian langsung, panduan pengujian end-to-end, dan mekanisme reset demo).
 
 ## Required Update Format
 

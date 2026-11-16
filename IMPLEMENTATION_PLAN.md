@@ -311,11 +311,11 @@
 - [x] Validasi filter dan data export.
 
 ### P8-T04 — Audit log
-- [ ] Catat aktivitas penting.
-- [ ] Filter audit log.
-- [ ] Proteksi akses.
+- [x] Catat aktivitas penting (login/logout, exam lifecycle publish/cancel, retake, force finish, result publish/unpublish).
+- [x] Filter audit log (action, user/role, date range, search keyword).
+- [x] Proteksi akses (Admin/Superadmin sees all; Teacher sees logs related to their own exams/actions; Student blocked with 403).
 
-**Acceptance Phase 8:** laporan dan audit dapat digunakan untuk demo.
+**Acceptance Phase 8:** laporan dan audit dapat digunakan untuk demo (SELESAI).
 
 ---
 

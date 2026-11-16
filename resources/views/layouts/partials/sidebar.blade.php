@@ -123,6 +123,13 @@
                             <p class="d-inline">Laporan & Peringkat</p>
                         </a>
                     </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('admin.audit-logs.index') }}" class="nav-link {{ request()->routeIs('admin.audit-logs.*') ? 'active' : '' }}">
+                            <span class="nav-icon me-2">&#128220;</span>
+                            <p class="d-inline">Audit Log & Aktivitas</p>
+                        </a>
+                    </li>
                 @endif
 
                 <!-- SECTION: GURU PENGAMPU -->
@@ -161,6 +168,13 @@
                         <a href="{{ route('teacher.reports.index') }}" class="nav-link {{ request()->routeIs('teacher.reports.*') ? 'active' : '' }}">
                             <span class="nav-icon me-2">&#128202;</span>
                             <p class="d-inline">Laporan & Peringkat</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('teacher.audit-logs.index') }}" class="nav-link {{ request()->routeIs('teacher.audit-logs.*') ? 'active' : '' }}">
+                            <span class="nav-icon me-2">&#128220;</span>
+                            <p class="d-inline">Audit Log & Aktivitas</p>
                         </a>
                     </li>
                 @endif

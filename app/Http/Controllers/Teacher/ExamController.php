@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Teacher\StoreExamRequest;
 use App\Http\Requests\Teacher\UpdateExamRequest;
 use App\Models\AcademicYear;
+use App\Models\AuditLog;
 use App\Models\Exam;
 use App\Models\Semester;
 use App\Models\Subject;
@@ -230,6 +231,19 @@ class ExamController extends Controller
             'status' => 'published',
         ]);
 
+        AuditLog::record(
+            'publish_exam',
+            "Jadwal ujian '{$exam->title}' dipublikasikan.",
+            $exam,
+            [
+                'exam_id' => $exam->id,
+                'exam_code' => $exam->code,
+                'exam_title' => $exam->title,
+                'total_questions' => $exam->total_questions,
+            ],
+            $request->user()
+        );
+
         return redirect()->route('teacher.exams.show', $exam)
             ->with('success', 'Jadwal ujian berhasil dipublikasikan dan siap diakses peserta.');
     }
@@ -243,6 +257,18 @@ class ExamController extends Controller
 
         $exam->update(['status' => 'draft']);
 
+        AuditLog::record(
+            'unpublish_exam',
+            "Status jadwal ujian '{$exam->title}' dikembalikan ke draft.",
+            $exam,
+            [
+                'exam_id' => $exam->id,
+                'exam_code' => $exam->code,
+                'exam_title' => $exam->title,
+            ],
+            $request->user()
+        );
+
         return redirect()->route('teacher.exams.show', $exam)
             ->with('success', 'Status jadwal ujian berhasil dikembalikan ke Draft.');
     }
@@ -254,7 +280,21 @@ class ExamController extends Controller
     {
         $this->authorizeExamAccess($request, $exam);
 
+        $reason = $request->input('reason', 'Jadwal ujian dibatalkan.');
+
         $exam->update(['status' => 'cancelled']);
+
+        AuditLog::record(
+            'cancel_exam',
+            $reason,
+            $exam,
+            [
+                'exam_id' => $exam->id,
+                'exam_code' => $exam->code,
+                'exam_title' => $exam->title,
+            ],
+            $request->user()
+        );
 
         return redirect()->route('teacher.exams.show', $exam)
             ->with('warning', 'Jadwal ujian telah dibatalkan.');

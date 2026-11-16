@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\UserRole;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\AuditLog;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -36,6 +37,14 @@ class AuthController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
+        AuditLog::record(
+            'login',
+            "Pengguna {$user->name} ({$user->username}) berhasil masuk ke sistem.",
+            $user,
+            ['role' => $user->role->value, 'username' => $user->username],
+            $user
+        );
+
         $targetUrl = $this->redirectPathForUser($user);
 
         return redirect()->intended($targetUrl)
@@ -47,6 +56,18 @@ class AuthController extends Controller
      */
     public function logout(Request $request): RedirectResponse
     {
+        $user = Auth::user();
+
+        if ($user) {
+            AuditLog::record(
+                'logout',
+                "Pengguna {$user->name} ({$user->username}) keluar dari sistem.",
+                $user,
+                ['role' => $user->role->value, 'username' => $user->username],
+                $user
+            );
+        }
+
         Auth::logout();
 
         $request->session()->invalidate();

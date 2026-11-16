@@ -98,6 +98,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/reports/exams/{exam}/export/item-analysis-csv', [\App\Http\Controllers\Teacher\ExamReportController::class, 'exportItemAnalysisCsv'])->name('reports.export-item-analysis-csv');
         Route::get('/reports/exams/{exam}/print', [\App\Http\Controllers\Teacher\ExamReportController::class, 'printReport'])->name('reports.print');
         Route::get('/reports/classes/{classroom}', [\App\Http\Controllers\Teacher\ExamReportController::class, 'classReport'])->name('reports.class');
+        // Audit Logs (P8-T04)
+        Route::get('/audit-logs', [\App\Http\Controllers\Admin\AuditLogController::class, 'index'])->name('audit-logs.index');
     });
 
     // Teacher Route Group
@@ -165,6 +167,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/reports/exams/{exam}/export/item-analysis-csv', [\App\Http\Controllers\Teacher\ExamReportController::class, 'exportItemAnalysisCsv'])->name('reports.export-item-analysis-csv');
         Route::get('/reports/exams/{exam}/print', [\App\Http\Controllers\Teacher\ExamReportController::class, 'printReport'])->name('reports.print');
         Route::get('/reports/classes/{classroom}', [\App\Http\Controllers\Teacher\ExamReportController::class, 'classReport'])->name('reports.class');
+        // Audit Logs (P8-T04)
+        Route::get('/audit-logs', [\App\Http\Controllers\Admin\AuditLogController::class, 'index'])->name('audit-logs.index');
     });
 
     // Student Route Group
