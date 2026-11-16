@@ -67,4 +67,12 @@ class Classroom extends Model
     {
         return $this->belongsToMany(Teacher::class, 'classroom_teacher')->withTimestamps();
     }
+
+    /**
+     * The students belonging to this classroom.
+     */
+    public function students(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Student::class);
+    }
 }

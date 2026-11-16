@@ -136,10 +136,10 @@
 - [x] CRUD, filter, pagination.
 
 ### P3-T04 — Student management
-- [ ] Profil siswa.
-- [ ] Relasi user dan kelas.
-- [ ] CRUD, filter, pagination.
-- [ ] Unique NIS dan username.
+- [x] Profil siswa.
+- [x] Relasi user dan kelas.
+- [x] CRUD, filter, pagination.
+- [x] Unique NIS dan username.
 
 ### P3-T05 — Master data seeders and dashboards
 - [ ] Faker/factory/seeders reproducible.
