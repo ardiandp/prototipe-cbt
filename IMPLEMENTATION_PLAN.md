@@ -170,11 +170,11 @@
 - [x] Validasi file.
 
 ### P4-T04 — Question seeding
-- [ ] Seed kategori.
-- [ ] Seed soal dummy yang koheren.
-- [ ] Reproducible seed.
+- [x] Seed kategori.
+- [x] Seed soal dummy yang koheren.
+- [x] Reproducible seed.
 
-**Acceptance Phase 4:** guru dapat mengelola dan preview soal pilihan ganda.
+**Acceptance Phase 4:** guru dapat mengelola dan preview soal pilihan ganda. (Selesai dan diverifikasi)
 
 ---
 
