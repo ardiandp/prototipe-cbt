@@ -39,3 +39,4 @@ class SchoolProfile extends Model
         ]);
     }
 }
+

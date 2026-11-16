@@ -64,3 +64,4 @@ class AcademicYear extends Model
         });
     }
 }
+

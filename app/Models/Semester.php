@@ -69,3 +69,4 @@ class Semester extends Model
         });
     }
 }
+

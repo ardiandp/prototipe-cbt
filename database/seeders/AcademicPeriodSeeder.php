@@ -82,3 +82,4 @@ class AcademicPeriodSeeder extends Seeder
         );
     }
 }
+

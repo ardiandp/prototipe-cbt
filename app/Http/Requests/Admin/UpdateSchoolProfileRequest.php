@@ -45,3 +45,4 @@ class UpdateSchoolProfileRequest extends FormRequest
         ];
     }
 }
+

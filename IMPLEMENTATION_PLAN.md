@@ -124,10 +124,10 @@
 - [x] Validasi periode aktif.
 
 ### P3-T02 — Department, class, subject
-- [ ] Jurusan.
-- [ ] Kelas.
-- [ ] Mata pelajaran.
-- [ ] Relasi dan validasi.
+- [x] Jurusan.
+- [x] Kelas.
+- [x] Mata pelajaran.
+- [x] Relasi dan validasi.
 
 ### P3-T03 — Teacher management
 - [ ] Profil guru.

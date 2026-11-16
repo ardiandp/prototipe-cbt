@@ -42,8 +42,23 @@ Route::middleware('auth')->group(function () {
         Route::delete('/academic-years/{academicYear}', [\App\Http\Controllers\Admin\AcademicYearController::class, 'destroy'])->name('academic-years.destroy');
         Route::post('/academic-years/{academicYear}/activate', [\App\Http\Controllers\Admin\AcademicYearController::class, 'activate'])->name('academic-years.activate');
         Route::post('/semesters/{semester}/activate', [\App\Http\Controllers\Admin\AcademicYearController::class, 'activateSemester'])->name('semesters.activate');
-        Route::get('/classes', function () { return view('adminlte-demo'); })->name('classes.index');
-        Route::get('/subjects', function () { return view('adminlte-demo'); })->name('subjects.index');
+        // Departments (Jurusan)
+        Route::get('/departments', [\App\Http\Controllers\Admin\DepartmentController::class, 'index'])->name('departments.index');
+        Route::post('/departments', [\App\Http\Controllers\Admin\DepartmentController::class, 'store'])->name('departments.store');
+        Route::put('/departments/{department}', [\App\Http\Controllers\Admin\DepartmentController::class, 'update'])->name('departments.update');
+        Route::delete('/departments/{department}', [\App\Http\Controllers\Admin\DepartmentController::class, 'destroy'])->name('departments.destroy');
+
+        // Classes (Kelas)
+        Route::get('/classes', [\App\Http\Controllers\Admin\ClassroomController::class, 'index'])->name('classes.index');
+        Route::post('/classes', [\App\Http\Controllers\Admin\ClassroomController::class, 'store'])->name('classes.store');
+        Route::put('/classes/{classroom}', [\App\Http\Controllers\Admin\ClassroomController::class, 'update'])->name('classes.update');
+        Route::delete('/classes/{classroom}', [\App\Http\Controllers\Admin\ClassroomController::class, 'destroy'])->name('classes.destroy');
+
+        // Subjects (Mata Pelajaran)
+        Route::get('/subjects', [\App\Http\Controllers\Admin\SubjectController::class, 'index'])->name('subjects.index');
+        Route::post('/subjects', [\App\Http\Controllers\Admin\SubjectController::class, 'store'])->name('subjects.store');
+        Route::put('/subjects/{subject}', [\App\Http\Controllers\Admin\SubjectController::class, 'update'])->name('subjects.update');
+        Route::delete('/subjects/{subject}', [\App\Http\Controllers\Admin\SubjectController::class, 'destroy'])->name('subjects.destroy');
         Route::get('/teachers', function () { return view('adminlte-demo'); })->name('teachers.index');
         Route::get('/students', function () { return view('adminlte-demo'); })->name('students.index');
         Route::get('/exams', function () { return view('adminlte-demo'); })->name('exams.index');

@@ -39,3 +39,4 @@ class AcademicYearFactory extends Factory
         ]);
     }
 }
+

@@ -114,3 +114,4 @@ class SchoolProfileTest extends TestCase
         $response->assertRedirect(route('login'));
     }
 }
+

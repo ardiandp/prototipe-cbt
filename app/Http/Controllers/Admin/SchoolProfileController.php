@@ -35,3 +35,4 @@ class SchoolProfileController extends Controller
             ->with('success', 'Profil sekolah berhasil diperbarui.');
     }
 }
+

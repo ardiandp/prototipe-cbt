@@ -53,9 +53,16 @@
                     </li>
 
                     <li class="nav-item">
+                        <a href="{{ route('admin.departments.index') }}" class="nav-link {{ request()->routeIs('admin.departments.*') ? 'active' : '' }}">
+                            <span class="nav-icon me-2">&#127891;</span>
+                            <p class="d-inline">Jurusan</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
                         <a href="{{ route('admin.classes.index') }}" class="nav-link {{ request()->routeIs('admin.classes.*') ? 'active' : '' }}">
                             <span class="nav-icon me-2">&#127963;</span>
-                            <p class="d-inline">Kelas & Jurusan</p>
+                            <p class="d-inline">Kelas</p>
                         </a>
                     </li>
 

@@ -39,3 +39,4 @@ class SemesterFactory extends Factory
         ]);
     }
 }
+

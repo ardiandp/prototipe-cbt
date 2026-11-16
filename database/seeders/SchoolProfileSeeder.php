@@ -26,3 +26,4 @@ class SchoolProfileSeeder extends Seeder
         );
     }
 }
+
