@@ -132,10 +132,17 @@ class ExamAttempt extends Model
      */
     public function markAsExpired(): void
     {
+        $totalAnswered = $this->attemptQuestions()->whereNotNull('selected_exam_question_option_id')->count();
+
         $this->update([
             'status' => 'expired',
             'completed_at' => $this->completed_at ?? $this->expires_at,
+            'total_answered' => $totalAnswered,
         ]);
+
+        ExamParticipant::where('exam_id', $this->exam_id)
+            ->where('student_id', $this->student_id)
+            ->update(['status' => 'completed']);
     }
 
     /**
@@ -143,10 +150,17 @@ class ExamAttempt extends Model
      */
     public function markAsCompleted(): void
     {
+        $totalAnswered = $this->attemptQuestions()->whereNotNull('selected_exam_question_option_id')->count();
+
         $this->update([
             'status' => 'completed',
             'completed_at' => Carbon::now(),
+            'total_answered' => $totalAnswered,
         ]);
+
+        ExamParticipant::where('exam_id', $this->exam_id)
+            ->where('student_id', $this->student_id)
+            ->update(['status' => 'completed']);
     }
 
     /**

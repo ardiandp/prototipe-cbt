@@ -160,6 +160,25 @@
                             &#9654; Lanjutkan Pengerjaan Ujian (Resume)
                         </a>
                     </div>
+                @elseif(isset($latestAttempt) && ($latestAttempt->isCompleted() || $latestAttempt->isExpired()))
+                    <!-- Sesi Telah Selesai / Kedaluwarsa -->
+                    <div class="mt-4 p-3 border rounded text-center {{ $latestAttempt->isCompleted() ? 'border-success bg-success-subtle' : 'border-secondary bg-secondary-subtle' }}">
+                        <div class="fw-bold text-dark fs-6 mb-1">
+                            @if($latestAttempt->isCompleted())
+                                &#10003; Sesi Ujian Telah Selesai
+                            @else
+                                &#9888; Sesi Ujian Telah Berakhir (Waktu Habis)
+                            @endif
+                        </div>
+                        <p class="small text-secondary mb-2">
+                            Mulai: <strong>{{ $latestAttempt->started_at->format('d/m/Y H:i') }} WIB</strong> |
+                            Selesai: <strong>{{ $latestAttempt->completed_at ? $latestAttempt->completed_at->format('d/m/Y H:i') . ' WIB' : '-' }}</strong> |
+                            Soal Dijawab: <strong>{{ $latestAttempt->total_answered }} / {{ $exam->questions->count() ?: $exam->total_questions }}</strong>
+                        </p>
+                        <div class="badge text-bg-{{ $latestAttempt->isCompleted() ? 'success' : 'secondary' }} fs-7 px-3 py-2">
+                            Status: {{ $latestAttempt->isCompleted() ? 'Telah Dikumpulkan' : 'Kedaluwarsa' }}
+                        </div>
+                    </div>
                 @elseif(!isset($latestAttempt) && $exam->isOpen())
                     <!-- Form Mulai Ujian Baru -->
                     <form method="POST" action="{{ route('student.exams.start', $exam) }}" id="startExamForm">

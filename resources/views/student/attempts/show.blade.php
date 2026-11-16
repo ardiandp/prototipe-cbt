@@ -217,15 +217,15 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title fw-bold" id="confirmFinishModalLabel">Konfirmasi Selesai Ujian</h5>
+                <h5 class="modal-title fw-bold" id="confirmFinishModalLabel">&#10003; Konfirmasi Selesai Ujian</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             <div class="modal-body text-start">
-                <p class="mb-3">Apakah Anda yakin ingin menyelesaikan sesi ujian ini? Pastikan Anda telah memeriksa seluruh butir jawaban.</p>
+                <p class="mb-3">Apakah Anda yakin ingin menyelesaikan sesi ujian ini? Pastikan Anda telah memeriksa kembali seluruh butir jawaban.</p>
 
                 <!-- Ringkasan Jawaban di Modal -->
                 <div class="border rounded p-3 bg-light mb-3">
-                    <div class="fw-bold small text-dark mb-2">Ringkasan Status Pengerjaan:</div>
+                    <div class="fw-bold small text-dark mb-2">&#128221; Ringkasan Status Pengerjaan:</div>
                     <div class="d-flex justify-content-between small mb-1">
                         <span>Total Soal:</span>
                         <strong class="font-monospace">{{ $totalQuestions }}</strong>
@@ -244,15 +244,24 @@
                     </div>
                 </div>
 
-                <div class="alert alert-warning small mb-0" id="modalWarningBox">
-                    Perhatian: Setelah Anda menekan tombol selesaikan ujian, Anda <strong>tidak dapat lagi mengubah jawaban</strong> atau mengulang kembali ujian ini.
+                <div class="alert alert-warning small mb-3" id="modalWarningBox">
+                    <div id="modalWarningText">
+                        Perhatian: Setelah Anda menekan tombol selesaikan ujian, Anda <strong>tidak dapat lagi mengubah jawaban</strong> atau mengulang kembali ujian ini.
+                    </div>
+                </div>
+
+                <div class="form-check p-2 bg-light border rounded">
+                    <input class="form-check-input ms-0 me-2" type="checkbox" id="confirmFinishCheckbox">
+                    <label class="form-check-label small fw-bold text-dark cursor-pointer" for="confirmFinishCheckbox">
+                        Saya yakin ingin mengakhiri sesi ujian ini dan telah memeriksa seluruh jawaban saya.
+                    </label>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Periksa Kembali</button>
-                <form method="POST" action="{{ route('student.attempts.finish', $attempt) }}" class="d-inline">
+                <form method="POST" action="{{ route('student.attempts.finish', $attempt) }}" class="d-inline" id="finishExamForm">
                     @csrf
-                    <button type="submit" class="btn btn-danger fw-bold">
+                    <button type="submit" class="btn btn-danger fw-bold" id="confirmFinishSubmitBtn" disabled>
                         Ya, Selesaikan Ujian
                     </button>
                 </form>
@@ -590,6 +599,59 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Modal Konfirmasi Selesai Ujian dynamic handling
+    const finishModalEl = document.getElementById('confirmFinishModal');
+    const confirmFinishCheckbox = document.getElementById('confirmFinishCheckbox');
+    const confirmFinishSubmitBtn = document.getElementById('confirmFinishSubmitBtn');
+    const modalWarningBox = document.getElementById('modalWarningBox');
+    const modalWarningText = document.getElementById('modalWarningText');
+    const finishExamForm = document.getElementById('finishExamForm');
+
+    if (finishModalEl) {
+        finishModalEl.addEventListener('show.bs.modal', function () {
+            if (confirmFinishCheckbox) confirmFinishCheckbox.checked = false;
+            if (confirmFinishSubmitBtn) {
+                confirmFinishSubmitBtn.disabled = true;
+                confirmFinishSubmitBtn.innerHTML = 'Ya, Selesaikan Ujian';
+            }
+
+            const modalAns = document.getElementById('modalAnsweredCount');
+            const modalDbt = document.getElementById('modalDoubtfulCount');
+            const modalUnans = document.getElementById('modalUnansweredCount');
+
+            const ans = answeredBadge ? parseInt(answeredBadge.textContent) || 0 : 0;
+            const dbt = doubtfulBadge ? parseInt(doubtfulBadge.textContent) || 0 : 0;
+            const unans = unansweredBadge ? parseInt(unansweredBadge.textContent) || 0 : 0;
+
+            if (modalAns) modalAns.textContent = ans;
+            if (modalDbt) modalDbt.textContent = dbt;
+            if (modalUnans) modalUnans.textContent = unans;
+
+            if (modalWarningBox && modalWarningText) {
+                if (unans > 0 || dbt > 0) {
+                    modalWarningBox.className = 'alert alert-warning small mb-3';
+                    modalWarningText.innerHTML = `<strong>Perhatian:</strong> Masih terdapat <strong>${unans}</strong> butir soal belum dijawab dan <strong>${dbt}</strong> butir soal bertanda ragu-ragu. Soal yang belum dijawab tidak akan memperoleh nilai.`;
+                } else {
+                    modalWarningBox.className = 'alert alert-success small mb-3';
+                    modalWarningText.innerHTML = `<strong>Luar biasa!</strong> Seluruh butir soal telah berhasil Anda jawab dan tidak ada penanda ragu-ragu.`;
+                }
+            }
+        });
+    }
+
+    if (confirmFinishCheckbox && confirmFinishSubmitBtn) {
+        confirmFinishCheckbox.addEventListener('change', function () {
+            confirmFinishSubmitBtn.disabled = !this.checked;
+        });
+    }
+
+    if (finishExamForm && confirmFinishSubmitBtn) {
+        finishExamForm.addEventListener('submit', function () {
+            confirmFinishSubmitBtn.disabled = true;
+            confirmFinishSubmitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Mengirim Jawaban...';
+        });
+    }
+
     // Initialize first question
     showQuestion(1);
 
@@ -599,6 +661,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const syncUrl = "{{ route('student.attempts.sync-time', $attempt) }}";
     const finalizeUrl = "{{ route('student.attempts.finalize-expired', $attempt) }}";
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    let isExpiredTriggered = false;
 
     function updateTimerDisplay(sec) {
         if (!timerElem) return;
@@ -615,7 +678,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to handle expiration
     function handleExpiration(redirectUrl) {
+        if (isExpiredTriggered) return;
+        isExpiredTriggered = true;
+
         if (timerElem) timerElem.textContent = '00:00:00';
+
+        // Disable all inputs & controls
+        document.querySelectorAll('input[type="radio"], #doubtfulSwitch, #prevQuestionBtn, #nextQuestionBtn, #confirmFinishSubmitBtn').forEach(el => el.disabled = true);
+
+        // Hide finish modal if opened
+        if (finishModalEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            const modalInstance = bootstrap.Modal.getInstance(finishModalEl);
+            if (modalInstance) modalInstance.hide();
+        }
+
         alert('Waktu ujian Anda telah habis! Sesi attempt telah otomatis diselesaikan oleh server.');
         window.location.href = redirectUrl || "{{ route('student.exams.show', $attempt->exam) }}";
     }

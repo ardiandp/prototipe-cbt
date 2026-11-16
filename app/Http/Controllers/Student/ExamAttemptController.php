@@ -156,8 +156,14 @@ class ExamAttemptController extends Controller
             abort(403, 'Anda tidak memiliki hak akses ke sesi ujian ini.');
         }
 
+        // If attempt has already been completed or expired, redirect to exam detail
+        if (! $attempt->isInProgress()) {
+            return redirect()->route('student.exams.show', $attempt->exam)
+                ->with('info', 'Sesi ujian ini telah diselesaikan.');
+        }
+
         // Auto-finalize if expired
-        if ($attempt->isInProgress() && $attempt->isExpired()) {
+        if ($attempt->isExpired()) {
             $attempt->markAsExpired();
 
             return redirect()->route('student.exams.show', $attempt->exam)
@@ -298,6 +304,7 @@ class ExamAttemptController extends Controller
         $validated = $request->validate([
             'exam_attempt_question_id' => ['required', 'integer'],
             'exam_question_option_id' => ['nullable', 'integer'],
+            'selected_exam_question_option_id' => ['nullable', 'integer'],
             'is_doubtful' => ['nullable', 'boolean'],
             'client_timestamp' => ['nullable', 'numeric'],
         ]);
@@ -313,7 +320,7 @@ class ExamAttemptController extends Controller
             ], 404);
         }
 
-        $optionId = $validated['exam_question_option_id'] ?? null;
+        $optionId = $validated['exam_question_option_id'] ?? $validated['selected_exam_question_option_id'] ?? null;
 
         // Verify that option belongs to this question
         if (! is_null($optionId)) {
@@ -378,9 +385,9 @@ class ExamAttemptController extends Controller
     }
 
     /**
-     * Complete and submit the attempt.
+     * Complete and submit the attempt manually.
      */
-    public function finish(Request $request, ExamAttempt $attempt): RedirectResponse
+    public function finish(Request $request, ExamAttempt $attempt): RedirectResponse|JsonResponse
     {
         $user = $request->user();
         $student = $user->studentProfile;
@@ -389,20 +396,18 @@ class ExamAttemptController extends Controller
             abort(403, 'Anda tidak memiliki hak akses ke sesi ujian ini.');
         }
 
-        if (! $attempt->isCompleted()) {
+        if ($attempt->isInProgress()) {
             DB::transaction(function () use ($attempt) {
-                $totalAnswered = $attempt->attemptQuestions()->whereNotNull('selected_exam_question_option_id')->count();
-
-                $attempt->update([
-                    'status' => 'completed',
-                    'completed_at' => Carbon::now(),
-                    'total_answered' => $totalAnswered,
-                ]);
-
-                ExamParticipant::where('exam_id', $attempt->exam_id)
-                    ->where('student_id', $attempt->student_id)
-                    ->update(['status' => 'completed']);
+                $attempt->markAsCompleted();
             });
+        }
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Sesi ujian Anda telah berhasil diselesaikan.',
+                'redirect_url' => route('student.exams.show', $attempt->exam),
+            ]);
         }
 
         return redirect()->route('student.exams.show', $attempt->exam)

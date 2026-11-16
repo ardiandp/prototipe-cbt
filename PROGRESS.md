@@ -13,15 +13,15 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | Master data | Selesai (Phase 3 lengkap) |
 | Question bank | Selesai (Phase 4 lengkap) |
 | Exam management | Selesai (Phase 5 lengkap) |
-| Exam engine | Dalam pengerjaan (P6-T01 - P6-T05 selesai) |
+| Exam engine | Selesai (Phase 6 lengkap) |
 | Monitoring & scoring | Belum dimulai |
 | Reporting | Belum dimulai |
 | LAN demo readiness | Belum dimulai |
 
 ## Current Task
 
-**Task ID:** P6-T06  
-**Task:** Manual and automatic submit  
+**Task ID:** P7-T01  
+**Task:** Scoring engine  
 **Status:** Pending
 
 ## Completed Tasks
@@ -53,6 +53,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - [x] **P6-T03:** Exam room UI (2026-11-16)
 - [x] **P6-T04:** Server timer (2026-11-16)
 - [x] **P6-T05:** Answer autosave and recovery (2026-11-16)
+- [x] **P6-T06:** Manual and automatic submit (2026-11-16)
 
 ## Task Log
 
@@ -85,6 +86,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | 2026-11-16 | P6-T03 | Implementasi antarmuka ruang ujian CBT responsif (AdminLTE 3), navigasi nomor soal (palette grid), navigasi soal sebelumnya/berikutnya, pilihan opsi jawaban A–E interaktif, penanda ragu-ragu, legend status indikator real-time, modal konfirmasi selesai ujian, dan feature tests | `ExamRoomUiTest`, `phpunit` (189 tests passed, 1161 assertions) | fcadf78 |
 | 2026-11-16 | P6-T04 | Implementasi endpoint sinkronisasi waktu server (sync-time), finalisasi attempt kedaluwarsa secara otomatis & idempotent, periodic timer sync di client, proteksi refresh tidak mereset timer, artisan command background cbt:finalize-expired-attempts, dan feature tests | `ExamServerTimerTest`, `phpunit` (195 tests passed, 1193 assertions) | 0d17d33 |
 | 2026-11-16 | P6-T05 | Implementasi autosave jawaban real-time (POST /attempts/{attempt}/save-answer), validasi kepemilikan & window waktu ujian, pencegahan race condition stale requests via client_timestamp, pemulihan instan saat reload/reconnect, indikator UI (Menyimpan/Tersimpan/Gagal), dan feature tests | `ExamAnswerAutosaveAndRecoveryTest`, `phpunit` (204 tests passed, 1229 assertions) | 4e2f7b0 |
+| 2026-11-16 | P6-T06 | Implementasi submit manual dengan konfirmasi aman & ringkasan status pengerjaan, submit otomatis saat timer habis, idempotensi mutasi attempt/peserta, proteksi pasca-submit, halaman portal status ujian selesai, dan full lifecycle feature tests | `ExamSubmitAndLifecycleTest`, `phpunit` (213 tests passed, 1288 assertions) | 703c3a8 |
 
 ## Theme Asset Inspection
 

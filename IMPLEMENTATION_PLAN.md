@@ -249,12 +249,12 @@
 - [x] Cegah request lama menimpa jawaban terbaru.
 
 ### P6-T06 — Manual and automatic submit
-- [ ] Konfirmasi submit.
-- [ ] Ringkasan jawaban.
-- [ ] Submit manual.
-- [ ] Submit otomatis.
-- [ ] Idempotency.
-- [ ] Tests lifecycle lengkap.
+- [x] Konfirmasi submit.
+- [x] Ringkasan jawaban.
+- [x] Submit manual.
+- [x] Submit otomatis.
+- [x] Idempotency.
+- [x] Tests lifecycle lengkap.
 
 **Acceptance Phase 6:** siswa dapat menyelesaikan ujian; timer, jawaban, dan attempt tetap konsisten setelah refresh.
 
