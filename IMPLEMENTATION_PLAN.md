@@ -105,11 +105,11 @@
 - [x] Demo account seeder.
 
 ### P2-T03 — Authorization
-- [ ] Role middleware.
-- [ ] Policies/authorization untuk resource.
-- [ ] Redirect dashboard berdasarkan role.
-- [ ] Sidebar/menu berdasarkan role.
-- [ ] Feature tests akses role.
+- [x] Role middleware.
+- [x] Policies/authorization untuk resource.
+- [x] Redirect dashboard berdasarkan role.
+- [x] Sidebar/menu berdasarkan role.
+- [x] Feature tests akses role.
 
 **Acceptance Phase 2:** empat role dapat login dan tidak dapat mengakses fungsi di luar kewenangannya.
 

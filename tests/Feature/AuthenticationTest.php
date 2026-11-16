@@ -151,3 +151,4 @@ class AuthenticationTest extends TestCase
         $response->assertSessionHasErrors('username');
     }
 }
+

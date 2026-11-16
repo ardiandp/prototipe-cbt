@@ -32,7 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Admin & Super Admin Route Group
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('admin')->name('admin.')->middleware('role:superadmin,admin')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
         Route::get('/school-profile', function () { return view('adminlte-demo'); })->name('school.profile');
         Route::get('/academic-years', function () { return view('adminlte-demo'); })->name('academic-years.index');
@@ -46,7 +46,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // Teacher Route Group
-    Route::prefix('teacher')->name('teacher.')->group(function () {
+    Route::prefix('teacher')->name('teacher.')->middleware('role:teacher,superadmin,admin')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'teacher'])->name('dashboard');
         Route::get('/question-banks', function () { return view('adminlte-demo'); })->name('question-banks.index');
         Route::get('/exams', function () { return view('adminlte-demo'); })->name('exams.index');
@@ -55,7 +55,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // Student Route Group
-    Route::prefix('student')->name('student.')->group(function () {
+    Route::prefix('student')->name('student.')->middleware('role:student')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'student'])->name('dashboard');
         Route::get('/exams', function () { return view('adminlte-demo'); })->name('exams.index');
         Route::get('/results', function () { return view('adminlte-demo'); })->name('results.index');
