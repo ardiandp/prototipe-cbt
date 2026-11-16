@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ExamAttempt extends Model
 {
@@ -64,6 +65,14 @@ class ExamAttempt extends Model
     public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class);
+    }
+
+    /**
+     * Get the ordered questions for this attempt.
+     */
+    public function attemptQuestions(): HasMany
+    {
+        return $this->hasMany(ExamAttemptQuestion::class, 'exam_attempt_id')->orderBy('order');
     }
 
     /**
@@ -165,3 +174,4 @@ class ExamAttempt extends Model
             ->where('expires_at', '>', Carbon::now());
     }
 }
+

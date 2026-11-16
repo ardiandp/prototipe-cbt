@@ -220,10 +220,10 @@
 - [x] Resume attempt.
 
 ### P6-T02 — Attempt question ordering
-- [ ] Simpan urutan soal per attempt.
-- [ ] Randomisasi stabil.
-- [ ] Randomisasi opsi dengan pemetaan yang aman.
-- [ ] Jangan expose kunci jawaban.
+- [x] Simpan urutan soal per attempt.
+- [x] Randomisasi stabil.
+- [x] Randomisasi opsi dengan pemetaan yang aman.
+- [x] Jangan expose kunci jawaban.
 
 ### P6-T03 — Exam room UI
 - [ ] Halaman persiapan.

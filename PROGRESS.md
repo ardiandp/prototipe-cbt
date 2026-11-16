@@ -49,6 +49,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - [x] **P5-T03:** Participant assignment (2026-11-16)
 - [x] **P5-T04:** Schedule and publication (2026-11-16)
 - [x] **P6-T01:** Attempt lifecycle (2026-11-16)
+- [x] **P6-T02:** Attempt question ordering (2026-11-16)
 
 ## Task Log
 
@@ -77,6 +78,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | 2026-11-16 | P5-T03 | Implementasi penetapan peserta ujian (ExamParticipant) berbasis rombongan belajar (kelas) & individual, validasi keunikan peserta ujian, pencarian & filter peserta, antarmuka AdminLTE penugasan, dan feature tests | `ExamParticipantTest`, `phpunit` (156 tests passed, 1003 assertions) | ee8a9ba |
 | 2026-11-16 | P5-T04 | Implementasi lifecycle jadwal ujian (publish/unpublish/cancel) dengan validasi prasyarat (soal snapshot & peserta aktif), preview simulasi ujian guru, portal & ruang persiapan ujian siswa (ongoing/upcoming/past), implementasi rumus server timer CBT, dan feature tests | `ExamScheduleAndPublicationTest`, `phpunit` (169 tests passed, 1051 assertions) | 448392e |
 | 2026-11-16 | P6-T01 | Implementasi model & migrasi exam_attempts, inisiasi attempt siswa dengan rumus server timer (min(start+duration, exam.end_at)), pencegahan duplicate attempt, fitur resume aktif, validasi token & jendela jadwal, dan feature tests | `ExamAttemptLifecycleTest`, `phpunit` (179 tests passed, 1094 assertions) | e8f2495 |
+| 2026-11-16 | P6-T02 | Implementasi skema & relasi exam_attempt_questions dan exam_attempt_question_options, persistensi urutan soal stabil (acak/urut), persistensi opsi jawaban A–E aman (acak/urut), proteksi anti-bocor kunci jawaban, dan feature tests | `ExamAttemptQuestionOrderingTest`, `phpunit` (185 tests passed, 1131 assertions) | 4b5db66 |
 
 ## Theme Asset Inspection
 
@@ -129,7 +131,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Next Task
 
-Setelah P6-T01 selesai, lanjutkan P6-T02 — Attempt question ordering (Simpan urutan soal per attempt, randomisasi stabil, randomisasi opsi dengan pemetaan yang aman, jangan expose kunci jawaban).
+Setelah P6-T02 selesai, lanjutkan P6-T03 — Exam room UI (Halaman persiapan, layout ruang ujian, navigasi nomor, pilihan jawaban, penanda ragu-ragu, indikator status jawaban).
 
 ## Required Update Format
 

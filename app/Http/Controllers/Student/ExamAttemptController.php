@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use App\Models\Exam;
 use App\Models\ExamAttempt;
+use App\Models\ExamAttemptQuestion;
+use App\Models\ExamAttemptQuestionOption;
 use App\Models\ExamParticipant;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -103,6 +105,37 @@ class ExamAttemptController extends Controller
 
             $participant->update(['status' => 'present']);
 
+            // Generate question ordering & option ordering (P6-T02)
+            $questions = $exam->questions()->with('options')->get();
+
+            if ($exam->random_question) {
+                $questions = $questions->shuffle();
+            }
+
+            $labels = ['A', 'B', 'C', 'D', 'E'];
+
+            foreach ($questions->values() as $qIndex => $question) {
+                $attemptQuestion = ExamAttemptQuestion::create([
+                    'exam_attempt_id' => $attempt->id,
+                    'exam_question_id' => $question->id,
+                    'order' => $qIndex + 1,
+                ]);
+
+                $options = $question->options;
+                if ($exam->random_answer) {
+                    $options = $options->shuffle();
+                }
+
+                foreach ($options->values() as $optIndex => $option) {
+                    ExamAttemptQuestionOption::create([
+                        'exam_attempt_question_id' => $attemptQuestion->id,
+                        'exam_question_option_id' => $option->id,
+                        'display_label' => $labels[$optIndex] ?? chr(65 + $optIndex),
+                        'order' => $optIndex + 1,
+                    ]);
+                }
+            }
+
             return $attempt;
         });
 
@@ -130,8 +163,16 @@ class ExamAttemptController extends Controller
                 ->with('error', 'Waktu ujian telah habis. Sesi ujian Anda telah otomatis diselesaikan oleh server.');
         }
 
-        $attempt->load(['exam.subject', 'exam.teacher.user', 'student.user', 'student.classroom']);
+        $attempt->load([
+            'exam.subject',
+            'exam.teacher.user',
+            'student.user',
+            'student.classroom',
+            'attemptQuestions.question',
+            'attemptQuestions.options.questionOption',
+        ]);
 
         return view('student.attempts.show', compact('attempt'));
     }
 }
+

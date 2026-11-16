@@ -76,16 +76,59 @@
                 </div>
             </div>
 
-            <!-- Placeholder Ruang Soal (Akan dihubungkan di P6-T02 & P6-T03) -->
-            <div class="p-4 border rounded text-center bg-body-tertiary">
-                <div class="fs-1 mb-2">&#128221;</div>
-                <h5 class="fw-bold text-dark">Sesi Pengerjaan Siap Digunakan</h5>
-                <p class="text-secondary small mb-3">
-                    Modul randomisasi urutan butir soal (P6-T02), tata letak navigasi nomor soal (P6-T03), sinkronisasi timer server (P6-T04), dan penyimpanan otomatis jawaban ke SQLite (P6-T05) akan aktif di langkah selanjutnya.
-                </p>
-                <button type="button" class="btn btn-outline-primary btn-sm" onclick="location.reload();">
-                    &#8635; Uji Refresh (Idempotent Resume Check)
-                </button>
+            <!-- Daftar Butir Soal & Opsi Terpetakan (P6-T02) -->
+            <div class="d-flex flex-column gap-4">
+                @foreach($attempt->attemptQuestions as $aq)
+                    <div class="border rounded p-3 bg-white shadow-xs" id="question-{{ $aq->order }}">
+                        <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                            <div>
+                                <span class="badge text-bg-dark font-monospace fs-7 me-1">Soal No. {{ $aq->order }}</span>
+                                <span class="badge text-bg-light border text-secondary font-monospace">Bobot: {{ $aq->question?->weight }}</span>
+                            </div>
+                            <div>
+                                @if($aq->is_doubtful)
+                                    <span class="badge text-bg-warning text-dark">&#9873; Ragu-ragu</span>
+                                @elseif($aq->isAnswered())
+                                    <span class="badge text-bg-success">&#10003; Terjawab</span>
+                                @else
+                                    <span class="badge text-bg-secondary">Belum Dijawab</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Teks Pertanyaan -->
+                        <div class="fs-6 fw-semibold text-body mb-3">
+                            {!! nl2br(e($aq->question?->question_text)) !!}
+                        </div>
+
+                        <!-- Gambar Soal Jika Ada -->
+                        @if($aq->question?->hasImage())
+                            <div class="mb-3">
+                                <img src="{{ $aq->question->image_url }}" alt="Gambar Soal #{{ $aq->order }}" class="img-fluid border rounded" style="max-height: 250px;">
+                            </div>
+                        @endif
+
+                        <!-- Opsi Jawaban Terpetakan Aman -->
+                        <div class="list-group list-group-flush border rounded">
+                            @foreach($aq->options as $opt)
+                                <label class="list-group-item list-group-item-action d-flex align-items-start gap-2 py-2">
+                                    <input type="radio" name="answer_{{ $aq->id }}" value="{{ $opt->exam_question_option_id }}" class="form-check-input mt-1" {{ $aq->selected_exam_question_option_id === $opt->exam_question_option_id ? 'checked' : '' }} disabled>
+                                    <span class="badge text-bg-light border text-dark font-monospace fw-bold mt-1">
+                                        {{ $opt->display_label }}
+                                    </span>
+                                    <div class="flex-grow-1 text-body">
+                                        {{ $opt->option_text }}
+                                        @if($opt->hasImage())
+                                            <div class="mt-2">
+                                                <img src="{{ $opt->image_url }}" alt="Gambar Opsi {{ $opt->display_label }}" class="img-fluid border rounded" style="max-height: 120px;">
+                                            </div>
+                                        @endif
+                                    </div>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </x-card>
     </div>
@@ -150,3 +193,4 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 @endsection
+
