@@ -172,7 +172,18 @@ class ExamAttemptController extends Controller
             'attemptQuestions.options.questionOption',
         ]);
 
-        return view('student.attempts.show', compact('attempt'));
+        $totalQuestions = $attempt->attemptQuestions->count();
+        $doubtfulCount = $attempt->attemptQuestions->where('is_doubtful', true)->count();
+        $answeredCount = $attempt->attemptQuestions->whereNotNull('selected_exam_question_option_id')->where('is_doubtful', false)->count();
+        $unansweredCount = $attempt->attemptQuestions->whereNull('selected_exam_question_option_id')->where('is_doubtful', false)->count();
+
+        return view('student.attempts.show', compact(
+            'attempt',
+            'totalQuestions',
+            'answeredCount',
+            'doubtfulCount',
+            'unansweredCount'
+        ));
     }
 }
 

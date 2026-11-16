@@ -226,12 +226,12 @@
 - [x] Jangan expose kunci jawaban.
 
 ### P6-T03 — Exam room UI
-- [ ] Halaman persiapan.
-- [ ] Layout ruang ujian.
-- [ ] Navigasi nomor.
-- [ ] Pilihan jawaban.
-- [ ] Penanda ragu-ragu.
-- [ ] Indikator status jawaban.
+- [x] Halaman persiapan.
+- [x] Layout ruang ujian.
+- [x] Navigasi nomor.
+- [x] Pilihan jawaban.
+- [x] Penanda ragu-ragu.
+- [x] Indikator status jawaban.
 
 ### P6-T04 — Server timer
 - [ ] Timer berbasis `expires_at`.
