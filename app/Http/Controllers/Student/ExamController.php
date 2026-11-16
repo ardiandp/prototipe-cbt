@@ -74,6 +74,11 @@ class ExamController extends Controller
 
         $exam->load(['subject', 'teacher.user', 'academicYear', 'semester']);
 
-        return view('student.exams.show', compact('exam', 'participant'));
+        $latestAttempt = \App\Models\ExamAttempt::where('exam_id', $exam->id)
+            ->where('student_id', $student->id)
+            ->latest('id')
+            ->first();
+
+        return view('student.exams.show', compact('exam', 'participant', 'latestAttempt'));
     }
 }

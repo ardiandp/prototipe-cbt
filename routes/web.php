@@ -132,6 +132,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'student'])->name('dashboard');
         Route::get('/exams', [\App\Http\Controllers\Student\ExamController::class, 'index'])->name('exams.index');
         Route::get('/exams/{exam}', [\App\Http\Controllers\Student\ExamController::class, 'show'])->name('exams.show');
+        Route::post('/exams/{exam}/start', [\App\Http\Controllers\Student\ExamAttemptController::class, 'start'])->name('exams.start');
+        Route::get('/attempts/{attempt}', [\App\Http\Controllers\Student\ExamAttemptController::class, 'show'])->name('attempts.show');
         Route::get('/results', function () { return view('adminlte-demo'); })->name('results.index');
     });
 });

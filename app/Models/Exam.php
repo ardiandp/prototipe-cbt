@@ -115,6 +115,14 @@ class Exam extends Model
     }
 
     /**
+     * Get all attempts made for this exam.
+     */
+    public function attempts(): HasMany
+    {
+        return $this->hasMany(ExamAttempt::class);
+    }
+
+    /**
      * Get the students assigned to this exam.
      */
     public function students(): BelongsToMany

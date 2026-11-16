@@ -14,7 +14,37 @@
 <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10">
         <!-- Status Banner -->
-        @if($exam->isOpen())
+        @if(isset($latestAttempt) && $latestAttempt->isActive())
+            <div class="alert alert-warning border-warning d-flex align-items-center mb-4">
+                <span class="fs-2 me-3">&#9201;</span>
+                <div>
+                    <h5 class="alert-heading fw-bold mb-1">Sesi Ujian Sedang Berjalan!</h5>
+                    <p class="mb-0 small">
+                        Anda memiliki sesi attempt aktif yang sedang berlangsung. Sesuai aturan CBT, waktu server tetap berjalan. Silakan lanjutkan pengerjaan Anda.
+                    </p>
+                </div>
+            </div>
+        @elseif(isset($latestAttempt) && $latestAttempt->isCompleted())
+            <div class="alert alert-success border-success d-flex align-items-center mb-4">
+                <span class="fs-2 me-3">&#10003;</span>
+                <div>
+                    <h5 class="alert-heading fw-bold mb-1">Ujian Telah Diselesaikan</h5>
+                    <p class="mb-0 small">
+                        Anda telah menyelesaikan seluruh proses pengerjaan untuk jadwal asesmen ini.
+                    </p>
+                </div>
+            </div>
+        @elseif(isset($latestAttempt) && $latestAttempt->isExpired())
+            <div class="alert alert-danger border-danger d-flex align-items-center mb-4">
+                <span class="fs-2 me-3">&#9888;</span>
+                <div>
+                    <h5 class="alert-heading fw-bold mb-1">Sesi Ujian Kedaluwarsa</h5>
+                    <p class="mb-0 small">
+                        Batas waktu pengerjaan sesi ujian Anda telah berakhir dan telah diselesaikan oleh sistem server.
+                    </p>
+                </div>
+            </div>
+        @elseif($exam->isOpen())
             <div class="alert alert-success border-success d-flex align-items-center mb-4">
                 <span class="fs-2 me-3">&#9654;</span>
                 <div>
@@ -121,24 +151,50 @@
                     </div>
                 </div>
 
-                <!-- Input Token Jika Diperlukan -->
-                @if($exam->token && $exam->isOpen())
-                    <div class="mt-4 p-3 border border-warning rounded bg-warning-subtle">
-                        <label class="form-label fw-bold text-dark small mb-1">&#128273; Token Masuk Ujian:</label>
-                        <p class="small text-secondary mb-2">Jadwal ujian ini memerlukan token yang diberikan oleh pengawas ruangan.</p>
-                        <input type="text" name="token" class="form-control text-uppercase font-monospace fw-bold text-center" style="letter-spacing: 4px; max-width: 250px;" placeholder="MASUKKAN TOKEN">
+                @if(isset($latestAttempt) && $latestAttempt->isActive())
+                    <!-- Sesi Aktif Berjalan -->
+                    <div class="mt-4 p-3 border border-warning rounded bg-warning-subtle text-center">
+                        <div class="fw-bold text-dark fs-6 mb-1">&#9201; Sesi Attempt Anda Sedang Berlangsung</div>
+                        <p class="small text-secondary mb-3">Dimulai pada: <strong>{{ $latestAttempt->started_at->format('H:i:s') }} WIB</strong> | Batas Selesai: <strong>{{ $latestAttempt->expires_at->format('H:i:s') }} WIB</strong></p>
+                        <a href="{{ route('student.attempts.show', $latestAttempt) }}" class="btn btn-warning btn-lg fw-bold px-4">
+                            &#9654; Lanjutkan Pengerjaan Ujian (Resume)
+                        </a>
                     </div>
+                @elseif(!isset($latestAttempt) && $exam->isOpen())
+                    <!-- Form Mulai Ujian Baru -->
+                    <form method="POST" action="{{ route('student.exams.start', $exam) }}" id="startExamForm">
+                        @csrf
+                        @if($exam->token)
+                            <div class="mt-4 p-3 border border-warning rounded bg-warning-subtle">
+                                <label class="form-label fw-bold text-dark small mb-1">&#128273; Token Masuk Ujian:</label>
+                                <p class="small text-secondary mb-2">Jadwal ujian ini memerlukan token yang diberikan oleh pengawas ruangan.</p>
+                                <input type="text" name="token" class="form-control text-uppercase font-monospace fw-bold text-center" style="letter-spacing: 4px; max-width: 250px;" placeholder="MASUKKAN TOKEN" required autocomplete="off">
+                            </div>
+                        @endif
+                    </form>
                 @endif
             </div>
 
-            <!-- Card Footer: Aksi Mulai -->
+            <!-- Card Footer: Aksi Mulai / Status -->
             <div class="card-footer bg-white border-top p-3 d-flex justify-content-between align-items-center">
                 <a href="{{ route('student.exams.index') }}" class="btn btn-outline-secondary">
                     &larr; Kembali ke Jadwal
                 </a>
 
-                @if($exam->isOpen())
-                    <button type="button" class="btn btn-success btn-lg fw-bold px-4" title="Masuk ke Ruang Ujian">
+                @if(isset($latestAttempt) && $latestAttempt->isActive())
+                    <a href="{{ route('student.attempts.show', $latestAttempt) }}" class="btn btn-warning btn-lg fw-bold px-4">
+                        &#9654; Resume Ujian
+                    </a>
+                @elseif(isset($latestAttempt) && $latestAttempt->isCompleted())
+                    <button type="button" class="btn btn-secondary btn-lg" disabled>
+                        &#10003; Telah Diselesaikan
+                    </button>
+                @elseif(isset($latestAttempt) && $latestAttempt->isExpired())
+                    <button type="button" class="btn btn-secondary btn-lg" disabled>
+                        &#9888; Waktu Kedaluwarsa
+                    </button>
+                @elseif($exam->isOpen())
+                    <button type="submit" form="startExamForm" class="btn btn-success btn-lg fw-bold px-4" title="Mulai Sesi Ujian" onclick="return confirm('Apakah Anda yakin ingin memulai ujian sekarang? Timer server akan langsung berjalan.')">
                         &#9654; Mulai Pengerjaan Ujian
                     </button>
                 @elseif($exam->isUpcoming())
@@ -155,3 +211,4 @@
     </div>
 </div>
 @endsection
+

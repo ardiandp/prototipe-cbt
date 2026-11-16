@@ -213,11 +213,11 @@
 ## PHASE 6 — Exam Engine
 
 ### P6-T01 — Attempt lifecycle
-- [ ] Model dan migration attempt.
-- [ ] Mulai attempt individual.
-- [ ] Cegah duplicate attempt.
-- [ ] Hitung `expires_at` dengan batas `exam.end_at`.
-- [ ] Resume attempt.
+- [x] Model dan migration attempt.
+- [x] Mulai attempt individual.
+- [x] Cegah duplicate attempt.
+- [x] Hitung `expires_at` dengan batas `exam.end_at`.
+- [x] Resume attempt.
 
 ### P6-T02 — Attempt question ordering
 - [ ] Simpan urutan soal per attempt.

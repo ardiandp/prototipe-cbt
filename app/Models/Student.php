@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Student extends Model
 {
@@ -56,6 +57,22 @@ class Student extends Model
     public function classroom(): BelongsTo
     {
         return $this->belongsTo(Classroom::class);
+    }
+
+    /**
+     * Get the exam participants records for this student.
+     */
+    public function examParticipants(): HasMany
+    {
+        return $this->hasMany(ExamParticipant::class);
+    }
+
+    /**
+     * Get all exam attempts made by this student.
+     */
+    public function examAttempts(): HasMany
+    {
+        return $this->hasMany(ExamAttempt::class);
     }
 
     /**
