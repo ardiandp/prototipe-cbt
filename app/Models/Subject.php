@@ -50,4 +50,12 @@ class Subject extends Model
     {
         return $this->belongsToMany(Teacher::class, 'subject_teacher')->withTimestamps();
     }
+
+    /**
+     * The question categories belonging to this subject.
+     */
+    public function questionCategories(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(QuestionCategory::class);
+    }
 }

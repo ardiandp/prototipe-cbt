@@ -70,5 +70,21 @@ class Teacher extends Model
     {
         return $query->where('is_active', true);
     }
+
+    /**
+     * The question categories managed by this teacher.
+     */
+    public function questionCategories(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(QuestionCategory::class);
+    }
+
+    /**
+     * The questions authored by this teacher.
+     */
+    public function questions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Question::class);
+    }
 }
 

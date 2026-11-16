@@ -153,9 +153,9 @@
 ## PHASE 4 — Question Bank
 
 ### P4-T01 — Category and question schema
-- [ ] Migration kategori, soal, opsi.
-- [ ] Relasi dan index.
-- [ ] Validasi kunci dan bobot.
+- [x] Migration kategori, soal, opsi.
+- [x] Relasi dan index.
+- [x] Validasi kunci dan bobot.
 
 ### P4-T02 — Question CRUD
 - [ ] List, search, filter, pagination.
