@@ -29,6 +29,11 @@ class ExamAttempt extends Model
         'score',
         'total_correct',
         'total_answered',
+        'total_incorrect',
+        'total_unanswered',
+        'total_weight',
+        'earned_weight',
+        'is_passed',
         'ip_address',
         'user_agent',
     ];
@@ -48,6 +53,11 @@ class ExamAttempt extends Model
             'score' => 'float',
             'total_correct' => 'integer',
             'total_answered' => 'integer',
+            'total_incorrect' => 'integer',
+            'total_unanswered' => 'integer',
+            'total_weight' => 'float',
+            'earned_weight' => 'float',
+            'is_passed' => 'boolean',
         ];
     }
 
@@ -152,6 +162,8 @@ class ExamAttempt extends Model
         ExamParticipant::where('exam_id', $this->exam_id)
             ->where('student_id', $this->student_id)
             ->update(['status' => 'completed']);
+
+        app(\App\Services\ScoringService::class)->scoreAttempt($this);
     }
 
     /**
@@ -170,6 +182,8 @@ class ExamAttempt extends Model
         ExamParticipant::where('exam_id', $this->exam_id)
             ->where('student_id', $this->student_id)
             ->update(['status' => 'completed']);
+
+        app(\App\Services\ScoringService::class)->scoreAttempt($this);
     }
 
     /**

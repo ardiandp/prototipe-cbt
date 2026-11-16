@@ -275,12 +275,12 @@
 - [x] Audit log.
 
 ### P7-T03 — Scoring service
-- [ ] Scoring berdasarkan snapshot.
-- [ ] Bobot soal.
-- [ ] Jawaban benar/salah/kosong.
-- [ ] Passing grade.
-- [ ] Hasil idempotent.
-- [ ] Unit tests scoring.
+- [x] Scoring berdasarkan snapshot.
+- [x] Bobot soal.
+- [x] Jawaban benar/salah/kosong.
+- [x] Passing grade.
+- [x] Hasil idempotent.
+- [x] Unit tests scoring.
 
 ### P7-T04 — Result publication
 - [ ] Hasil guru/admin.

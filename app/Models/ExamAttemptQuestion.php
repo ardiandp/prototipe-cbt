@@ -22,6 +22,8 @@ class ExamAttemptQuestion extends Model
         'order',
         'selected_exam_question_option_id',
         'is_doubtful',
+        'is_correct',
+        'earned_weight',
         'answered_at',
         'client_timestamp',
     ];
@@ -36,6 +38,8 @@ class ExamAttemptQuestion extends Model
         return [
             'order' => 'integer',
             'is_doubtful' => 'boolean',
+            'is_correct' => 'boolean',
+            'earned_weight' => 'float',
             'answered_at' => 'datetime',
             'client_timestamp' => 'integer',
         ];

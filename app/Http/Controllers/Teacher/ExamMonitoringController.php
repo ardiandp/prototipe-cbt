@@ -205,6 +205,8 @@ class ExamMonitoringController extends Controller
                 ->where('student_id', $attempt->student_id)
                 ->update(['status' => 'completed']);
 
+            app(\App\Services\ScoringService::class)->scoreAttempt($attempt);
+
             \App\Models\AuditLog::record(
                 action: 'admin_finalize',
                 reason: $validated['reason'],

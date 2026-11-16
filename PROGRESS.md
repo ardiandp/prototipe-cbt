@@ -14,14 +14,14 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | Question bank | Selesai (Phase 4 lengkap) |
 | Exam management | Selesai (Phase 5 lengkap) |
 | Exam engine | Selesai (Phase 6 lengkap) |
-| Monitoring & scoring | Dalam pengerjaan (P7-T01 - P7-T02 selesai) |
+| Monitoring & scoring | Dalam pengerjaan (P7-T01 - P7-T03 selesai) |
 | Reporting | Belum dimulai |
 | LAN demo readiness | Belum dimulai |
 
 ## Current Task
 
-**Task ID:** P7-T03  
-**Task:** Scoring service  
+**Task ID:** P7-T04  
+**Task:** Result publication  
 **Status:** Pending
 
 ## Completed Tasks
@@ -56,6 +56,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - [x] **P6-T06:** Manual and automatic submit (2026-11-16)
 - [x] **P7-T01:** Monitoring dashboard (2026-11-16)
 - [x] **P7-T02:** Administrative actions (2026-11-16)
+- [x] **P7-T03:** Scoring service (2026-11-16)
 
 ## Task Log
 
@@ -91,6 +92,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | 2026-11-16 | P6-T06 | Implementasi submit manual dengan konfirmasi aman & ringkasan status pengerjaan, submit otomatis saat timer habis, idempotensi mutasi attempt/peserta, proteksi pasca-submit, halaman portal status ujian selesai, dan full lifecycle feature tests | `ExamSubmitAndLifecycleTest`, `phpunit` (213 tests passed, 1288 assertions) | 703c3a8 |
 | 2026-11-16 | P7-T01 | Implementasi dashboard monitoring live ujian CBT, ringkasan real-time (total, belum mulai, mengerjakan, selesai, kedaluwarsa), status & progres butir soal per peserta, polling berkala (5 detik), modal rincian attempt siswa, dan feature tests | `ExamMonitoringTest`, `phpunit` (220 tests passed, 1328 assertions) | e7c27cf |
 | 2026-11-16 | P7-T02 | Implementasi tindakan administratif pengawas (finalisasi paksa sesi attempt, otorisasi retake ujian ulang dengan counter attempt_number), validasi alasan tindakan wajib, tabel dan model AuditLog, modal UI terintegrasi, dan feature tests | `ExamAdministrativeActionTest`, `phpunit` (229 tests passed, 1377 assertions) | f2f8e93 |
+| 2026-11-16 | P7-T03 | Implementasi ScoringService berbasis snapshot soal ujian & bobot positif, rumus skala 0–100, evaluasi benar/salah/kosong, threshold passing grade/KKM, idempotensi kalkulasi berulang, automatic scoring pasca-submit & expiration, dan feature tests | `ExamScoringTest`, `phpunit` (236 tests passed, 1423 assertions) | b5e3d44 |
 
 ## Theme Asset Inspection
 
