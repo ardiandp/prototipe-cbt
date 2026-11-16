@@ -171,6 +171,60 @@ class Exam extends Model
     }
 
     /**
+     * Determine if the exam is scheduled for the future.
+     */
+    public function isUpcoming(): bool
+    {
+        if (! $this->isPublished()) {
+            return false;
+        }
+
+        return Carbon::now()->lessThan($this->start_at);
+    }
+
+    /**
+     * Determine if the exam schedule window has passed.
+     */
+    public function isPast(): bool
+    {
+        return Carbon::now()->greaterThanOrEqualTo($this->end_at);
+    }
+
+    /**
+     * Calculate attempt expiry time according to server time CBT rule:
+     * expires_at = min(started_at + duration, exam.end_at)
+     */
+    public function calculateAttemptExpiry(Carbon $startedAt): Carbon
+    {
+        $durationExpiry = (clone $startedAt)->addMinutes($this->duration);
+
+        return $durationExpiry->lessThan($this->end_at) ? $durationExpiry : clone $this->end_at;
+    }
+
+    /**
+     * Check if exam meets all prerequisites to be published.
+     */
+    public function canBePublished(?string &$reason = null): bool
+    {
+        if ($this->questions()->count() === 0) {
+            $reason = 'Jadwal ujian belum memiliki butir soal. Silakan pilih minimal 1 butir soal sebelum mempublikasikan.';
+            return false;
+        }
+
+        if ($this->participants()->count() === 0) {
+            $reason = 'Jadwal ujian belum memiliki peserta. Silakan tetapkan minimal 1 peserta ujian.';
+            return false;
+        }
+
+        if ($this->end_at->isPast()) {
+            $reason = 'Waktu selesai ujian (end_at) sudah lewat. Silakan perbarui jadwal sebelum mempublikasikan.';
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Get the computed operational status based on administrative status and time window.
      */
     public function getComputedStatusAttribute(): string

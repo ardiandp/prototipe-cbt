@@ -116,6 +116,13 @@ Route::middleware('auth')->group(function () {
         Route::post('/exams/{exam}/participants', [\App\Http\Controllers\Teacher\ExamParticipantController::class, 'store'])->name('exams.participants.store');
         Route::delete('/exams/{exam}/participants/{participant}', [\App\Http\Controllers\Teacher\ExamParticipantController::class, 'destroy'])->name('exams.participants.destroy');
         Route::delete('/exams/{exam}/participants', [\App\Http\Controllers\Teacher\ExamParticipantController::class, 'destroyAll'])->name('exams.participants.destroy-all');
+
+        // Exam Lifecycle & Preview (P5-T04)
+        Route::post('/exams/{exam}/publish', [\App\Http\Controllers\Teacher\ExamController::class, 'publish'])->name('exams.publish');
+        Route::post('/exams/{exam}/unpublish', [\App\Http\Controllers\Teacher\ExamController::class, 'unpublish'])->name('exams.unpublish');
+        Route::post('/exams/{exam}/cancel', [\App\Http\Controllers\Teacher\ExamController::class, 'cancel'])->name('exams.cancel');
+        Route::get('/exams/{exam}/preview', [\App\Http\Controllers\Teacher\ExamController::class, 'preview'])->name('exams.preview');
+
         Route::get('/monitoring', function () { return view('adminlte-demo'); })->name('monitoring.index');
         Route::get('/results', function () { return view('adminlte-demo'); })->name('results.index');
     });
@@ -123,7 +130,8 @@ Route::middleware('auth')->group(function () {
     // Student Route Group
     Route::prefix('student')->name('student.')->middleware('role:student')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'student'])->name('dashboard');
-        Route::get('/exams', function () { return view('adminlte-demo'); })->name('exams.index');
+        Route::get('/exams', [\App\Http\Controllers\Student\ExamController::class, 'index'])->name('exams.index');
+        Route::get('/exams/{exam}', [\App\Http\Controllers\Student\ExamController::class, 'show'])->name('exams.show');
         Route::get('/results', function () { return view('adminlte-demo'); })->name('results.index');
     });
 });

@@ -253,7 +253,7 @@
 
     <!-- Kolom Kanan: Navigasi & Aksi -->
     <div class="col-md-4">
-        <x-card title="Status & Navigasi Cepat">
+        <x-card title="Status & Publikasi">
             <div class="mb-3">
                 <label class="form-label text-secondary small">Status Publikasi</label>
                 <div>
@@ -272,9 +272,73 @@
                 </div>
             </div>
 
+            <!-- Kesiapan Publikasi (Checklist) -->
+            <div class="border rounded p-3 mb-3 bg-light">
+                <div class="fw-bold small mb-2 text-dark">Kesiapan Publikasi:</div>
+                <div class="d-flex align-items-center justify-content-between small mb-1">
+                    <span>1. Butir Soal Snapshot</span>
+                    @if($exam->total_questions > 0)
+                        <span class="badge text-bg-success">&#10003; {{ $exam->total_questions }} Soal</span>
+                    @else
+                        <span class="badge text-bg-danger">&#10007; Kosong</span>
+                    @endif
+                </div>
+                <div class="d-flex align-items-center justify-content-between small mb-1">
+                    <span>2. Peserta Terdaftar</span>
+                    @if($exam->total_participants > 0)
+                        <span class="badge text-bg-success">&#10003; {{ $exam->total_participants }} Siswa</span>
+                    @else
+                        <span class="badge text-bg-danger">&#10007; Kosong</span>
+                    @endif
+                </div>
+                <div class="d-flex align-items-center justify-content-between small">
+                    <span>3. Waktu Pelaksanaan</span>
+                    @if(!$exam->end_at->isPast())
+                        <span class="badge text-bg-success">&#10003; Valid</span>
+                    @else
+                        <span class="badge text-bg-danger">&#10007; Kedaluwarsa</span>
+                    @endif
+                </div>
+            </div>
+
             <hr class="my-3">
 
+            <!-- Tombol Aksi Lifecycle -->
             <div class="d-grid gap-2">
+                @if($exam->isDraft())
+                    <form method="POST" action="{{ route('teacher.exams.publish', $exam) }}">
+                        @csrf
+                        <button type="submit" class="btn btn-success fw-bold w-100" {{ $exam->canBePublished() ? '' : 'disabled' }} onclick="return confirm('Publikasikan jadwal ujian ini? Siswa terdaftar akan dapat melihat jadwal ini.')">
+                            &#128640; Publikasikan Ujian
+                        </button>
+                    </form>
+                    @if(!$exam->canBePublished())
+                        <div class="small text-danger text-center">
+                            Lengkapi butir soal dan peserta terlebih dahulu untuk mempublikasikan.
+                        </div>
+                    @endif
+                @elseif($exam->isPublished())
+                    <form method="POST" action="{{ route('teacher.exams.unpublish', $exam) }}">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-warning w-100" onclick="return confirm('Kembalikan status ujian ke Draft? Ujian tidak akan dapat diakses siswa sampai dipublikasikan kembali.')">
+                            &#9100; Kembalikan ke Draft
+                        </button>
+                    </form>
+                @endif
+
+                @if(!$exam->isCancelled())
+                    <form method="POST" action="{{ route('teacher.exams.cancel', $exam) }}">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-danger w-100" onclick="return confirm('Apakah Anda yakin ingin membatalkan jadwal ujian ini?')">
+                            &#128683; Batalkan Ujian
+                        </button>
+                    </form>
+                @endif
+
+                <a href="{{ route('teacher.exams.preview', $exam) }}" class="btn btn-info text-white">
+                    &#128065; Pratinjau Ujian (Simulasi Siswa)
+                </a>
+
                 <a href="{{ route('teacher.exams.edit', $exam) }}" class="btn btn-outline-primary">
                     &#9998; Edit Jadwal & Pengaturan
                 </a>

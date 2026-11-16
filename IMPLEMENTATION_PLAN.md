@@ -199,12 +199,12 @@
 - [x] Daftar peserta.
 
 ### P5-T04 — Schedule and publication
-- [ ] `start_at` dan `end_at`.
-- [ ] Durasi attempt.
-- [ ] Random question/answer.
-- [ ] Draft, publish, cancel.
-- [ ] Preview ujian.
-- [ ] Tests jadwal dan akses peserta.
+- [x] `start_at` dan `end_at`.
+- [x] Durasi attempt.
+- [x] Random question/answer.
+- [x] Draft, publish, cancel.
+- [x] Preview ujian.
+- [x] Tests jadwal dan akses peserta.
 
 **Acceptance Phase 5:** guru dapat membuat ujian terjadwal dengan snapshot soal dan peserta yang benar.
 

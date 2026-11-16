@@ -47,6 +47,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - [x] **P5-T01:** Exam schema and CRUD (2026-11-16)
 - [x] **P5-T02:** Question selection and snapshots (2026-11-16)
 - [x] **P5-T03:** Participant assignment (2026-11-16)
+- [x] **P5-T04:** Schedule and publication (2026-11-16)
 
 ## Task Log
 
@@ -73,6 +74,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | 2026-11-16 | P5-T01 | Implementasi skema tabel exams & CRUD Jadwal Ujian, FormRequests, validasi rentang tanggal (end_at > start_at) dan durasi positif, authorization & ownership guru/admin, status operasional turunan (computed status), AdminLTE views, dan feature tests | `ExamCrudTest`, `phpunit` (136 tests passed, 919 assertions) | 7ca0716 |
 | 2026-11-16 | P5-T02 | Implementasi snapshot butir soal ujian (exam_questions & exam_question_options), seleksi butir soal dari bank soal berbasis mata pelajaran, perlindungan snapshot terhadap mutasi/penghapusan bank soal, reordering, dan feature tests | `ExamQuestionSnapshotTest`, `phpunit` (145 tests passed, 959 assertions) | 3c2acb3 |
 | 2026-11-16 | P5-T03 | Implementasi penetapan peserta ujian (ExamParticipant) berbasis rombongan belajar (kelas) & individual, validasi keunikan peserta ujian, pencarian & filter peserta, antarmuka AdminLTE penugasan, dan feature tests | `ExamParticipantTest`, `phpunit` (156 tests passed, 1003 assertions) | ee8a9ba |
+| 2026-11-16 | P5-T04 | Implementasi lifecycle jadwal ujian (publish/unpublish/cancel) dengan validasi prasyarat (soal snapshot & peserta aktif), preview simulasi ujian guru, portal & ruang persiapan ujian siswa (ongoing/upcoming/past), implementasi rumus server timer CBT, dan feature tests | `ExamScheduleAndPublicationTest`, `phpunit` (169 tests passed, 1051 assertions) | 448392e |
 
 ## Theme Asset Inspection
 
@@ -125,7 +127,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Next Task
 
-Setelah P5-T03 selesai, lanjutkan P5-T04 — Schedule and publication (`start_at` dan `end_at`, durasi attempt, random question/answer, draft/publish/cancel, preview ujian, tests jadwal dan akses peserta).
+Fase 5 selesai. Lanjutkan ke Fase 6: Exam Engine -> Task P6-T01 — Attempt lifecycle (Model dan migration attempt, mulai attempt individual, cegah duplicate attempt, hitung expires_at dengan batas exam.end_at, resume attempt).
 
 ## Required Update Format
 

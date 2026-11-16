@@ -205,16 +205,93 @@ class ExamController extends Controller
      */
     public function destroy(Request $request, Exam $exam): RedirectResponse
     {
-        $user = $request->user();
-
-        // Authorization check
-        if ($user->isTeacher() && $exam->teacher_id !== $user->teacherProfile?->id) {
-            abort(403, 'Anda tidak memiliki hak akses untuk menghapus jadwal ujian ini.');
-        }
+        $this->authorizeExamAccess($request, $exam);
 
         $exam->delete();
 
         return redirect()->route('teacher.exams.index')
             ->with('success', 'Jadwal ujian berhasil dihapus.');
+    }
+
+    /**
+     * Publish the exam so it becomes visible to assigned participants.
+     */
+    public function publish(Request $request, Exam $exam): RedirectResponse
+    {
+        $this->authorizeExamAccess($request, $exam);
+
+        if (! $exam->canBePublished($reason)) {
+            return redirect()->route('teacher.exams.show', $exam)
+                ->with('error', $reason);
+        }
+
+        $exam->update([
+            'total_questions' => $exam->questions()->count(),
+            'status' => 'published',
+        ]);
+
+        return redirect()->route('teacher.exams.show', $exam)
+            ->with('success', 'Jadwal ujian berhasil dipublikasikan dan siap diakses peserta.');
+    }
+
+    /**
+     * Set the exam status back to draft.
+     */
+    public function unpublish(Request $request, Exam $exam): RedirectResponse
+    {
+        $this->authorizeExamAccess($request, $exam);
+
+        $exam->update(['status' => 'draft']);
+
+        return redirect()->route('teacher.exams.show', $exam)
+            ->with('success', 'Status jadwal ujian berhasil dikembalikan ke Draft.');
+    }
+
+    /**
+     * Cancel the exam.
+     */
+    public function cancel(Request $request, Exam $exam): RedirectResponse
+    {
+        $this->authorizeExamAccess($request, $exam);
+
+        $exam->update(['status' => 'cancelled']);
+
+        return redirect()->route('teacher.exams.show', $exam)
+            ->with('warning', 'Jadwal ujian telah dibatalkan.');
+    }
+
+    /**
+     * Preview the exam from student perspective (questions, randomization preview, instructions).
+     */
+    public function preview(Request $request, Exam $exam): View
+    {
+        $this->authorizeExamAccess($request, $exam);
+
+        $exam->load(['subject', 'teacher.user', 'academicYear', 'semester']);
+        $questions = $exam->questions()->with('options')->orderBy('order')->get();
+
+        return view('teacher.exams.preview', compact('exam', 'questions'));
+    }
+
+    /**
+     * Authorize that the current user has rights to access/manage this exam.
+     */
+    private function authorizeExamAccess(Request $request, Exam $exam): void
+    {
+        $user = $request->user();
+
+        if (! $user) {
+            abort(401);
+        }
+
+        if ($user->isAnyAdmin()) {
+            return;
+        }
+
+        if ($user->isTeacher() && $exam->teacher_id === $user->teacherProfile?->id) {
+            return;
+        }
+
+        abort(403, 'Anda tidak memiliki hak akses untuk mengelola jadwal ujian ini.');
     }
 }
