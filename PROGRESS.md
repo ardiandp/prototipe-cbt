@@ -51,6 +51,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - [x] **P6-T01:** Attempt lifecycle (2026-11-16)
 - [x] **P6-T02:** Attempt question ordering (2026-11-16)
 - [x] **P6-T03:** Exam room UI (2026-11-16)
+- [x] **P6-T04:** Server timer (2026-11-16)
 
 ## Task Log
 
@@ -81,6 +82,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | 2026-11-16 | P6-T01 | Implementasi model & migrasi exam_attempts, inisiasi attempt siswa dengan rumus server timer (min(start+duration, exam.end_at)), pencegahan duplicate attempt, fitur resume aktif, validasi token & jendela jadwal, dan feature tests | `ExamAttemptLifecycleTest`, `phpunit` (179 tests passed, 1094 assertions) | e8f2495 |
 | 2026-11-16 | P6-T02 | Implementasi skema & relasi exam_attempt_questions dan exam_attempt_question_options, persistensi urutan soal stabil (acak/urut), persistensi opsi jawaban A–E aman (acak/urut), proteksi anti-bocor kunci jawaban, dan feature tests | `ExamAttemptQuestionOrderingTest`, `phpunit` (185 tests passed, 1131 assertions) | 4b5db66 |
 | 2026-11-16 | P6-T03 | Implementasi antarmuka ruang ujian CBT responsif (AdminLTE 3), navigasi nomor soal (palette grid), navigasi soal sebelumnya/berikutnya, pilihan opsi jawaban A–E interaktif, penanda ragu-ragu, legend status indikator real-time, modal konfirmasi selesai ujian, dan feature tests | `ExamRoomUiTest`, `phpunit` (189 tests passed, 1161 assertions) | fcadf78 |
+| 2026-11-16 | P6-T04 | Implementasi endpoint sinkronisasi waktu server (sync-time), finalisasi attempt kedaluwarsa secara otomatis & idempotent, periodic timer sync di client, proteksi refresh tidak mereset timer, artisan command background cbt:finalize-expired-attempts, dan feature tests | `ExamServerTimerTest`, `phpunit` (195 tests passed, 1193 assertions) | 0d17d33 |
 
 ## Theme Asset Inspection
 
@@ -133,7 +135,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Next Task
 
-Setelah P6-T03 selesai, lanjutkan P6-T04 — Server timer (Timer berbasis `expires_at`, sinkronisasi waktu server, validasi waktu di backend, refresh tidak mereset timer, expired attempt difinalisasi secara idempotent).
+Setelah P6-T04 selesai, lanjutkan P6-T05 — Answer autosave and recovery (Endpoint simpan jawaban, validasi ownership dan waktu, simpan ke SQLite, status saving/saved/failed, recovery setelah refresh/koneksi pulih, cegah request lama menimpa jawaban terbaru).
 
 ## Required Update Format
 

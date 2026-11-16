@@ -134,6 +134,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/exams/{exam}', [\App\Http\Controllers\Student\ExamController::class, 'show'])->name('exams.show');
         Route::post('/exams/{exam}/start', [\App\Http\Controllers\Student\ExamAttemptController::class, 'start'])->name('exams.start');
         Route::get('/attempts/{attempt}', [\App\Http\Controllers\Student\ExamAttemptController::class, 'show'])->name('attempts.show');
+        Route::get('/attempts/{attempt}/sync-time', [\App\Http\Controllers\Student\ExamAttemptController::class, 'syncTime'])->name('attempts.sync-time');
+        Route::post('/attempts/{attempt}/finalize-expired', [\App\Http\Controllers\Student\ExamAttemptController::class, 'finalizeExpired'])->name('attempts.finalize-expired');
         Route::get('/results', function () { return view('adminlte-demo'); })->name('results.index');
     });
 });

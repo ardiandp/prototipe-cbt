@@ -234,11 +234,11 @@
 - [x] Indikator status jawaban.
 
 ### P6-T04 — Server timer
-- [ ] Timer berbasis `expires_at`.
-- [ ] Sinkronisasi waktu server.
-- [ ] Validasi waktu di backend.
-- [ ] Refresh tidak mereset timer.
-- [ ] Expired attempt difinalisasi secara idempotent.
+- [x] Timer berbasis `expires_at`.
+- [x] Sinkronisasi waktu server.
+- [x] Validasi waktu di backend.
+- [x] Refresh tidak mereset timer.
+- [x] Expired attempt difinalisasi secara idempotent.
 
 ### P6-T05 — Answer autosave and recovery
 - [ ] Endpoint simpan jawaban.

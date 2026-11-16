@@ -9,6 +9,7 @@ use App\Models\ExamAttemptQuestion;
 use App\Models\ExamAttemptQuestionOption;
 use App\Models\ExamParticipant;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -184,6 +185,79 @@ class ExamAttemptController extends Controller
             'doubtfulCount',
             'unansweredCount'
         ));
+    }
+
+    /**
+     * Synchronize client timer with server time and auto-finalize if expired.
+     */
+    public function syncTime(Request $request, ExamAttempt $attempt): JsonResponse
+    {
+        $user = $request->user();
+        $student = $user->studentProfile;
+
+        if (! $student || $attempt->student_id !== $student->id) {
+            abort(403, 'Anda tidak memiliki hak akses ke sesi ujian ini.');
+        }
+
+        $now = Carbon::now();
+
+        // Check if deadline has passed
+        if ($attempt->isExpired() || $now->greaterThanOrEqualTo($attempt->expires_at)) {
+            if ($attempt->isInProgress()) {
+                $attempt->markAsExpired();
+            }
+
+            return response()->json([
+                'server_time' => $now->format('Y-m-d H:i:s'),
+                'server_timestamp' => $now->timestamp,
+                'expires_at' => $attempt->expires_at->format('Y-m-d H:i:s'),
+                'expires_timestamp' => $attempt->expires_at->timestamp,
+                'remaining_seconds' => 0,
+                'is_expired' => true,
+                'status' => 'expired',
+                'redirect_url' => route('student.exams.show', $attempt->exam),
+            ]);
+        }
+
+        $remaining = max(0, (int) $now->diffInSeconds($attempt->expires_at, false));
+
+        return response()->json([
+            'server_time' => $now->format('Y-m-d H:i:s'),
+            'server_timestamp' => $now->timestamp,
+            'expires_at' => $attempt->expires_at->format('Y-m-d H:i:s'),
+            'expires_timestamp' => $attempt->expires_at->timestamp,
+            'remaining_seconds' => $remaining,
+            'is_expired' => false,
+            'status' => $attempt->status,
+        ]);
+    }
+
+    /**
+     * Finalize an expired attempt idempotently.
+     */
+    public function finalizeExpired(Request $request, ExamAttempt $attempt): JsonResponse|RedirectResponse
+    {
+        $user = $request->user();
+        $student = $user->studentProfile;
+
+        if (! $student || $attempt->student_id !== $student->id) {
+            abort(403, 'Anda tidak memiliki hak akses ke sesi ujian ini.');
+        }
+
+        if ($attempt->isInProgress() && $attempt->isExpired()) {
+            $attempt->markAsExpired();
+        }
+
+        if ($request->expectsJson() || $request->isJson()) {
+            return response()->json([
+                'success' => true,
+                'status' => $attempt->status,
+                'redirect_url' => route('student.exams.show', $attempt->exam),
+            ]);
+        }
+
+        return redirect()->route('student.exams.show', $attempt->exam)
+            ->with('error', 'Waktu ujian telah habis. Sesi ujian Anda telah diselesaikan.');
     }
 }
 

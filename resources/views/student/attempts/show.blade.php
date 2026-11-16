@@ -497,30 +497,88 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initialize first question
     showQuestion(1);
 
-    // Live Server Countdown Timer
+    // Live Server Countdown Timer & Periodic Sync (P6-T04)
     let remaining = {{ $attempt->remaining_seconds }};
     const timerElem = document.getElementById('timerDisplay');
+    const syncUrl = "{{ route('student.attempts.sync-time', $attempt) }}";
+    const finalizeUrl = "{{ route('student.attempts.finalize-expired', $attempt) }}";
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-    if (timerElem && remaining > 0) {
-        const interval = setInterval(function () {
-            remaining--;
-            if (remaining <= 0) {
-                clearInterval(interval);
-                timerElem.textContent = '00:00:00';
-                alert('Waktu ujian Anda telah habis!');
-                location.reload();
+    function updateTimerDisplay(sec) {
+        if (!timerElem) return;
+        const safeSec = Math.max(0, sec);
+        const h = Math.floor(safeSec / 3600);
+        const m = Math.floor((safeSec % 3600) / 60);
+        const s = safeSec % 60;
+
+        timerElem.textContent = 
+            String(h).padStart(2, '0') + ':' + 
+            String(m).padStart(2, '0') + ':' + 
+            String(s).padStart(2, '0');
+    }
+
+    // Function to handle expiration
+    function handleExpiration(redirectUrl) {
+        if (timerElem) timerElem.textContent = '00:00:00';
+        alert('Waktu ujian Anda telah habis! Sesi attempt telah otomatis diselesaikan oleh server.');
+        window.location.href = redirectUrl || "{{ route('student.exams.show', $attempt->exam) }}";
+    }
+
+    // Sync with server time
+    function syncServerTimer() {
+        fetch(syncUrl, {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.is_expired) {
+                handleExpiration(data.redirect_url);
                 return;
             }
+            if (typeof data.remaining_seconds === 'number') {
+                remaining = data.remaining_seconds;
+                updateTimerDisplay(remaining);
+            }
+        })
+        .catch(err => {
+            console.warn('Timer sync error:', err);
+        });
+    }
 
-            const h = Math.floor(remaining / 3600);
-            const m = Math.floor((remaining % 3600) / 60);
-            const s = remaining % 60;
+    if (timerElem) {
+        updateTimerDisplay(remaining);
 
-            timerElem.textContent = 
-                String(h).padStart(2, '0') + ':' + 
-                String(m).padStart(2, '0') + ':' + 
-                String(s).padStart(2, '0');
-        }, 1000);
+        if (remaining <= 0) {
+            handleExpiration();
+        } else {
+            const interval = setInterval(function () {
+                remaining--;
+                updateTimerDisplay(remaining);
+
+                if (remaining <= 0) {
+                    clearInterval(interval);
+                    // Finalize to backend
+                    fetch(finalizeUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(res => res.json())
+                    .then(data => handleExpiration(data.redirect_url))
+                    .catch(() => handleExpiration());
+                }
+            }, 1000);
+
+            // Sync with server every 30 seconds
+            setInterval(syncServerTimer, 30000);
+        }
     }
 });
 </script>
