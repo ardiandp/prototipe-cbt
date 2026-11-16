@@ -177,13 +177,76 @@
             </x-card>
         </div>
 
+        <!-- Modul Penetapan Peserta Ujian (P5-T03) -->
         <div class="mt-4">
-            <x-card title="Penetapan Peserta Ujian (Tahap P5-T03)">
-                <div class="text-center py-4 text-secondary">
-                    <div class="fs-2 mb-2">&#128101;</div>
-                    <h6 class="fw-bold">Manajemen Peserta Asesmen</h6>
-                    <p class="small mb-0">Modul penugasan kelas dan peserta individual akan dihubungkan pada tahap selanjutnya (P5-T03).</p>
-                </div>
+            <x-card title="Penetapan Peserta Ujian">
+                <x-slot:tools>
+                    <a href="{{ route('teacher.exams.participants.create', $exam) }}" class="btn btn-primary btn-sm fw-bold">
+                        &#43; Tambah Peserta
+                    </a>
+                </x-slot:tools>
+
+                @if($exam->total_participants === 0)
+                    <div class="text-center py-4 text-secondary">
+                        <div class="fs-2 mb-2">&#128101;</div>
+                        <h6 class="fw-bold">Belum Ada Peserta Terdaftar</h6>
+                        <p class="small mb-3">Jadwal ujian ini belum memiliki peserta. Silakan tetapkan peserta berdasarkan rombongan belajar (kelas) atau pilih secara individual.</p>
+                        <a href="{{ route('teacher.exams.participants.create', $exam) }}" class="btn btn-primary btn-sm fw-bold">
+                            Tambah Peserta Ujian Sekarang
+                        </a>
+                    </div>
+                @else
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <span class="badge text-bg-light border fs-7 me-2">
+                                Total Peserta: <strong class="text-primary">{{ $exam->total_participants }}</strong> Siswa
+                            </span>
+                        </div>
+                        <a href="{{ route('teacher.exams.participants.index', $exam) }}" class="btn btn-outline-primary btn-sm fw-bold">
+                            Kelola Seluruh Peserta ({{ $exam->total_participants }}) &rarr;
+                        </a>
+                    </div>
+
+                    <!-- Cuplikan 4 Peserta Pertama -->
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover align-middle mb-2">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 120px;">NIS</th>
+                                    <th>Nama Siswa</th>
+                                    <th style="width: 140px;">Kelas</th>
+                                    <th style="width: 100px;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($exam->participants()->with(['student', 'classroom'])->take(4)->get() as $p)
+                                    <tr>
+                                        <td class="font-monospace small fw-bold">{{ $p->student?->nis ?? '-' }}</td>
+                                        <td class="small fw-semibold">{{ $p->student?->name ?? 'Siswa' }}</td>
+                                        <td class="small">
+                                            <span class="badge text-bg-light border text-dark">
+                                                {{ $p->classroom?->name ?? ($p->student?->classroom?->name ?? '-') }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge text-bg-info text-white small">
+                                                {{ $p->status === 'registered' ? 'Terdaftar' : ucfirst($p->status) }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @if($exam->total_participants > 4)
+                        <div class="text-center mt-2">
+                            <a href="{{ route('teacher.exams.participants.index', $exam) }}" class="small text-decoration-none">
+                                dan {{ $exam->total_participants - 4 }} peserta lainnya...
+                            </a>
+                        </div>
+                    @endif
+                @endif
             </x-card>
         </div>
     </div>

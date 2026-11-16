@@ -109,6 +109,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/exams/{exam}/questions/create', [\App\Http\Controllers\Teacher\ExamQuestionController::class, 'create'])->name('exams.questions.create');
         Route::post('/exams/{exam}/questions', [\App\Http\Controllers\Teacher\ExamQuestionController::class, 'store'])->name('exams.questions.store');
         Route::delete('/exams/{exam}/questions/{question}', [\App\Http\Controllers\Teacher\ExamQuestionController::class, 'destroy'])->name('exams.questions.destroy');
+
+        // Exam Participants Management (Penetapan Peserta Ujian)
+        Route::get('/exams/{exam}/participants', [\App\Http\Controllers\Teacher\ExamParticipantController::class, 'index'])->name('exams.participants.index');
+        Route::get('/exams/{exam}/participants/create', [\App\Http\Controllers\Teacher\ExamParticipantController::class, 'create'])->name('exams.participants.create');
+        Route::post('/exams/{exam}/participants', [\App\Http\Controllers\Teacher\ExamParticipantController::class, 'store'])->name('exams.participants.store');
+        Route::delete('/exams/{exam}/participants/{participant}', [\App\Http\Controllers\Teacher\ExamParticipantController::class, 'destroy'])->name('exams.participants.destroy');
+        Route::delete('/exams/{exam}/participants', [\App\Http\Controllers\Teacher\ExamParticipantController::class, 'destroyAll'])->name('exams.participants.destroy-all');
         Route::get('/monitoring', function () { return view('adminlte-demo'); })->name('monitoring.index');
         Route::get('/results', function () { return view('adminlte-demo'); })->name('results.index');
     });

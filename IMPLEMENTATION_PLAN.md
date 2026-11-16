@@ -193,10 +193,10 @@
 - [x] Lindungi snapshot dari perubahan bank soal.
 
 ### P5-T03 — Participant assignment
-- [ ] Pilih kelas/peserta.
-- [ ] Simpan peserta ujian.
-- [ ] Validasi peserta unik.
-- [ ] Daftar peserta.
+- [x] Pilih kelas/peserta.
+- [x] Simpan peserta ujian.
+- [x] Validasi peserta unik.
+- [x] Daftar peserta.
 
 ### P5-T04 — Schedule and publication
 - [ ] `start_at` dan `end_at`.

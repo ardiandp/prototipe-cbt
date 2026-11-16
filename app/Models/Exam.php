@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Exam extends Model
@@ -103,6 +104,32 @@ class Exam extends Model
     public function getTotalWeightAttribute(): float
     {
         return (float) $this->questions()->sum('weight');
+    }
+
+    /**
+     * Get the registered participants for this exam.
+     */
+    public function participants(): HasMany
+    {
+        return $this->hasMany(ExamParticipant::class);
+    }
+
+    /**
+     * Get the students assigned to this exam.
+     */
+    public function students(): BelongsToMany
+    {
+        return $this->belongsToMany(Student::class, 'exam_participants')
+            ->withPivot(['classroom_id', 'status'])
+            ->withTimestamps();
+    }
+
+    /**
+     * Get the total count of participants in this exam.
+     */
+    public function getTotalParticipantsAttribute(): int
+    {
+        return $this->participants()->count();
     }
 
     /**
