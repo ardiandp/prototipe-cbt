@@ -90,9 +90,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/results/{exam}/attempts/{attempt}', [\App\Http\Controllers\Teacher\ExamResultController::class, 'attemptDetail'])->name('results.attempts.detail');
         Route::post('/exams/{exam}/publish-results', [\App\Http\Controllers\Teacher\ExamResultController::class, 'publishResults'])->name('exams.publish-results');
         Route::post('/exams/{exam}/unpublish-results', [\App\Http\Controllers\Teacher\ExamResultController::class, 'unpublishResults'])->name('exams.unpublish-results');
-        // Exam Reports & Analytics (P8-T01)
+        // Exam Reports & Analytics (P8-T01, P8-T02)
         Route::get('/reports', [\App\Http\Controllers\Teacher\ExamReportController::class, 'index'])->name('reports.index');
         Route::get('/reports/exams/{exam}', [\App\Http\Controllers\Teacher\ExamReportController::class, 'examReport'])->name('reports.exam');
+        Route::get('/reports/exams/{exam}/item-analysis', [\App\Http\Controllers\Teacher\ExamReportController::class, 'itemAnalysis'])->name('reports.item-analysis');
         Route::get('/reports/classes/{classroom}', [\App\Http\Controllers\Teacher\ExamReportController::class, 'classReport'])->name('reports.class');
     });
 
@@ -153,9 +154,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/results/{exam}/attempts/{attempt}', [\App\Http\Controllers\Teacher\ExamResultController::class, 'attemptDetail'])->name('results.attempts.detail');
         Route::post('/exams/{exam}/publish-results', [\App\Http\Controllers\Teacher\ExamResultController::class, 'publishResults'])->name('exams.publish-results');
         Route::post('/exams/{exam}/unpublish-results', [\App\Http\Controllers\Teacher\ExamResultController::class, 'unpublishResults'])->name('exams.unpublish-results');
-        // Exam Reports & Analytics (P8-T01)
+        // Exam Reports & Analytics (P8-T01, P8-T02)
         Route::get('/reports', [\App\Http\Controllers\Teacher\ExamReportController::class, 'index'])->name('reports.index');
         Route::get('/reports/exams/{exam}', [\App\Http\Controllers\Teacher\ExamReportController::class, 'examReport'])->name('reports.exam');
+        Route::get('/reports/exams/{exam}/item-analysis', [\App\Http\Controllers\Teacher\ExamReportController::class, 'itemAnalysis'])->name('reports.item-analysis');
         Route::get('/reports/classes/{classroom}', [\App\Http\Controllers\Teacher\ExamReportController::class, 'classReport'])->name('reports.class');
     });
 

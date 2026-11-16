@@ -301,9 +301,9 @@
 - [x] Distribusi nilai.
 
 ### P8-T02 — Item analysis
-- [ ] Persentase benar/salah.
-- [ ] Distribusi pilihan A–E.
-- [ ] Jumlah peserta per soal.
+- [x] Persentase benar/salah.
+- [x] Distribusi pilihan A–E.
+- [x] Jumlah peserta per soal.
 
 ### P8-T03 — Export
 - [ ] Export CSV/Excel jika dependency sesuai.

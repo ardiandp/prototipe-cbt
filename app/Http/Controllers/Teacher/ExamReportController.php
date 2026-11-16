@@ -7,6 +7,7 @@ use App\Models\AcademicYear;
 use App\Models\Classroom;
 use App\Models\Exam;
 use App\Models\ExamAttempt;
+use App\Models\ExamAttemptQuestion;
 use App\Models\ExamParticipant;
 use App\Models\Subject;
 use App\Services\ScoringService;
@@ -363,4 +364,159 @@ class ExamReportController extends Controller
 
         return view('teacher.reports.classroom', compact('classroom', 'examSummaries'));
     }
+
+    /**
+     * Display item analysis for an exam: correct/incorrect %, option A-E distribution, and participant counts per question.
+     */
+    public function itemAnalysis(Request $request, Exam $exam): View
+    {
+        $user = $request->user();
+
+        // Authorization check
+        if ($user->isTeacher() && $user->teacherProfile && ! $user->isAnyAdmin()) {
+            if ($exam->teacher_id !== $user->teacherProfile->id) {
+                abort(403, 'Anda tidak berhak mengakses analisis butir soal ujian ini.');
+            }
+        }
+
+        // Ensure all attempts are scored
+        $this->scoringService->scoreExam($exam);
+
+        $exam->load(['subject', 'teacher.user', 'academicYear', 'semester', 'questions.options']);
+
+        // Participants query with optional classroom filter
+        $participantsQuery = ExamParticipant::where('exam_id', $exam->id)
+            ->with(['student.classroom', 'student.user']);
+
+        if ($classroomId = $request->input('classroom_id')) {
+            $participantsQuery->whereHas('student', function ($q) use ($classroomId) {
+                $q->where('classroom_id', $classroomId);
+            });
+        }
+
+        $participants = $participantsQuery->get();
+        $participantStudentIds = $participants->pluck('student_id');
+
+        // Fetch latest completed/expired attempt per student
+        $attempts = ExamAttempt::where('exam_id', $exam->id)
+            ->whereIn('student_id', $participantStudentIds)
+            ->whereIn('status', ['completed', 'expired'])
+            ->orderBy('attempt_number', 'desc')
+            ->get()
+            ->groupBy('student_id')
+            ->map(fn ($studentAttempts) => $studentAttempts->first());
+
+        $attemptIds = $attempts->pluck('id');
+        $totalParticipants = $attempts->count();
+
+        // Fetch all attempt questions grouped by exam_question_id
+        $attemptQuestions = ExamAttemptQuestion::whereIn('exam_attempt_id', $attemptIds)
+            ->get()
+            ->groupBy('exam_question_id');
+
+        $analysis = [];
+        $totalCorrectSum = 0;
+        $questionCount = $exam->questions->count();
+
+        foreach ($exam->questions->sortBy('order') as $question) {
+            $aqs = $attemptQuestions->get($question->id, collect());
+            $answeredAqs = $aqs->filter(fn ($aq) => ! is_null($aq->selected_exam_question_option_id));
+
+            $answeredCount = $answeredAqs->count();
+            $correctCount = $aqs->where('is_correct', true)->count();
+            $incorrectCount = max(0, $answeredCount - $correctCount);
+            $unansweredCount = max(0, $totalParticipants - $answeredCount);
+
+            $correctPercentage = $totalParticipants > 0 ? round(($correctCount / $totalParticipants) * 100, 1) : 0;
+            $incorrectPercentage = $totalParticipants > 0 ? round(($incorrectCount / $totalParticipants) * 100, 1) : 0;
+            $unansweredPercentage = $totalParticipants > 0 ? round(($unansweredCount / $totalParticipants) * 100, 1) : 0;
+
+            // Difficulty category based on accuracy
+            $difficultyLabel = 'Sedang';
+            $difficultyBadge = 'primary';
+            if ($correctPercentage >= 70) {
+                $difficultyLabel = 'Mudah';
+                $difficultyBadge = 'success';
+            } elseif ($correctPercentage < 30) {
+                $difficultyLabel = 'Sukar';
+                $difficultyBadge = 'danger';
+            }
+
+            // Distractor / Option distribution
+            $optionsDistribution = [];
+            foreach ($question->options->sortBy('order') as $option) {
+                $countSelected = $aqs->where('selected_exam_question_option_id', $option->id)->count();
+                $pctSelected = $totalParticipants > 0 ? round(($countSelected / $totalParticipants) * 100, 1) : 0;
+                $isKey = (bool) $option->is_correct;
+
+                $distractorStatus = 'Pengecoh Kurang Efektif';
+                $distractorBadge = 'secondary';
+                if ($isKey) {
+                    $distractorStatus = 'Kunci Jawaban';
+                    $distractorBadge = 'success';
+                } elseif ($countSelected > 0) {
+                    $distractorStatus = 'Pengecoh Berfungsi';
+                    $distractorBadge = 'info';
+                }
+
+                $optionsDistribution[] = (object) [
+                    'option_id' => $option->id,
+                    'label' => $option->label,
+                    'option_text' => $option->option_text,
+                    'is_correct' => $isKey,
+                    'count' => $countSelected,
+                    'percentage' => $pctSelected,
+                    'distractor_status' => $distractorStatus,
+                    'distractor_badge' => $distractorBadge,
+                ];
+            }
+
+            $analysis[] = (object) [
+                'question' => $question,
+                'total_participants' => $totalParticipants,
+                'answered_count' => $answeredCount,
+                'correct_count' => $correctCount,
+                'incorrect_count' => $incorrectCount,
+                'unanswered_count' => $unansweredCount,
+                'correct_percentage' => $correctPercentage,
+                'incorrect_percentage' => $incorrectPercentage,
+                'unanswered_percentage' => $unansweredPercentage,
+                'difficulty_label' => $difficultyLabel,
+                'difficulty_badge' => $difficultyBadge,
+                'options_distribution' => $optionsDistribution,
+            ];
+
+            $totalCorrectSum += $correctPercentage;
+        }
+
+        $overallAccuracy = $questionCount > 0 ? round($totalCorrectSum / $questionCount, 1) : 0;
+
+        $easiestQuestion = collect($analysis)->sortByDesc('correct_percentage')->first();
+        $hardestQuestion = collect($analysis)->sortBy('correct_percentage')->first();
+
+        $easyCount = collect($analysis)->where('difficulty_label', 'Mudah')->count();
+        $mediumCount = collect($analysis)->where('difficulty_label', 'Sedang')->count();
+        $hardCount = collect($analysis)->where('difficulty_label', 'Sukar')->count();
+
+        $summary = [
+            'total_questions' => $questionCount,
+            'total_participants' => $totalParticipants,
+            'overall_accuracy' => $overallAccuracy,
+            'easiest_question' => $easiestQuestion,
+            'hardest_question' => $hardestQuestion,
+            'easy_count' => $easyCount,
+            'medium_count' => $mediumCount,
+            'hard_count' => $hardCount,
+        ];
+
+        $classrooms = Classroom::orderBy('name')->get();
+
+        return view('teacher.reports.item_analysis', compact(
+            'exam',
+            'analysis',
+            'summary',
+            'classrooms'
+        ));
+    }
 }
+

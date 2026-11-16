@@ -20,8 +20,8 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Current Task
 
-**Task ID:** P8-T02  
-**Task:** Item analysis  
+**Task ID:** P8-T03  
+**Task:** Export  
 **Status:** Pending
 
 ## Completed Tasks
@@ -59,6 +59,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - [x] **P7-T03:** Scoring service (2026-11-16)
 - [x] **P7-T04:** Result publication (2026-11-16)
 - [x] **P8-T01:** Result reports (2026-11-16)
+- [x] **P8-T02:** Item analysis (2026-11-16)
 
 ## Task Log
 
@@ -96,7 +97,8 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | 2026-11-16 | P7-T02 | Implementasi tindakan administratif pengawas (finalisasi paksa sesi attempt, otorisasi retake ujian ulang dengan counter attempt_number), validasi alasan tindakan wajib, tabel dan model AuditLog, modal UI terintegrasi, dan feature tests | `ExamAdministrativeActionTest`, `phpunit` (229 tests passed, 1377 assertions) | f2f8e93 |
 | 2026-11-16 | P7-T03 | Implementasi ScoringService berbasis snapshot soal ujian & bobot positif, rumus skala 0–100, evaluasi benar/salah/kosong, threshold passing grade/KKM, idempotensi kalkulasi berulang, automatic scoring pasca-submit & expiration, dan feature tests | `ExamScoringTest`, `phpunit` (236 tests passed, 1423 assertions) | b5e3d44 |
 | 2026-11-16 | P7-T04 | Implementasi publikasi hasil ujian guru/admin, sembunyikan/terbitkan skor ke siswa dengan audit logging, portal nilai & lembar jawaban siswa yang digate publikasi, review rincian attempt per butir soal, dan feature tests | `ExamResultPublicationTest`, `phpunit` (247 tests passed, 1473 assertions) | e4031b0 |
-| 2026-11-16 | P8-T01 | Implementasi laporan komprehensif ujian & rekapitulasi, ringkasan statistik (rata-rata, median, std dev, tertinggi, terendah), papan peringkat (ranking) peserta dengan tie-handling & medali, distribusi frekuensi rentang skor (histogram), rekap berbasis rombel/kelas, dan feature tests | `ExamResultReportTest`, `phpunit` (254 tests passed, 1520 assertions) | 9884225 |
+| 2026-11-16 | P8-T01 | Implementasi laporan komprehensif ujian & rekapitulasi, ringkasan statistik (rata-rata, median, std dev, tertinggi, terendah), papan peringkat (ranking) peserta dengan tie-handling & medali, distribusi frekuensi rentang skor (histogram), rekap berbasis rombel/kelas, dan feature tests | `ExamResultReportTest`, `phpunit` (254 tests passed, 1520 assertions) | 04b91b8 |
+| 2026-11-16 | P8-T02 | Implementasi analisis butir soal (item analysis), penghitungan persentase benar/salah & kosong, tingkat kesukaran soal (mudah, sedang, sukar), distribusi pemilihan opsi A–E (analisis fungsi distraktor), filter per rombel, dan feature tests | `ExamItemAnalysisTest`, `phpunit` (260 tests passed, 1547 assertions) | 9e6f626 |
 
 ## Theme Asset Inspection
 
@@ -149,7 +151,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Next Task
 
-Setelah P8-T01 selesai, lanjutkan P8-T02 — Item analysis (Persentase benar/salah, distribusi pilihan A–E, jumlah peserta per soal).
+Setelah P8-T02 selesai, lanjutkan P8-T03 — Export (Export CSV/Excel jika dependency sesuai, PDF jika feasible, validasi filter dan data export).
 
 ## Required Update Format
 

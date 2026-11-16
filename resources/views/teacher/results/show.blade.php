@@ -24,6 +24,9 @@
         <a href="{{ route($routePrefix . 'monitoring.show', $exam) }}" class="btn btn-outline-primary btn-sm ms-1">
             &#128065; Buka Live Monitoring
         </a>
+        <a href="{{ route($routePrefix . 'reports.item-analysis', $exam) }}" class="btn btn-outline-success btn-sm ms-1">
+            &#128269; Analisis Butir Soal
+        </a>
     </div>
     <div class="col-md-6 text-md-end mt-2 mt-md-0">
         @if($exam->is_results_published)
