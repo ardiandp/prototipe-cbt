@@ -10,7 +10,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | Dokumentasi awal | Selesai |
 | Laravel foundation | Selesai |
 | Authentication & roles | Selesai |
-| Master data | Belum dimulai |
+| Master data | Dalam pengerjaan (P3-T01 selesai) |
 | Question bank | Belum dimulai |
 | Exam management | Belum dimulai |
 | Exam engine | Belum dimulai |
@@ -20,8 +20,8 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Current Task
 
-**Task ID:** P3-T01  
-**Task:** School profile model and CRUD  
+**Task ID:** P3-T02  
+**Task:** Department, class, subject  
 **Status:** Pending
 
 ## Completed Tasks
@@ -35,6 +35,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - [x] **P2-T01:** User and role model (2026-11-16)
 - [x] **P2-T02:** Login and logout (2026-11-16)
 - [x] **P2-T03:** Authorization (2026-11-16)
+- [x] **P3-T01:** School profile and academic period (2026-11-16)
 
 ## Task Log
 
@@ -49,6 +50,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | 2026-11-16 | P2-T01 | Implementasi UserRole Enum (superadmin, admin, teacher, student), migrasi username & role, User model helpers, UserFactory, UserSeeder, dan UserModelTest | `UserModelTest`, `phpunit` (15 tests passed, 73 assertions) | 0865f1d |
 | 2026-11-16 | P2-T02 | FormRequest LoginRequest dengan rate limiting & inactive check, login multi-identifier (username/email), dynamic role-based redirect, session regeneration, logout invalidation, dan AuthenticationTest | `AuthenticationTest`, `phpunit` (23 tests passed, 96 assertions) | 64fb14d |
 | 2026-11-16 | P2-T03 | Implementasi EnsureUserHasRole middleware (`role`), pembatasan route groups admin/teacher/student, render sidebar dinamis per role, dan AuthorizationTest | `AuthorizationTest`, `phpunit` (30 tests passed, 118 assertions) | f548a37 |
+| 2026-11-16 | P3-T01 | Implementasi Profil Sekolah (SchoolProfile) & Periode Akademik (AcademicYear & Semester) lengkap dengan form validation, active period toggle via DB transaction, AdminLTE views, seeders, serta feature tests | `SchoolProfileTest`, `AcademicPeriodTest`, `phpunit` (45 tests passed, 174 assertions) | 2113edd |
 
 ## Theme Asset Inspection
 

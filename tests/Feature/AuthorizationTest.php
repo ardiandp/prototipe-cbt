@@ -122,3 +122,4 @@ class AuthorizationTest extends TestCase
         $response->assertDontSee('Ujian Tersedia');
     }
 }
+

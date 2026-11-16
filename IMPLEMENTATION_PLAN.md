@@ -118,10 +118,10 @@
 ## PHASE 3 — School Master Data
 
 ### P3-T01 — School profile and academic period
-- [ ] Profil sekolah.
-- [ ] Tahun ajaran.
-- [ ] Semester.
-- [ ] Validasi periode aktif.
+- [x] Profil sekolah.
+- [x] Tahun ajaran.
+- [x] Semester.
+- [x] Validasi periode aktif.
 
 ### P3-T02 — Department, class, subject
 - [ ] Jurusan.

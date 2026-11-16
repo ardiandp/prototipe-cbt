@@ -34,8 +34,14 @@ Route::middleware('auth')->group(function () {
     // Admin & Super Admin Route Group
     Route::prefix('admin')->name('admin.')->middleware('role:superadmin,admin')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
-        Route::get('/school-profile', function () { return view('adminlte-demo'); })->name('school.profile');
-        Route::get('/academic-years', function () { return view('adminlte-demo'); })->name('academic-years.index');
+        Route::get('/school-profile', [\App\Http\Controllers\Admin\SchoolProfileController::class, 'show'])->name('school.profile');
+        Route::put('/school-profile', [\App\Http\Controllers\Admin\SchoolProfileController::class, 'update'])->name('school.profile.update');
+        Route::get('/academic-years', [\App\Http\Controllers\Admin\AcademicYearController::class, 'index'])->name('academic-years.index');
+        Route::post('/academic-years', [\App\Http\Controllers\Admin\AcademicYearController::class, 'store'])->name('academic-years.store');
+        Route::put('/academic-years/{academicYear}', [\App\Http\Controllers\Admin\AcademicYearController::class, 'update'])->name('academic-years.update');
+        Route::delete('/academic-years/{academicYear}', [\App\Http\Controllers\Admin\AcademicYearController::class, 'destroy'])->name('academic-years.destroy');
+        Route::post('/academic-years/{academicYear}/activate', [\App\Http\Controllers\Admin\AcademicYearController::class, 'activate'])->name('academic-years.activate');
+        Route::post('/semesters/{semester}/activate', [\App\Http\Controllers\Admin\AcademicYearController::class, 'activateSemester'])->name('semesters.activate');
         Route::get('/classes', function () { return view('adminlte-demo'); })->name('classes.index');
         Route::get('/subjects', function () { return view('adminlte-demo'); })->name('subjects.index');
         Route::get('/teachers', function () { return view('adminlte-demo'); })->name('teachers.index');
