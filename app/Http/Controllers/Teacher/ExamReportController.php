@@ -9,10 +9,12 @@ use App\Models\Exam;
 use App\Models\ExamAttempt;
 use App\Models\ExamAttemptQuestion;
 use App\Models\ExamParticipant;
+use App\Models\SchoolProfile;
 use App\Models\Subject;
 use App\Services\ScoringService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExamReportController extends Controller
 {
@@ -516,6 +518,412 @@ class ExamReportController extends Controller
             'analysis',
             'summary',
             'classrooms'
+        ));
+    }
+
+    /**
+     * Export exam results and student score recap to CSV (Excel compatible).
+     */
+    public function exportCsv(Request $request, Exam $exam): StreamedResponse
+    {
+        $user = $request->user();
+
+        // Authorization check
+        if ($user->isTeacher() && $user->teacherProfile && ! $user->isAnyAdmin()) {
+            if ($exam->teacher_id !== $user->teacherProfile->id) {
+                abort(403, 'Anda tidak berhak mengekspor hasil ujian ini.');
+            }
+        }
+
+        // Validate filter parameters
+        $request->validate([
+            'classroom_id' => 'nullable|integer',
+            'status' => 'nullable|in:passed,failed,all',
+        ]);
+
+        // Ensure all attempts are scored
+        $this->scoringService->scoreExam($exam);
+
+        $exam->load(['subject', 'teacher.user', 'academicYear', 'semester']);
+
+        // Participants query
+        $participantsQuery = ExamParticipant::where('exam_id', $exam->id)
+            ->with(['student.classroom', 'student.user']);
+
+        if ($classroomId = $request->input('classroom_id')) {
+            $participantsQuery->whereHas('student', function ($q) use ($classroomId) {
+                $q->where('classroom_id', $classroomId);
+            });
+        }
+
+        $participants = $participantsQuery->get();
+        $studentIds = $participants->pluck('student_id');
+
+        // Fetch latest attempt per student
+        $attempts = ExamAttempt::where('exam_id', $exam->id)
+            ->whereIn('student_id', $studentIds)
+            ->whereIn('status', ['completed', 'expired'])
+            ->with(['student.classroom'])
+            ->orderBy('attempt_number', 'desc')
+            ->get();
+
+        $latestAttempts = $attempts->groupBy('student_id')->map(function ($studentAttempts) {
+            $latest = $studentAttempts->first();
+            $latest->duration_seconds = $latest->started_at && $latest->completed_at
+                ? max(0, $latest->started_at->diffInSeconds($latest->completed_at))
+                : 0;
+            return $latest;
+        })->values();
+
+        // Sort for ranking
+        $sortedAttempts = $latestAttempts->sort(function ($a, $b) {
+            if ($a->score != $b->score) {
+                return $a->score > $b->score ? -1 : 1;
+            }
+            if ($a->duration_seconds != $b->duration_seconds) {
+                return $a->duration_seconds < $b->duration_seconds ? -1 : 1;
+            }
+            return strcmp($a->student->name, $b->student->name);
+        })->values();
+
+        // Assign Rank
+        $rankedAttempts = [];
+        $currentRank = 1;
+        $prevScore = null;
+        $prevDuration = null;
+
+        foreach ($sortedAttempts as $idx => $att) {
+            if ($idx > 0 && $att->score == $prevScore && $att->duration_seconds == $prevDuration) {
+                $att->rank = $currentRank;
+            } else {
+                $currentRank = $idx + 1;
+                $att->rank = $currentRank;
+            }
+            $prevScore = $att->score;
+            $prevDuration = $att->duration_seconds;
+
+            // Apply status filter if present
+            $statusFilter = $request->input('status');
+            $isPassed = (float) $att->score >= (float) $exam->passing_grade;
+            if ($statusFilter === 'passed' && ! $isPassed) {
+                continue;
+            }
+            if ($statusFilter === 'failed' && $isPassed) {
+                continue;
+            }
+
+            $rankedAttempts[] = $att;
+        }
+
+        $filename = "Rekap_Nilai_{$exam->code}_" . now()->format('Ymd_His') . ".csv";
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        return response()->stream(function () use ($exam, $rankedAttempts) {
+            $handle = fopen('php://output', 'w');
+
+            // UTF-8 BOM for automatic Microsoft Excel UTF-8 recognition
+            fputs($handle, "\xEF\xBB\xBF");
+
+            // Header metadata
+            fputcsv($handle, ['CBT SCHOOL - REKAPITULASI HASIL ASESMEN UJIAN']);
+            fputcsv($handle, ['Judul Ujian', $exam->title]);
+            fputcsv($handle, ['Kode Ujian', $exam->code]);
+            fputcsv($handle, ['Mata Pelajaran', $exam->subject->name ?? '-']);
+            fputcsv($handle, ['Guru Pengampu', $exam->teacher->name ?? ($exam->teacher->user->name ?? '-')]);
+            fputcsv($handle, ['KKM / Passing Grade', number_format($exam->passing_grade, 0)]);
+            fputcsv($handle, ['Tanggal Export', now()->format('d/m/Y H:i:s') . ' WIB']);
+            fputcsv($handle, []); // Blank line
+
+            // Column Headers
+            fputcsv($handle, [
+                'Peringkat',
+                'NIS',
+                'NISN',
+                'Nama Siswa',
+                'Kelas',
+                'Attempt',
+                'Waktu Mulai',
+                'Waktu Selesai',
+                'Durasi (Menit:Detik)',
+                'Benar',
+                'Salah',
+                'Kosong',
+                'Nilai Akhir',
+                'Status KKM',
+            ]);
+
+            // Data Rows
+            foreach ($rankedAttempts as $att) {
+                $minutes = floor($att->duration_seconds / 60);
+                $seconds = $att->duration_seconds % 60;
+                $durationStr = sprintf('%02d:%02d', $minutes, $seconds);
+
+                fputcsv($handle, [
+                    $att->rank,
+                    $att->student->nis ?? '-',
+                    $att->student->nisn ?? '-',
+                    $att->student->name,
+                    $att->student->classroom->name ?? '-',
+                    $att->attempt_number,
+                    $att->started_at?->format('d/m/Y H:i:s') ?? '-',
+                    $att->completed_at?->format('d/m/Y H:i:s') ?? '-',
+                    $durationStr,
+                    $att->total_correct,
+                    $att->total_incorrect,
+                    $att->total_unanswered,
+                    number_format($att->score, 2),
+                    (float) $att->score >= (float) $exam->passing_grade ? 'Lulus / Tuntas KKM' : 'Remedial / Di Bawah KKM',
+                ]);
+            }
+
+            fclose($handle);
+        }, 200, $headers);
+    }
+
+    /**
+     * Export item analysis to CSV.
+     */
+    public function exportItemAnalysisCsv(Request $request, Exam $exam): StreamedResponse
+    {
+        $user = $request->user();
+
+        // Authorization check
+        if ($user->isTeacher() && $user->teacherProfile && ! $user->isAnyAdmin()) {
+            if ($exam->teacher_id !== $user->teacherProfile->id) {
+                abort(403, 'Anda tidak berhak mengekspor analisis butir soal ujian ini.');
+            }
+        }
+
+        // Ensure all attempts are scored
+        $this->scoringService->scoreExam($exam);
+
+        $exam->load(['subject', 'teacher.user', 'academicYear', 'semester', 'questions.options']);
+
+        // Participants query
+        $participantsQuery = ExamParticipant::where('exam_id', $exam->id)
+            ->with(['student.classroom', 'student.user']);
+
+        if ($classroomId = $request->input('classroom_id')) {
+            $participantsQuery->whereHas('student', function ($q) use ($classroomId) {
+                $q->where('classroom_id', $classroomId);
+            });
+        }
+
+        $participants = $participantsQuery->get();
+        $studentIds = $participants->pluck('student_id');
+
+        $attempts = ExamAttempt::where('exam_id', $exam->id)
+            ->whereIn('student_id', $studentIds)
+            ->whereIn('status', ['completed', 'expired'])
+            ->orderBy('attempt_number', 'desc')
+            ->get()
+            ->groupBy('student_id')
+            ->map(fn ($studentAttempts) => $studentAttempts->first());
+
+        $attemptIds = $attempts->pluck('id');
+        $totalStudents = $attempts->count();
+
+        $attemptQuestions = ExamAttemptQuestion::whereIn('exam_attempt_id', $attemptIds)
+            ->get()
+            ->groupBy('exam_question_id');
+
+        $filename = "Analisis_Butir_{$exam->code}_" . now()->format('Ymd_His') . ".csv";
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        return response()->stream(function () use ($exam, $totalStudents, $attemptQuestions) {
+            $handle = fopen('php://output', 'w');
+            fputs($handle, "\xEF\xBB\xBF");
+
+            fputcsv($handle, ['CBT SCHOOL - ANALISIS BUTIR SOAL (ITEM ANALYSIS)']);
+            fputcsv($handle, ['Judul Ujian', $exam->title]);
+            fputcsv($handle, ['Kode Ujian', $exam->code]);
+            fputcsv($handle, ['Mata Pelajaran', $exam->subject->name ?? '-']);
+            fputcsv($handle, ['Total Peserta Dianalisis', $totalStudents]);
+            fputcsv($handle, ['Tanggal Export', now()->format('d/m/Y H:i:s') . ' WIB']);
+            fputcsv($handle, []); // Blank line
+
+            // Column Headers
+            fputcsv($handle, [
+                'No Soal',
+                'Teks Soal',
+                'Bobot',
+                'Kunci Jawaban',
+                'Peserta Menjawab',
+                'Menjawab Benar',
+                'Menjawab Salah',
+                'Kosong',
+                'Persentase Benar (%)',
+                'Tingkat Kesukaran',
+                'Distribusi Pilihan A',
+                'Distribusi Pilihan B',
+                'Distribusi Pilihan C',
+                'Distribusi Pilihan D',
+                'Distribusi Pilihan E',
+            ]);
+
+            foreach ($exam->questions->sortBy('order') as $question) {
+                $aqs = $attemptQuestions->get($question->id, collect());
+                $answeredAqs = $aqs->filter(fn ($aq) => ! is_null($aq->selected_exam_question_option_id));
+
+                $answeredCount = $answeredAqs->count();
+                $correctCount = $aqs->where('is_correct', true)->count();
+                $incorrectCount = max(0, $answeredCount - $correctCount);
+                $unansweredCount = max(0, $totalStudents - $answeredCount);
+                $correctPct = $totalStudents > 0 ? round(($correctCount / $totalStudents) * 100, 1) : 0;
+
+                $difficulty = 'Sedang';
+                if ($correctPct >= 70) {
+                    $difficulty = 'Mudah';
+                } elseif ($correctPct < 30) {
+                    $difficulty = 'Sukar';
+                }
+
+                $optionDistStrings = [];
+                $labels = ['A', 'B', 'C', 'D', 'E'];
+                foreach ($labels as $label) {
+                    $opt = $question->options->firstWhere('label', $label);
+                    if ($opt) {
+                        $selectedCount = $aqs->where('selected_exam_question_option_id', $opt->id)->count();
+                        $pct = $totalStudents > 0 ? round(($selectedCount / $totalStudents) * 100, 1) : 0;
+                        $keyTag = $opt->is_correct ? ' [KUNCI]' : '';
+                        $optionDistStrings[] = "{$selectedCount} ({$pct}%){$keyTag}";
+                    } else {
+                        $optionDistStrings[] = '-';
+                    }
+                }
+
+                fputcsv($handle, array_merge([
+                    $question->order,
+                    strip_tags($question->question_text),
+                    number_format($question->weight, 1),
+                    $question->getCorrectAnswerLabel() ?? '-',
+                    $answeredCount,
+                    $correctCount,
+                    $incorrectCount,
+                    $unansweredCount,
+                    $correctPct . '%',
+                    $difficulty,
+                ], $optionDistStrings));
+            }
+
+            fclose($handle);
+        }, 200, $headers);
+    }
+
+    /**
+     * Display printable / PDF-ready view of exam results with school letterhead.
+     */
+    public function printReport(Request $request, Exam $exam): View
+    {
+        $user = $request->user();
+
+        // Authorization check
+        if ($user->isTeacher() && $user->teacherProfile && ! $user->isAnyAdmin()) {
+            if ($exam->teacher_id !== $user->teacherProfile->id) {
+                abort(403, 'Anda tidak berhak mencetak laporan ujian ini.');
+            }
+        }
+
+        // Ensure all attempts are scored
+        $this->scoringService->scoreExam($exam);
+
+        $exam->load(['subject', 'teacher.user', 'academicYear', 'semester']);
+
+        $school = SchoolProfile::current();
+
+        $participantsQuery = ExamParticipant::where('exam_id', $exam->id)
+            ->with(['student.classroom', 'student.user']);
+
+        $selectedClassroom = null;
+        if ($classroomId = $request->input('classroom_id')) {
+            $selectedClassroom = Classroom::find($classroomId);
+            $participantsQuery->whereHas('student', function ($q) use ($classroomId) {
+                $q->where('classroom_id', $classroomId);
+            });
+        }
+
+        $participants = $participantsQuery->get();
+        $studentIds = $participants->pluck('student_id');
+
+        $attempts = ExamAttempt::where('exam_id', $exam->id)
+            ->whereIn('student_id', $studentIds)
+            ->whereIn('status', ['completed', 'expired'])
+            ->with(['student.classroom'])
+            ->orderBy('attempt_number', 'desc')
+            ->get();
+
+        $latestAttempts = $attempts->groupBy('student_id')->map(function ($studentAttempts) {
+            $latest = $studentAttempts->first();
+            $latest->duration_seconds = $latest->started_at && $latest->completed_at
+                ? max(0, $latest->started_at->diffInSeconds($latest->completed_at))
+                : 0;
+            return $latest;
+        })->values();
+
+        $sortedAttempts = $latestAttempts->sort(function ($a, $b) {
+            if ($a->score != $b->score) {
+                return $a->score > $b->score ? -1 : 1;
+            }
+            if ($a->duration_seconds != $b->duration_seconds) {
+                return $a->duration_seconds < $b->duration_seconds ? -1 : 1;
+            }
+            return strcmp($a->student->name, $b->student->name);
+        })->values();
+
+        $rankings = [];
+        $currentRank = 1;
+        $prevScore = null;
+        $prevDuration = null;
+
+        foreach ($sortedAttempts as $idx => $att) {
+            if ($idx > 0 && $att->score == $prevScore && $att->duration_seconds == $prevDuration) {
+                $att->rank = $currentRank;
+            } else {
+                $currentRank = $idx + 1;
+                $att->rank = $currentRank;
+            }
+            $prevScore = $att->score;
+            $prevDuration = $att->duration_seconds;
+            $rankings[] = $att;
+        }
+
+        $scores = $latestAttempts->pluck('score')->map(fn ($s) => (float) $s)->toArray();
+        $totalCompleted = count($scores);
+        $totalEnrolled = $participants->count();
+        $passedCount = collect($scores)->filter(fn ($s) => $s >= (float) $exam->passing_grade)->count();
+
+        $summary = [
+            'total_enrolled' => $totalEnrolled,
+            'total_completed' => $totalCompleted,
+            'total_absent' => max(0, $totalEnrolled - $totalCompleted),
+            'avg_score' => $totalCompleted > 0 ? round(array_sum($scores) / $totalCompleted, 2) : 0,
+            'max_score' => $totalCompleted > 0 ? round(max($scores), 2) : 0,
+            'min_score' => $totalCompleted > 0 ? round(min($scores), 2) : 0,
+            'passed_count' => $passedCount,
+            'failed_count' => $totalCompleted - $passedCount,
+            'pass_percentage' => $totalCompleted > 0 ? round(($passedCount / $totalCompleted) * 100, 1) : 0,
+        ];
+
+        return view('teacher.reports.print', compact(
+            'exam',
+            'school',
+            'selectedClassroom',
+            'summary',
+            'rankings'
         ));
     }
 }

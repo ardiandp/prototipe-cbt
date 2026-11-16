@@ -306,9 +306,9 @@
 - [x] Jumlah peserta per soal.
 
 ### P8-T03 — Export
-- [ ] Export CSV/Excel jika dependency sesuai.
-- [ ] PDF jika feasible.
-- [ ] Validasi filter dan data export.
+- [x] Export CSV/Excel jika dependency sesuai.
+- [x] PDF jika feasible.
+- [x] Validasi filter dan data export.
 
 ### P8-T04 — Audit log
 - [ ] Catat aktivitas penting.

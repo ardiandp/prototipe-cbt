@@ -46,6 +46,14 @@
                 <a href="{{ request()->url() }}" class="btn btn-sm btn-outline-secondary">Reset</a>
             @endif
         </form>
+        <div class="btn-group btn-group-sm ms-2">
+            <a href="{{ route($routePrefix . 'reports.export-csv', ['exam' => $exam, 'classroom_id' => request('classroom_id')]) }}" class="btn btn-outline-success">
+                &#128190; Export CSV
+            </a>
+            <a href="{{ route($routePrefix . 'reports.print', ['exam' => $exam, 'classroom_id' => request('classroom_id')]) }}" target="_blank" class="btn btn-outline-dark">
+                &#128424; Cetak / PDF
+            </a>
+        </div>
     </div>
 </div>
 

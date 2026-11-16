@@ -90,10 +90,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/results/{exam}/attempts/{attempt}', [\App\Http\Controllers\Teacher\ExamResultController::class, 'attemptDetail'])->name('results.attempts.detail');
         Route::post('/exams/{exam}/publish-results', [\App\Http\Controllers\Teacher\ExamResultController::class, 'publishResults'])->name('exams.publish-results');
         Route::post('/exams/{exam}/unpublish-results', [\App\Http\Controllers\Teacher\ExamResultController::class, 'unpublishResults'])->name('exams.unpublish-results');
-        // Exam Reports & Analytics (P8-T01, P8-T02)
+        // Exam Reports & Analytics (P8-T01, P8-T02, P8-T03)
         Route::get('/reports', [\App\Http\Controllers\Teacher\ExamReportController::class, 'index'])->name('reports.index');
         Route::get('/reports/exams/{exam}', [\App\Http\Controllers\Teacher\ExamReportController::class, 'examReport'])->name('reports.exam');
         Route::get('/reports/exams/{exam}/item-analysis', [\App\Http\Controllers\Teacher\ExamReportController::class, 'itemAnalysis'])->name('reports.item-analysis');
+        Route::get('/reports/exams/{exam}/export/csv', [\App\Http\Controllers\Teacher\ExamReportController::class, 'exportCsv'])->name('reports.export-csv');
+        Route::get('/reports/exams/{exam}/export/item-analysis-csv', [\App\Http\Controllers\Teacher\ExamReportController::class, 'exportItemAnalysisCsv'])->name('reports.export-item-analysis-csv');
+        Route::get('/reports/exams/{exam}/print', [\App\Http\Controllers\Teacher\ExamReportController::class, 'printReport'])->name('reports.print');
         Route::get('/reports/classes/{classroom}', [\App\Http\Controllers\Teacher\ExamReportController::class, 'classReport'])->name('reports.class');
     });
 
@@ -154,10 +157,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/results/{exam}/attempts/{attempt}', [\App\Http\Controllers\Teacher\ExamResultController::class, 'attemptDetail'])->name('results.attempts.detail');
         Route::post('/exams/{exam}/publish-results', [\App\Http\Controllers\Teacher\ExamResultController::class, 'publishResults'])->name('exams.publish-results');
         Route::post('/exams/{exam}/unpublish-results', [\App\Http\Controllers\Teacher\ExamResultController::class, 'unpublishResults'])->name('exams.unpublish-results');
-        // Exam Reports & Analytics (P8-T01, P8-T02)
+        // Exam Reports & Analytics (P8-T01, P8-T02, P8-T03)
         Route::get('/reports', [\App\Http\Controllers\Teacher\ExamReportController::class, 'index'])->name('reports.index');
         Route::get('/reports/exams/{exam}', [\App\Http\Controllers\Teacher\ExamReportController::class, 'examReport'])->name('reports.exam');
         Route::get('/reports/exams/{exam}/item-analysis', [\App\Http\Controllers\Teacher\ExamReportController::class, 'itemAnalysis'])->name('reports.item-analysis');
+        Route::get('/reports/exams/{exam}/export/csv', [\App\Http\Controllers\Teacher\ExamReportController::class, 'exportCsv'])->name('reports.export-csv');
+        Route::get('/reports/exams/{exam}/export/item-analysis-csv', [\App\Http\Controllers\Teacher\ExamReportController::class, 'exportItemAnalysisCsv'])->name('reports.export-item-analysis-csv');
+        Route::get('/reports/exams/{exam}/print', [\App\Http\Controllers\Teacher\ExamReportController::class, 'printReport'])->name('reports.print');
         Route::get('/reports/classes/{classroom}', [\App\Http\Controllers\Teacher\ExamReportController::class, 'classReport'])->name('reports.class');
     });
 

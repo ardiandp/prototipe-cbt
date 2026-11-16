@@ -41,6 +41,9 @@
                 <a href="{{ request()->url() }}" class="btn btn-sm btn-outline-secondary">Reset</a>
             @endif
         </form>
+        <a href="{{ route($routePrefix . 'reports.export-item-analysis-csv', ['exam' => $exam, 'classroom_id' => request('classroom_id')]) }}" class="btn btn-outline-success btn-sm ms-2">
+            &#128190; Export CSV
+        </a>
     </div>
 </div>
 
@@ -273,3 +276,4 @@
     @endforeach
 </div>
 @endsection
+

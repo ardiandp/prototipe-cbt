@@ -27,6 +27,12 @@
         <a href="{{ route($routePrefix . 'reports.item-analysis', $exam) }}" class="btn btn-outline-success btn-sm ms-1">
             &#128269; Analisis Butir Soal
         </a>
+        <a href="{{ route($routePrefix . 'reports.export-csv', ['exam' => $exam, 'classroom_id' => request('classroom_id')]) }}" class="btn btn-outline-secondary btn-sm ms-1">
+            &#128190; CSV
+        </a>
+        <a href="{{ route($routePrefix . 'reports.print', ['exam' => $exam, 'classroom_id' => request('classroom_id')]) }}" target="_blank" class="btn btn-outline-secondary btn-sm ms-1">
+            &#128424; Cetak
+        </a>
     </div>
     <div class="col-md-6 text-md-end mt-2 mt-md-0">
         @if($exam->is_results_published)
