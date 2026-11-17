@@ -21,9 +21,7 @@ Route::get('/theme-demo', function () {
 })->name('theme.demo');
 
 // FAQ / Knowledge Base (Panduan Penggunaan Seluruh Role)
-Route::get('/faq', function () {
-    return view('faq');
-})->name('faq');
+Route::get('/faq', [\App\Http\Controllers\FaqController::class, 'index'])->name('faq');
 
 // Guest Routes
 Route::middleware('guest')->group(function () {
@@ -105,6 +103,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/reports/classes/{classroom}', [\App\Http\Controllers\Teacher\ExamReportController::class, 'classReport'])->name('reports.class');
         // Audit Logs (P8-T04)
         Route::get('/audit-logs', [\App\Http\Controllers\Admin\AuditLogController::class, 'index'])->name('audit-logs.index');
+
+        // Manage FAQs (Admin only)
+        Route::post('/faqs', [\App\Http\Controllers\FaqController::class, 'store'])->name('faqs.store');
+        Route::put('/faqs/{faq}', [\App\Http\Controllers\FaqController::class, 'update'])->name('faqs.update');
+        Route::delete('/faqs/{faq}', [\App\Http\Controllers\FaqController::class, 'destroy'])->name('faqs.destroy');
     });
 
     // Teacher Route Group
