@@ -44,13 +44,14 @@
             </div>
         </x-card>
 
-        <div class="card bg-body-tertiary border shadow-sm mt-3">
-            <div class="card-body">
-                <h6 class="fw-bold mb-2">&#8505; Catatan Konfigurasi</h6>
-                <small class="text-secondary">
-                    Data profil sekolah ini digunakan secara otomatis pada header halaman ujian siswa, berita acara pelaksanaan ujian, serta cetak rekapitulasi nilai.
-                </small>
-            </div>
+        <div class="callout callout-info shadow-sm mt-3">
+            <h6 class="fw-bold text-info mb-2 d-flex align-items-center">
+                <svg class="me-2" style="width: 1.15rem; height: 1.15rem;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Catatan Konfigurasi
+            </h6>
+            <small class="text-secondary d-block">
+                Data profil sekolah ini digunakan secara otomatis pada header halaman ujian siswa, berita acara pelaksanaan ujian, serta cetak rekapitulasi nilai.
+            </small>
         </div>
     </div>
 

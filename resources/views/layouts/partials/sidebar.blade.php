@@ -1,6 +1,6 @@
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
     <!-- Sidebar Brand -->
-    <div class="sidebar-brand p-3 border-bottom border-secondary">
+    <div class="sidebar-brand px-3">
         <a href="{{ url('/') }}" class="brand-link text-decoration-none d-flex align-items-center">
             <img src="{{ asset('theme/adminLTE/dist/assets/img/AdminLTELogo.png') }}" alt="CBT Logo" class="brand-image opacity-75 shadow-sm me-2" style="width: 32px; height: 32px;">
             <span class="brand-text fw-bold text-white fs-5">CBT School</span>

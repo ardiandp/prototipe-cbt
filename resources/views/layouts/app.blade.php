@@ -43,12 +43,21 @@
         .fs-7 { font-size: 0.85rem !important; }
         .fs-8 { font-size: 0.75rem !important; }
 
-        .app-wrapper { min-height: 100vh; display: flex; flex-direction: column; }
-        .app-main { flex: 1; }
-        .app-footer { margin-top: auto; }
-
         .sidebar-brand .brand-link { text-decoration: none; }
         .user-header { border-top-left-radius: 0.375rem; border-top-right-radius: 0.375rem; }
+
+        /* Ensure Sidebar is full height and scrolls smoothly */
+        .app-sidebar {
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+        }
+        .app-sidebar .sidebar-wrapper {
+            height: calc(100vh - 3.5rem);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
 
         /* Sidebar Item Polish */
         .sidebar-menu .nav-link {

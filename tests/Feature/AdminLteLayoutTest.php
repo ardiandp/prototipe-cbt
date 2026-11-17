@@ -2,10 +2,15 @@
 
 namespace Tests\Feature;
 
+use App\Models\SchoolProfile;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class AdminLteLayoutTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * Test that root redirects to login for guests.
      */
@@ -36,10 +41,35 @@ class AdminLteLayoutTest extends TestCase
         $response->assertSee('app-content-header', false);
         $response->assertSee('app-footer', false);
 
+        // Ensure no harmful flex overrides destroy AdminLTE native CSS Grid
+        $response->assertDontSee('.app-wrapper { min-height: 100vh; display: flex; flex-direction: column; }', false);
+
         // Reusable components
         $response->assertSee('card-title', false);
         $response->assertSee('table-responsive', false);
         $response->assertSee('modal fade', false);
         $response->assertSee('CBT School', false);
+    }
+
+    /**
+     * Test that school profile page renders cleanly with AdminLTE layout and active sidebar menu.
+     */
+    public function test_school_profile_renders_with_adminlte_layout_and_active_sidebar(): void
+    {
+        $this->seed(\Database\Seeders\SchoolProfileSeeder::class);
+
+        $admin = User::factory()->admin()->create();
+
+        $response = $this->actingAs($admin)->get(route('admin.school.profile'));
+
+        $response->assertStatus(200);
+        $response->assertSee('app-wrapper', false);
+        $response->assertSee('app-sidebar', false);
+        $response->assertSee('app-main', false);
+        $response->assertSee('app-header', false);
+        $response->assertSee('Profil Sekolah');
+        $response->assertSee('SMA Negeri 1 CBT Indonesia');
+        $response->assertSee('active');
+        $response->assertDontSee('.app-wrapper { min-height: 100vh; display: flex; flex-direction: column; }', false);
     }
 }
