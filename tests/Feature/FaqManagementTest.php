@@ -169,3 +169,4 @@ class FaqManagementTest extends TestCase
         $resTeacherDelete->assertStatus(403);
     }
 }
+

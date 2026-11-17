@@ -36,3 +36,4 @@ class Faq extends Model
         return self::CATEGORIES[$this->category] ?? ucfirst($this->category);
     }
 }
+

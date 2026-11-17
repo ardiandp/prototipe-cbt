@@ -69,3 +69,4 @@ class FaqController extends Controller
         return redirect()->route('faq')->with('success', 'Pertanyaan FAQ berhasil dihapus!');
     }
 }
+
