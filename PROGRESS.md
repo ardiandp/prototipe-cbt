@@ -20,8 +20,8 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Current Task
 
-**Task ID:** Selesai (Seluruh Phase 0 - 9 Selesai)  
-**Task:** Full regression and final review  
+**Task ID:** DEMO-RAPORT  
+**Task:** Penambahan dataset dummy ujian selesai bernilai multi-mapel dan fitur cetak rapor nilai siswa  
 **Status:** Selesai
 
 ## Completed Tasks
@@ -113,6 +113,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | 2026-11-17 | UI-FIX-2 | Perbaikan arsitektur CSS Grid AdminLTE 4 (`.app-wrapper`): menghapus override `display: flex; flex-direction: column` yang mematahkan tata letak sidebar dan mendorong konten utama ke bawah, memastikan sidebar membentang 100vh dan dapat di-scroll lancar, memperbaiki perataan sidebar-brand, mempercantik alert & callout konfigurasi, dan verifikasi layout admin school profile | `AdminLteLayoutTest`, `SchoolProfileTest`, `phpunit` (283 tests passed, 1768 assertions) | 1b7060d |
 | 2026-11-17 | DOC-FAQ | Implementasi dokumen panduan & FAQ menyeluruh (FAQ.md) dan modul Pusat Bantuan in-app interaktif (/faq): panduan lengkap seluruh role (Admin, Guru, Siswa, Pengawas/Proktor), troubleshooting LAN & server, integrasi menu navigasi sidebar & footer, dan feature tests | `AdminLteLayoutTest`, `phpunit` (284 tests passed, 1776 assertions) | fff47f5 |
 | 2026-11-17 | FAQ-MGMT | Implementasi manajemen FAQ dinamis untuk Role Admin: skema tabel faqs & model Faq, FaqSeeder, FaqController (CRUD), tombol modal tambah FAQ, tombol aksi ubah dengan icon pensil & hapus dengan icon trash, proteksi otorisasi role, dan feature tests | `FaqManagementTest`, `phpunit` (290 tests passed, 1807 assertions) | 1e899f2 |
+| 2026-11-17 | DEMO-RAPORT | Penambahan dataset dummy ujian selesai bernilai multi-mapel (Basis Data, Matematika, Bahasa Indonesia) & fitur cetak Rapor Asesmen Siswa (raport) dan Lembar Hasil Ujian (LHU) siap cetak dengan kop surat resmi & kolom tanda tangan | `StudentExamRaportAndPrintTest`, `DemoDatasetAndScenarioTest`, `phpunit` (295 tests passed, 1840 assertions) | pending |
 
 ## Theme Asset Inspection
 

@@ -106,6 +106,9 @@
                 </td>
                 <td>
                     <div class="btn-group btn-group-sm">
+                        <a href="{{ route('admin.students.raport', $student) }}" target="_blank" class="btn btn-outline-info" title="Cetak Rapor Nilai">
+                            &#128424; Rapor
+                        </a>
                         <a href="{{ route('admin.students.edit', $student) }}" class="btn btn-outline-primary" title="Edit">
                             &#9998; Edit
                         </a>

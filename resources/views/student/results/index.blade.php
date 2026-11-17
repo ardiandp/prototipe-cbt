@@ -14,8 +14,16 @@
     <div class="col-12">
         <div class="card shadow-sm border-0">
             <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
-                <h5 class="card-title fw-bold mb-0">&#128220; Hasil Ujian Saya</h5>
-                <span class="badge text-bg-info">Total: {{ count($history) }} Asesmen</span>
+                <div>
+                    <h5 class="card-title fw-bold mb-0">&#128220; Hasil Ujian Saya</h5>
+                    <div class="small text-secondary">Daftar capaian nilai asesmen dan cetak rapor hasil ujian</div>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge text-bg-info">Total: {{ count($history) }} Asesmen</span>
+                    <a href="{{ route('student.results.raport') }}" target="_blank" class="btn btn-sm btn-primary fw-semibold">
+                        &#128424; Cetak Rapor Nilai Siswa
+                    </a>
+                </div>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -103,9 +111,14 @@
                                     <td class="text-center">
                                         @if($attempt && in_array($attempt->status, ['completed', 'expired']))
                                             @if($isPublished)
-                                                <a href="{{ route('student.results.show', $exam) }}" class="btn btn-sm btn-primary">
-                                                    &#128221; Lihat Rincian & Pembahasan
-                                                </a>
+                                                <div class="d-flex flex-column gap-1">
+                                                    <a href="{{ route('student.results.show', $exam) }}" class="btn btn-sm btn-primary">
+                                                        &#128221; Pembahasan
+                                                    </a>
+                                                    <a href="{{ route('student.results.print', $exam) }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                                        &#128424; Cetak Hasil
+                                                    </a>
+                                                </div>
                                             @else
                                                 <button class="btn btn-sm btn-outline-secondary" disabled title="Hasil belum dipublikasikan oleh guru">
                                                     &#128274; Menunggu Pengumuman

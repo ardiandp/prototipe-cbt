@@ -10,6 +10,8 @@ use App\Models\ExamAttempt;
 use App\Models\ExamAttemptQuestion;
 use App\Models\ExamParticipant;
 use App\Models\SchoolProfile;
+use App\Models\Semester;
+use App\Models\Student;
 use App\Models\Subject;
 use App\Services\ScoringService;
 use Illuminate\Http\Request;
@@ -924,6 +926,98 @@ class ExamReportController extends Controller
             'selectedClassroom',
             'summary',
             'rankings'
+        ));
+    }
+
+    /**
+     * Display printable comprehensive report card for a specific student (for Teacher/Admin).
+     */
+    public function studentRaport(Request $request, Student $student): View
+    {
+        $student->load(['classroom.department', 'classroom.academicYear', 'user']);
+
+        $participations = ExamParticipant::where('student_id', $student->id)
+            ->with(['exam.subject', 'exam.teacher.user', 'exam.academicYear', 'exam.semester'])
+            ->get();
+
+        $examIds = $participations->pluck('exam_id');
+
+        $attempts = ExamAttempt::whereIn('exam_id', $examIds)
+            ->where('student_id', $student->id)
+            ->whereIn('status', ['completed', 'expired'])
+            ->orderBy('attempt_number', 'desc')
+            ->get()
+            ->groupBy('exam_id');
+
+        $grades = [];
+        $scores = [];
+        $passedCount = 0;
+
+        foreach ($participations as $participation) {
+            $exam = $participation->exam;
+            if (! $exam->is_results_published) {
+                continue;
+            }
+
+            $attempt = $attempts->get($exam->id, collect())->first();
+            if (! $attempt) {
+                continue;
+            }
+
+            $this->scoringService->scoreAttempt($attempt);
+
+            $score = (float) $attempt->score;
+            $scores[] = $score;
+            $isPassed = $score >= (float) $exam->passing_grade;
+            if ($isPassed) {
+                $passedCount++;
+            }
+
+            $predicate = match (true) {
+                $score >= 90 => 'A (Sangat Baik)',
+                $score >= 80 => 'B (Baik)',
+                $score >= 75 => 'C (Cukup)',
+                default => 'D (Kurang)',
+            };
+
+            $grades[] = (object) [
+                'exam' => $exam,
+                'attempt' => $attempt,
+                'score' => $score,
+                'passing_grade' => (float) $exam->passing_grade,
+                'is_passed' => $isPassed,
+                'predicate' => $predicate,
+            ];
+        }
+
+        $totalExams = count($grades);
+        $avgScore = $totalExams > 0 ? round(array_sum($scores) / $totalExams, 2) : 0;
+        $maxScore = $totalExams > 0 ? max($scores) : 0;
+        $minScore = $totalExams > 0 ? min($scores) : 0;
+
+        $overallPredicate = match (true) {
+            $avgScore >= 90 => 'A (Sangat Baik)',
+            $avgScore >= 80 => 'B (Baik)',
+            $avgScore >= 75 => 'C (Cukup)',
+            default => 'D (Kurang)',
+        };
+
+        $school = SchoolProfile::current();
+        $academicYear = AcademicYear::where('is_active', true)->first() ?? AcademicYear::first();
+        $semester = Semester::where('is_active', true)->first() ?? Semester::first();
+
+        return view('student.results.raport', compact(
+            'student',
+            'grades',
+            'totalExams',
+            'avgScore',
+            'maxScore',
+            'minScore',
+            'passedCount',
+            'overallPredicate',
+            'school',
+            'academicYear',
+            'semester'
         ));
     }
 }

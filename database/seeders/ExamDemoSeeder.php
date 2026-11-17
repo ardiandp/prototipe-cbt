@@ -53,9 +53,16 @@ class ExamDemoSeeder extends Seeder
 
         $pwpbSubject = Subject::where('code', 'PWPB')->first() ?? Subject::first();
         $bdSubject = Subject::where('code', 'BD')->first() ?? Subject::skip(1)->first() ?? Subject::first();
+        $mtkSubject = Subject::where('code', 'MTK')->first();
+        $binSubject = Subject::where('code', 'BIN')->first();
+
+        $sitiTeacherUser = User::where('username', 'guru.matematika')->first();
+        $sitiTeacher = Teacher::where('user_id', $sitiTeacherUser?->id)->first() ?? $teacher;
 
         $pwpbCategory = QuestionCategory::where('subject_id', $pwpbSubject->id)->first() ?? QuestionCategory::first();
         $bdCategory = QuestionCategory::where('subject_id', $bdSubject->id)->first() ?? QuestionCategory::skip(1)->first() ?? $pwpbCategory;
+        $mtkCategory = QuestionCategory::where('code', 'MTK-X-2026')->first() ?? ($mtkSubject ? QuestionCategory::where('subject_id', $mtkSubject->id)->first() : null);
+        $binCategory = QuestionCategory::where('code', 'BIN-XII-2026')->first() ?? ($binSubject ? QuestionCategory::where('subject_id', $binSubject->id)->first() : null);
 
         // =========================================================================
         // 1. EXAM 1: UJIAN AKTIF SIAP DIUJI (LIVE READY FOR STUDENT DEMO)
@@ -119,7 +126,87 @@ class ExamDemoSeeder extends Seeder
         $this->seedExam2CompletedAttempts($exam2);
 
         // =========================================================================
-        // 3. EXAM 3: UJIAN DRAFT (FOR TEACHER WORKFLOW DEMO)
+        // 3. EXAM 3: UJIAN SELESAI MATEMATIKA (COMPLETED & PUBLISHED FOR RAPORT)
+        // =========================================================================
+        $examMtk = null;
+        if ($mtkSubject && $mtkCategory) {
+            $examMtk = Exam::updateOrCreate(
+                ['code' => 'EXAM-MTK-01'],
+                [
+                    'academic_year_id' => $year->id,
+                    'semester_id' => $semester->id,
+                    'subject_id' => $mtkSubject->id,
+                    'teacher_id' => $sitiTeacher->id,
+                    'title' => 'Asesmen Sumatif Matematika - Semester Ganjil',
+                    'description' => 'Evaluasi capaian materi fungsi eksponen, logaritma, persamaan linier, dan peluang dasar.',
+                    'start_at' => Carbon::now()->subDays(6),
+                    'end_at' => Carbon::now()->subDays(3),
+                    'duration' => 60,
+                    'passing_grade' => 75.00,
+                    'random_question' => false,
+                    'random_answer' => false,
+                    'token' => 'MATEMATIKA',
+                    'status' => 'published',
+                    'is_results_published' => true,
+                ]
+            );
+
+            $this->snapshotQuestions($examMtk, $mtkCategory, 10);
+            $this->assignClassroomParticipants($examMtk, $classXRpl1);
+            $this->assignClassroomParticipants($examMtk, $classXRpl2);
+
+            $this->seedCompletedExamAttempts($examMtk, [
+                '20261001' => 5, // Ahmad Dani: 5 of 6 correct = 83.33 (Tuntas KKM)
+                '20261002' => 6, // Annisa: 6 of 6 = 100.00
+                '20261003' => 5, // Bagas: 5 of 6 = 83.33
+                '20261004' => 4, // Citra: 4 of 6 = 66.67
+                '20261005' => 5, // Dimas: 5 of 6 = 83.33
+                '20261006' => 4, // Eka: 4 of 6 = 66.67
+            ]);
+        }
+
+        // =========================================================================
+        // 4. EXAM 4: UJIAN SELESAI BAHASA INDONESIA (COMPLETED & PUBLISHED FOR RAPORT)
+        // =========================================================================
+        $examBin = null;
+        if ($binSubject && $binCategory) {
+            $examBin = Exam::updateOrCreate(
+                ['code' => 'EXAM-BIN-01'],
+                [
+                    'academic_year_id' => $year->id,
+                    'semester_id' => $semester->id,
+                    'subject_id' => $binSubject->id,
+                    'teacher_id' => $teacher->id,
+                    'title' => 'Penilaian Akhir Semester Bahasa Indonesia',
+                    'description' => 'Penilaian capaian kompetensi surat lamaran pekerjaan, teks editorial, dan kaidah kebahasaan.',
+                    'start_at' => Carbon::now()->subDays(5),
+                    'end_at' => Carbon::now()->subDays(2),
+                    'duration' => 45,
+                    'passing_grade' => 75.00,
+                    'random_question' => false,
+                    'random_answer' => false,
+                    'token' => 'BAHASA26',
+                    'status' => 'published',
+                    'is_results_published' => true,
+                ]
+            );
+
+            $this->snapshotQuestions($examBin, $binCategory, 10);
+            $this->assignClassroomParticipants($examBin, $classXRpl1);
+            $this->assignClassroomParticipants($examBin, $classXRpl2);
+
+            $this->seedCompletedExamAttempts($examBin, [
+                '20261001' => 4, // Ahmad Dani: 4 of 4 = 100.00 (Tuntas KKM)
+                '20261002' => 4, // Annisa: 4 of 4 = 100.00
+                '20261003' => 3, // Bagas: 3 of 4 = 75.00
+                '20261004' => 4, // Citra: 4 of 4 = 100.00
+                '20261005' => 3, // Dimas: 3 of 4 = 75.00
+                '20261006' => 3, // Eka: 3 of 4 = 75.00
+            ]);
+        }
+
+        // =========================================================================
+        // 5. EXAM 5: UJIAN DRAFT (FOR TEACHER WORKFLOW DEMO)
         // =========================================================================
         $exam3 = Exam::updateOrCreate(
             ['code' => 'EXAM-PWPB-REMIDIAL'],
@@ -146,9 +233,9 @@ class ExamDemoSeeder extends Seeder
         $this->assignClassroomParticipants($exam3, $classXRpl1);
 
         // =========================================================================
-        // 4. SEED DEMO AUDIT LOGS
+        // 6. SEED DEMO AUDIT LOGS
         // =========================================================================
-        $this->seedDemoAuditLogs($teacherUser, $adminUser, $studentUser, $exam1, $exam2);
+        $this->seedDemoAuditLogs($teacherUser, $adminUser, $studentUser, $exam1, $exam2, $examMtk, $examBin);
     }
 
     /**
@@ -370,14 +457,31 @@ class ExamDemoSeeder extends Seeder
      */
     private function seedExam2CompletedAttempts(Exam $exam): void
     {
+        $this->seedCompletedExamAttempts($exam, [
+            '20261001' => 4, // Ahmad Dani: 4 of 4 = 100.00 (Tuntas KKM)
+            '20261002' => 4, // Annisa: 4 of 4 = 100.00
+            '20261003' => 3, // Bagas: 3 of 4 = 75.00
+            '20261004' => 3, // Citra: 3 of 4 = 75.00
+            '20261005' => 3, // Dimas: 3 of 4 = 75.00
+            '20261006' => 2, // Eka: 2 of 4 = 50.00 (Remedial)
+        ]);
+    }
+
+    /**
+     * Seed completed attempts for an exam with configurable correct counts per student.
+     *
+     * @param Exam $exam
+     * @param array<string, int> $customCorrectCounts [nis => number_of_correct_answers]
+     * @param int $defaultCorrectOffset
+     */
+    private function seedCompletedExamAttempts(Exam $exam, array $customCorrectCounts = [], int $defaultCorrectOffset = 0): void
+    {
         ExamAttempt::where('exam_id', $exam->id)->delete();
 
         $participants = ExamParticipant::where('exam_id', $exam->id)->with('student')->get();
-        $questions = $exam->questions()->with('options')->get();
+        $questions = $exam->questions()->with('options')->orderBy('order')->get();
         $labels = ['A', 'B', 'C', 'D', 'E'];
-
-        // Preset score profiles: target number of correct answers out of 10
-        $scoreTargets = [9, 8, 8, 7, 6, 5, 4, 9, 7, 8];
+        $totalQuestions = $questions->count();
 
         foreach ($participants as $index => $participant) {
             $student = $participant->student;
@@ -385,11 +489,18 @@ class ExamDemoSeeder extends Seeder
                 continue;
             }
 
-            $correctTarget = $scoreTargets[$index % count($scoreTargets)];
+            // Determine target correct answers
+            if (isset($customCorrectCounts[$student->nis])) {
+                $correctTarget = $customCorrectCounts[$student->nis];
+            } else {
+                $pattern = [$totalQuestions, max(1, $totalQuestions - 1), max(1, $totalQuestions - 1), max(1, $totalQuestions - 2), max(1, $totalQuestions - 1), max(1, $totalQuestions - 2)];
+                $correctTarget = $pattern[($index + $defaultCorrectOffset) % count($pattern)];
+            }
+            $correctTarget = min($totalQuestions, max(0, $correctTarget));
 
             $startedAt = Carbon::now()->subDays(3)->addMinutes($index * 5);
             $expiresAt = $startedAt->copy()->addMinutes($exam->duration);
-            $completedAt = $startedAt->copy()->addMinutes(35 + ($index % 10));
+            $completedAt = $startedAt->copy()->addMinutes(min($exam->duration - 5, 20 + ($index % 12)));
 
             $attempt = ExamAttempt::create([
                 'exam_id' => $exam->id,
@@ -427,11 +538,9 @@ class ExamDemoSeeder extends Seeder
                 $correctOpt = $q->options->firstWhere('is_correct', true);
                 $wrongOptions = $q->options->where('is_correct', false)->values();
 
-                // Select answer based on target correct count
                 if ($qIndex < $correctTarget) {
                     $selectedOpt = $correctOpt;
                 } else {
-                    // Distribute wrong choices across distractors for item analysis
                     $distractorIndex = ($index + $qIndex) % max(1, $wrongOptions->count());
                     $selectedOpt = $wrongOptions->get($distractorIndex) ?? $wrongOptions->first();
                 }
@@ -450,7 +559,7 @@ class ExamDemoSeeder extends Seeder
     /**
      * Seed realistic audit logs for demo history inspection.
      */
-    private function seedDemoAuditLogs(?User $teacherUser, ?User $adminUser, ?User $studentUser, Exam $exam1, Exam $exam2): void
+    private function seedDemoAuditLogs(?User $teacherUser, ?User $adminUser, ?User $studentUser, Exam $exam1, Exam $exam2, ?Exam $examMtk = null, ?Exam $examBin = null): void
     {
         if ($adminUser) {
             AuditLog::record(
@@ -494,6 +603,40 @@ class ExamDemoSeeder extends Seeder
                 ['exam_id' => $exam2->id, 'exam_code' => $exam2->code],
                 $teacherUser
             );
+
+            if ($examMtk) {
+                AuditLog::record(
+                    'publish_exam',
+                    "Jadwal ujian '{$examMtk->title}' dipublikasikan.",
+                    $examMtk,
+                    ['exam_id' => $examMtk->id, 'exam_code' => $examMtk->code, 'token' => $examMtk->token],
+                    $teacherUser
+                );
+                AuditLog::record(
+                    'publish_results',
+                    "Pengumuman hasil dan rekap nilai ujian '{$examMtk->title}' telah dirilis kepada siswa.",
+                    $examMtk,
+                    ['exam_id' => $examMtk->id, 'exam_code' => $examMtk->code],
+                    $teacherUser
+                );
+            }
+
+            if ($examBin) {
+                AuditLog::record(
+                    'publish_exam',
+                    "Jadwal ujian '{$examBin->title}' dipublikasikan.",
+                    $examBin,
+                    ['exam_id' => $examBin->id, 'exam_code' => $examBin->code, 'token' => $examBin->token],
+                    $teacherUser
+                );
+                AuditLog::record(
+                    'publish_results',
+                    "Pengumuman hasil dan rekap nilai ujian '{$examBin->title}' telah dirilis kepada siswa.",
+                    $examBin,
+                    ['exam_id' => $examBin->id, 'exam_code' => $examBin->code],
+                    $teacherUser
+                );
+            }
         }
 
         if ($studentUser) {

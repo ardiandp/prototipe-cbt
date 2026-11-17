@@ -17,9 +17,12 @@
 
 @section('content')
 <div class="row mb-3">
-    <div class="col-12">
+    <div class="col-12 d-flex justify-content-between align-items-center">
         <a href="{{ route($routePrefix . 'results.show', $exam) }}" class="btn btn-outline-secondary btn-sm">
             &larr; Kembali ke Rekap Nilai
+        </a>
+        <a href="{{ route($routePrefix . 'results.attempts.print', [$exam, $attempt]) }}" target="_blank" class="btn btn-primary btn-sm fw-semibold">
+            &#128424; Cetak Lembar Hasil Siswa
         </a>
     </div>
 </div>

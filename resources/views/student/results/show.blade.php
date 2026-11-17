@@ -12,9 +12,12 @@
 
 @section('content')
 <div class="row mb-3">
-    <div class="col-12">
+    <div class="col-12 d-flex justify-content-between align-items-center">
         <a href="{{ route('student.results.index') }}" class="btn btn-outline-secondary btn-sm">
             &larr; Kembali ke Riwayat Nilai
+        </a>
+        <a href="{{ route('student.results.print', $exam) }}" target="_blank" class="btn btn-primary btn-sm fw-semibold">
+            &#128424; Cetak Lembar Hasil Ujian
         </a>
     </div>
 </div>

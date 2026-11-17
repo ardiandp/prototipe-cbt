@@ -8,6 +8,7 @@ use App\Models\Classroom;
 use App\Models\Exam;
 use App\Models\ExamAttempt;
 use App\Models\ExamParticipant;
+use App\Models\SchoolProfile;
 use App\Models\Subject;
 use App\Services\ScoringService;
 use Illuminate\Http\RedirectResponse;
@@ -261,5 +262,39 @@ class ExamResultController extends Controller
         ]);
 
         return view('teacher.results.attempt_detail', compact('exam', 'attempt'));
+    }
+
+    /**
+     * Display printable individual exam result and answer sheet for a student attempt.
+     */
+    public function printAttemptResult(Request $request, Exam $exam, ExamAttempt $attempt): View
+    {
+        $user = $request->user();
+
+        // Authorization check
+        if ($user->isTeacher() && $user->teacherProfile && ! $user->isAnyAdmin()) {
+            if ($exam->teacher_id !== $user->teacherProfile->id) {
+                abort(403, 'Anda tidak berhak mencetak lembar hasil siswa ini.');
+            }
+        }
+
+        if ($attempt->exam_id !== $exam->id) {
+            abort(404, 'Attempt tidak sesuai dengan ujian.');
+        }
+
+        // Ensure attempt is scored
+        $this->scoringService->scoreAttempt($attempt);
+
+        $attempt->load([
+            'student.classroom.department',
+            'attemptQuestions.question.options',
+            'attemptQuestions.selectedOption',
+            'attemptQuestions.options.questionOption',
+        ]);
+
+        $student = $attempt->student;
+        $school = SchoolProfile::current();
+
+        return view('student.results.print', compact('exam', 'attempt', 'student', 'school'));
     }
 }

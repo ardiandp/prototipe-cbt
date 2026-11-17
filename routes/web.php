@@ -91,6 +91,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/results', [\App\Http\Controllers\Teacher\ExamResultController::class, 'index'])->name('results.index');
         Route::get('/results/{exam}', [\App\Http\Controllers\Teacher\ExamResultController::class, 'show'])->name('results.show');
         Route::get('/results/{exam}/attempts/{attempt}', [\App\Http\Controllers\Teacher\ExamResultController::class, 'attemptDetail'])->name('results.attempts.detail');
+        Route::get('/results/{exam}/attempts/{attempt}/print', [\App\Http\Controllers\Teacher\ExamResultController::class, 'printAttemptResult'])->name('results.attempts.print');
         Route::post('/exams/{exam}/publish-results', [\App\Http\Controllers\Teacher\ExamResultController::class, 'publishResults'])->name('exams.publish-results');
         Route::post('/exams/{exam}/unpublish-results', [\App\Http\Controllers\Teacher\ExamResultController::class, 'unpublishResults'])->name('exams.unpublish-results');
         // Exam Reports & Analytics (P8-T01, P8-T02, P8-T03)
@@ -101,6 +102,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/reports/exams/{exam}/export/item-analysis-csv', [\App\Http\Controllers\Teacher\ExamReportController::class, 'exportItemAnalysisCsv'])->name('reports.export-item-analysis-csv');
         Route::get('/reports/exams/{exam}/print', [\App\Http\Controllers\Teacher\ExamReportController::class, 'printReport'])->name('reports.print');
         Route::get('/reports/classes/{classroom}', [\App\Http\Controllers\Teacher\ExamReportController::class, 'classReport'])->name('reports.class');
+        Route::get('/students/{student}/raport', [\App\Http\Controllers\Teacher\ExamReportController::class, 'studentRaport'])->name('students.raport');
         // Audit Logs (P8-T04)
         Route::get('/audit-logs', [\App\Http\Controllers\Admin\AuditLogController::class, 'index'])->name('audit-logs.index');
 
@@ -165,6 +167,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/results', [\App\Http\Controllers\Teacher\ExamResultController::class, 'index'])->name('results.index');
         Route::get('/results/{exam}', [\App\Http\Controllers\Teacher\ExamResultController::class, 'show'])->name('results.show');
         Route::get('/results/{exam}/attempts/{attempt}', [\App\Http\Controllers\Teacher\ExamResultController::class, 'attemptDetail'])->name('results.attempts.detail');
+        Route::get('/results/{exam}/attempts/{attempt}/print', [\App\Http\Controllers\Teacher\ExamResultController::class, 'printAttemptResult'])->name('results.attempts.print');
         Route::post('/exams/{exam}/publish-results', [\App\Http\Controllers\Teacher\ExamResultController::class, 'publishResults'])->name('exams.publish-results');
         Route::post('/exams/{exam}/unpublish-results', [\App\Http\Controllers\Teacher\ExamResultController::class, 'unpublishResults'])->name('exams.unpublish-results');
         // Exam Reports & Analytics (P8-T01, P8-T02, P8-T03)
@@ -175,6 +178,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/reports/exams/{exam}/export/item-analysis-csv', [\App\Http\Controllers\Teacher\ExamReportController::class, 'exportItemAnalysisCsv'])->name('reports.export-item-analysis-csv');
         Route::get('/reports/exams/{exam}/print', [\App\Http\Controllers\Teacher\ExamReportController::class, 'printReport'])->name('reports.print');
         Route::get('/reports/classes/{classroom}', [\App\Http\Controllers\Teacher\ExamReportController::class, 'classReport'])->name('reports.class');
+        Route::get('/students/{student}/raport', [\App\Http\Controllers\Teacher\ExamReportController::class, 'studentRaport'])->name('students.raport');
         // Audit Logs (P8-T04)
         Route::get('/audit-logs', [\App\Http\Controllers\Admin\AuditLogController::class, 'index'])->name('audit-logs.index');
     });
@@ -190,9 +194,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/attempts/{attempt}/finalize-expired', [\App\Http\Controllers\Student\ExamAttemptController::class, 'finalizeExpired'])->name('attempts.finalize-expired');
         Route::post('/attempts/{attempt}/save-answer', [\App\Http\Controllers\Student\ExamAttemptController::class, 'saveAnswer'])->name('attempts.save-answer');
         Route::post('/attempts/{attempt}/finish', [\App\Http\Controllers\Student\ExamAttemptController::class, 'finish'])->name('attempts.finish');
-        // Exam Results (P7-T04)
+        // Exam Results & Report Cards
         Route::get('/results', [\App\Http\Controllers\Student\ExamResultController::class, 'index'])->name('results.index');
+        Route::get('/results/raport', [\App\Http\Controllers\Student\ExamResultController::class, 'printRaport'])->name('results.raport');
         Route::get('/results/{exam}', [\App\Http\Controllers\Student\ExamResultController::class, 'show'])->name('results.show');
+        Route::get('/results/{exam}/print', [\App\Http\Controllers\Student\ExamResultController::class, 'printReport'])->name('results.print');
     });
 });
 
