@@ -1,14 +1,19 @@
-<nav class="app-header navbar navbar-expand bg-body">
+<nav class="app-header navbar navbar-expand bg-body shadow-sm">
     <div class="container-fluid">
         <!-- Start Navbar Links -->
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button" aria-label="Toggle sidebar">
-                    <span class="navbar-toggler-icon">&#9776;</span>
+                    <svg style="width: 1.25rem; height: 1.25rem;" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"></path>
+                    </svg>
                 </a>
             </li>
             <li class="nav-item d-none d-md-block">
-                <span class="nav-link text-muted fw-bold">Computer Based Test (LAN Server)</span>
+                <span class="nav-link text-body-secondary fw-semibold">
+                    <span class="badge text-bg-primary me-2">LAN Server</span>
+                    Computer Based Test (CBT School)
+                </span>
             </li>
         </ul>
 
@@ -16,8 +21,12 @@
         <ul class="navbar-nav ms-auto align-items-center">
             <!-- Server Time Indicator -->
             <li class="nav-item d-none d-sm-block me-3">
-                <span class="badge text-bg-light border text-secondary" id="server-clock-badge">
-                    <span id="server-clock">{{ now()->format('H:i:s') }}</span> WIB
+                <span class="badge text-bg-light border text-secondary shadow-sm py-2 px-3" id="server-clock-badge">
+                    <svg class="me-1" style="width: 1rem; height: 1rem; vertical-align: -0.15rem;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span id="server-clock" class="fw-bold">{{ now()->format('H:i:s') }}</span> WIB
                 </span>
             </li>
 
@@ -49,4 +58,3 @@
         </ul>
     </div>
 </nav>
-
