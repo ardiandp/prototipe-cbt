@@ -20,8 +20,8 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Current Task
 
-**Task ID:** P9-T02  
-**Task:** LAN deployment documentation  
+**Task ID:** P9-T03  
+**Task:** Full regression and final review  
 **Status:** Pending
 
 ## Completed Tasks
@@ -63,6 +63,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 - [x] **P8-T03:** Export (2026-11-16)
 - [x] **P8-T04:** Audit log (2026-11-16)
 - [x] **P9-T01:** Demo dataset and scenario (2026-11-16)
+- [x] **P9-T02:** LAN deployment documentation (2026-11-17)
 
 ## Task Log
 
@@ -105,6 +106,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 | 2026-11-16 | P8-T03 | Implementasi export rekap nilai ujian dan analisis butir soal ke format CSV/Excel dengan UTF-8 BOM, view printable/PDF siap cetak dengan kop surat resmi & kolom tanda tangan, filter rombel & status kelulusan, dan feature tests | `ExamExportTest`, `phpunit` (265 tests passed, 1591 assertions) | 7fc1d40 |
 | 2026-11-16 | P8-T04 | Implementasi hub Audit Log terpusat, instrumentasi logging otomatis (login/logout, publish/unpublish/cancel exam, force finish, retake, release/hide results), multi-parameter filtering, modal payload JSON, proteksi role berjenjang, dan feature tests | `AuditLogTest`, `phpunit` (272 tests passed, 1619 assertions) | dc90e8e |
 | 2026-11-16 | P9-T01 | Implementasi dataset demo terpadu (ExamDemoSeeder untuk EXAM-PWPB-01 aktif siap uji, EXAM-BD-01 selesai & dinilai, EXAM-PWPB-REMIDIAL draft), artisan command cbt:reset-demo --force, panduan skenario DEMO_GUIDE.md end-to-end, dan feature tests | `DemoDatasetAndScenarioTest`, `phpunit` (275 tests passed, 1669 assertions) | 545a330 |
+| 2026-11-17 | P9-T02 | Implementasi dokumentasi deployment LAN komprehensif (DEPLOYMENT_LAN.md), panduan host/bind 0.0.0.0, akses klien browser, konfigurasi firewall & router AP isolation, garansi offline asset tanpa CDN, batas prototype, update README.md, dan feature tests | `LanDeploymentTest`, `phpunit` (278 tests passed, 1685 assertions) | Pending |
 
 ## Theme Asset Inspection
 
@@ -157,7 +159,7 @@ Dokumen ini adalah catatan status aktual implementasi. AI wajib memperbaruinya s
 
 ## Next Task
 
-Setelah P9-T01 selesai, lanjutkan P9-T02 — LAN deployment documentation (Panduan menjalankan server lokal, akses dari komputer klien LAN, catatan firewall, IP lokal, dan asset offline tanpa CDN).
+Setelah P9-T02 selesai, lanjutkan P9-T03 — Full regression and final review (Verifikasi menyeluruh seluruh role, alur ujian, timer/autosave/resume, dan penutupan seluruh acceptance criteria CBT School).
 
 ## Required Update Format
 

@@ -328,11 +328,11 @@
 - [x] Sediakan cara reset data demo yang eksplisit (Artisan command cbt:reset-demo --force).
 
 ### P9-T02 — LAN deployment documentation
-- [ ] Panduan menjalankan server lokal.
-- [ ] Panduan akses dari komputer klien.
-- [ ] Catatan firewall dan IP lokal.
-- [ ] Asset lokal tanpa CDN.
-- [ ] Catatan keterbatasan prototype.
+- [x] Panduan menjalankan server lokal (`php artisan serve --host=0.0.0.0 --port=8000`).
+- [x] Panduan akses dari komputer klien (Browser IP host LAN, kredensial demo).
+- [x] Catatan firewall dan IP lokal (Windows Defender PowerShell rule, Linux UFW, nonaktifkan AP isolation).
+- [x] Asset lokal tanpa CDN (100% AdminLTE 3 lokal di `public/theme/adminLTE/dist`, jaminan offline intranet).
+- [x] Catatan keterbatasan prototype (SQLite database concurrency, single-threaded server, anti-cheating disclaimer).
 
 ### P9-T03 — Full regression and final review
 - [ ] Test seluruh role.

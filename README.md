@@ -97,4 +97,16 @@ Setiap selesai task, laporkan:
 7. Risiko atau pekerjaan tersisa.
 8. Task berikutnya (tanpa langsung mengerjakannya).
 
+## 7. Panduan Cepat Demo & Deployment LAN
+
+- **Panduan Skenario Demo End-to-End**: [DEMO_GUIDE.md](DEMO_GUIDE.md)
+- **Panduan Deployment Jaringan Lokal (LAN)**: [DEPLOYMENT_LAN.md](DEPLOYMENT_LAN.md)
+- **Perintah Reset Dataset Demo**: `php artisan cbt:reset-demo --force`
+- **Perintah Menjalankan Server LAN**: `php artisan serve --host=0.0.0.0 --port=8000`
+- **Kredensial Default (Password: `password`)**:
+  - Siswa: `siswa`
+  - Guru: `guru`
+  - Admin: `admin`
+  - Superadmin: `superadmin`
+
 **Mulai sekarang: baca seluruh dokumen, inspeksi project, lalu kerjakan hanya task pertama yang belum selesai.**
