@@ -335,15 +335,15 @@
 - [x] Catatan keterbatasan prototype (SQLite database concurrency, single-threaded server, anti-cheating disclaimer).
 
 ### P9-T03 — Full regression and final review
-- [ ] Test seluruh role.
-- [ ] Test seluruh alur ujian.
-- [ ] Test refresh/resume.
-- [ ] Test waktu habis.
-- [ ] Test scoring dan publikasi.
-- [ ] Periksa responsive UI.
-- [ ] Periksa Git status dan dokumentasi.
+- [x] Test seluruh role (Superadmin, Admin, Teacher, Student).
+- [x] Test seluruh alur ujian (Draft -> Publish -> Start Attempt -> Finish -> Result Publish).
+- [x] Test refresh/resume (Anti-reset timer dan pencegahan duplicate attempt).
+- [x] Test waktu habis (Finalisasi otomatis via artisan cbt:finalize-expired-attempts).
+- [x] Test scoring dan publikasi (Scoring snapshot otomatis, publish/unpublish hasil).
+- [x] Periksa responsive UI (AdminLTE 3 lokal, layout ruang ujian, monitoring live, audit modal).
+- [x] Periksa Git status dan dokumentasi (README, DEMO_GUIDE, DEPLOYMENT_LAN, PROGRESS).
 
-**Acceptance Phase 9:** prototype siap didemonstrasikan melalui LAN dengan seluruh alur utama berjalan.
+**Acceptance Phase 9:** prototype siap didemonstrasikan melalui LAN dengan seluruh alur utama berjalan (SELESAI - SELURUH PHASE LENGKAP).
 
 ---
 

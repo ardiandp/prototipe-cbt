@@ -99,7 +99,9 @@ class AuditLogController extends Controller
             'unpublish_exam' => 'Tarik Jadwal (Draft)',
             'cancel_exam' => 'Batalkan Jadwal Ujian',
             'force_finish' => 'Selesaikan Paksa Peserta',
+            'admin_finalize' => 'Finalisasi Paksa (Admin)',
             'retake_authorization' => 'Otorisasi Ujian Ulang',
+            'retake_authorized' => 'Otorisasi Ujian Ulang',
             'publish_results' => 'Rilis Pengumuman Nilai',
             'unpublish_results' => 'Tarik Pengumuman Nilai',
         ];
