@@ -97,8 +97,9 @@ Setiap selesai task, laporkan:
 7. Risiko atau pekerjaan tersisa.
 8. Task berikutnya (tanpa langsung mengerjakannya).
 
-## 7. Panduan Cepat Demo & Deployment LAN
+## 7. Panduan Cepat Demo, FAQ & Deployment LAN
 
+- **Pusat Bantuan & FAQ Seluruh Role**: [FAQ.md](FAQ.md)
 - **Panduan Skenario Demo End-to-End**: [DEMO_GUIDE.md](DEMO_GUIDE.md)
 - **Panduan Deployment Jaringan Lokal (LAN)**: [DEPLOYMENT_LAN.md](DEPLOYMENT_LAN.md)
 - **Perintah Reset Dataset Demo**: `php artisan cbt:reset-demo --force`

@@ -72,4 +72,21 @@ class AdminLteLayoutTest extends TestCase
         $response->assertSee('active');
         $response->assertDontSee('.app-wrapper { min-height: 100vh; display: flex; flex-direction: column; }', false);
     }
+
+    /**
+     * Test that FAQ knowledge base page renders and includes guides for all roles.
+     */
+    public function test_faq_page_renders_with_knowledge_base(): void
+    {
+        $response = $this->get(route('faq'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Pusat Bantuan & FAQ');
+        $response->assertSee('Admin Sekolah');
+        $response->assertSee('Guru Pengampu');
+        $response->assertSee('Siswa Peserta');
+        $response->assertSee('Pengawas / Proktor');
+        $response->assertSee('Troubleshooting LAN');
+        $response->assertSee('app-wrapper', false);
+    }
 }

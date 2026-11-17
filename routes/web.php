@@ -20,6 +20,11 @@ Route::get('/theme-demo', function () {
     return view('adminlte-demo');
 })->name('theme.demo');
 
+// FAQ / Knowledge Base (Panduan Penggunaan Seluruh Role)
+Route::get('/faq', function () {
+    return view('faq');
+})->name('faq');
+
 // Guest Routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
